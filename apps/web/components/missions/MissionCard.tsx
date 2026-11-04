@@ -83,7 +83,7 @@ export function MissionCard({ mission }: { mission: Mission }) {
             >
               <span className="inline-flex items-center gap-1.5">
                 <Coins aria-hidden className="size-4" />
-                {vbucks} V-Bucks
+                {t('Mission.vbucksAmount', { count: vbucks })}
               </span>
             </p>
           </TooltipTrigger>

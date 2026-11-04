@@ -108,7 +108,8 @@
     "powerLevel": "Уровень силы",
     "group": "Групповая миссия",
     "alertReward": "Награда за алерт",
-    "unknownPl": "Уровень силы пока неизвестен"
+    "unknownPl": "Уровень силы пока неизвестен",
+    "vbucksAmount": "{count, plural, one {# В-бакс} few {# В-бакса} many {# В-баксов} other {# В-бакса}}"
   },
   "Biome": {
     "forest": "Лес",

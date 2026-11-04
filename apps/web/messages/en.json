@@ -108,7 +108,8 @@
     "powerLevel": "Power level",
     "group": "Group mission",
     "alertReward": "Alert reward",
-    "unknownPl": "Power level not known yet"
+    "unknownPl": "Power level not known yet",
+    "vbucksAmount": "{count} V-Bucks"
   },
   "Biome": {
     "forest": "Forest",

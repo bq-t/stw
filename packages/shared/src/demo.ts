@@ -10,7 +10,7 @@ import {
   type Reward,
   type VbucksHistory,
   type Zone,
-} from '@stw/shared';
+} from './index';
 
 // DEMO DATA for UI work before the real world/info is available.
 // Used only when NEXT_PUBLIC_API_URL is not set; the page shows a "demo data" banner.

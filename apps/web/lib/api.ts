@@ -12,12 +12,12 @@ async function get<T>(path: string): Promise<T> {
 }
 
 export async function fetchMissions(): Promise<DaySnapshot> {
-  if (IS_DEMO) return (await import('./demo')).demoSnapshot();
+  if (IS_DEMO) return (await import('@stw/shared/demo')).demoSnapshot();
   return get<DaySnapshot>('/api/missions');
 }
 
 export async function fetchHistory(): Promise<VbucksHistory> {
-  if (IS_DEMO) return (await import('./demo')).demoHistory();
+  if (IS_DEMO) return (await import('@stw/shared/demo')).demoHistory();
   return get<VbucksHistory>('/api/history');
 }
 

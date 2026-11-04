@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./epic": "./src/epic/index.ts",
-    "./items": "./src/items/index.ts"
+    "./items": "./src/items/index.ts",
+    "./demo": "./src/demo.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",

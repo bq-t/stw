@@ -29,6 +29,7 @@ pnpm format
 pnpm auth:setup         # create device auth for the dedicated Epic account → .env
 pnpm fetch:world [file] # fetch world/info (or parse a saved fixture) and print what parse.ts sees
 pnpm --filter web build # static export to apps/web/out
+pnpm seed:local         # demo snapshot + history into the Worker LOCAL KV (then dev:worker + dev:web with NEXT_PUBLIC_API_URL)
 ```
 
 ## Web specifics
