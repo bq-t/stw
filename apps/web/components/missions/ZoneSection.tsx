@@ -52,7 +52,7 @@ export function ZoneSection({
       </header>
       <ul
         className={cn(
-          'gap-1 p-1',
+          'gap-1.5 p-2',
           wide ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'flex flex-col',
         )}
       >
