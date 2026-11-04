@@ -59,6 +59,8 @@ function Tracker() {
   }, [missions.data, filters]);
 
   const shown = byZone.reduce((s, z) => s + z.missions.length, 0);
+  // One zone or V-Bucks only: full-width zone cards with a 3-column mission grid.
+  const wide = filters.zones.length === 1 || filters.alert === 'vbucks';
 
   return (
     <div className="flex flex-col gap-3">
@@ -70,6 +72,7 @@ function Tracker() {
         history={history.data}
         today={missions.data?.date}
         todayTotal={missions.data?.vbucksTotal}
+        onFarm={() => setFilters({ ...filters, alert: 'vbucks' })}
       />
       <MissionFilters value={filters} onChange={setFilters} />
 
@@ -91,9 +94,15 @@ function Tracker() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div
+          className={
+            wide
+              ? 'flex flex-col gap-3'
+              : 'grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-4'
+          }
+        >
           {byZone.map(({ zone, missions: list }) => (
-            <ZoneSection key={zone} zone={zone} missions={list} />
+            <ZoneSection key={zone} zone={zone} missions={list} wide={wide} />
           ))}
         </div>
       )}

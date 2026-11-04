@@ -47,7 +47,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
           <QueryProvider>
-            <TooltipProvider delayDuration={150}>
+            <TooltipProvider delayDuration={150} skipDelayDuration={400} disableHoverableContent>
               <Header />
               <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">{children}</main>
               <Footer />

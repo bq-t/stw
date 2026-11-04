@@ -1,7 +1,8 @@
 'use client';
 
-import { vbucksOf, type Mission, type Rarity } from '@stw/shared';
-import { maxRarity } from '@stw/shared/items';
+import { vbucksOf, type Mission, type Rarity, type Reward } from '@stw/shared';
+import { RARITY_ORDER, maxRarity, rarityOf } from '@stw/shared/items';
+import { MapPin } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -14,7 +15,7 @@ import { VbucksIcon } from './VbucksIcon';
 /** Shown on every alert and not useful for choosing a mission (freethevbucks hides it too). */
 const HIDDEN_REWARDS = new Set(['AccountResource:campaign_event_currency']);
 
-/** Row tint by the best alert reward rarity, as in the game. */
+/** Card tint by the best alert reward rarity, as in the game. */
 const RARITY_ROW: Record<Rarity, string> = {
   common: 'border-common bg-common/8',
   uncommon: 'border-uncommon bg-uncommon/8',
@@ -24,9 +25,32 @@ const RARITY_ROW: Record<Rarity, string> = {
   mythic: 'border-mythic bg-mythic/12',
 };
 
+/** Rewards left to right: mythic → common, items without rarity last (V-Bucks go first separately). */
+function byRarity(a: Reward, b: Reward): number {
+  const rank = (r: Reward) => {
+    const rarity = r.rarity ?? rarityOf(r.itemId);
+    return rarity ? RARITY_ORDER.indexOf(rarity) : -1;
+  };
+  return rank(b) - rank(a);
+}
+
+/** Small corner icon with its own tooltip. */
+function CornerIcon({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span tabIndex={0} aria-label={label} className="flex size-4 items-center justify-center">
+          {children}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
+  );
+}
+
 /**
- * Compact row: mission icon with power level underneath · name and location ·
- * alert rewards. Fits a 4-column layout.
+ * Mission card: icon with power level underneath · name with alert/location icons in the
+ * corner · rewards (V-Bucks first, then by rarity).
  */
 export function MissionRow({ mission }: { mission: Mission }) {
   const t = useTranslations();
@@ -37,7 +61,9 @@ export function MissionRow({ mission }: { mission: Mission }) {
   const name = missionType(type);
   const category = stormCategory(type);
   const alertFallback = ALERT_ICONS[mission.alertKind];
-  const rewards = mission.alertRewards.filter((r) => !r.isVbucks && !HIDDEN_REWARDS.has(r.itemId));
+  const rewards = mission.alertRewards
+    .filter((r) => !r.isVbucks && !HIDDEN_REWARDS.has(r.itemId))
+    .sort(byRarity);
 
   const own = mission.isGroup ? [`${type}-group`, type] : [type];
   const iconNamesList = [
@@ -51,12 +77,12 @@ export function MissionRow({ mission }: { mission: Mission }) {
   // Storm category badge only when there is no icon drawn for that category.
   const showCategory = category !== null && !gameIconSrc('missions', ...own);
   const rarity = maxRarity(rewards.map((r) => r.itemId));
-  const rowTone =
+  const tone =
     vbucks > 0
       ? 'border-vbucks bg-[var(--vbucks-glow)]'
       : rarity
         ? RARITY_ROW[rarity]
-        : 'border-transparent';
+        : 'border-transparent bg-surface/40';
   const pl = mission.powerLevel > 0 ? mission.powerLevel : '?';
   const place = mission.biome ? biome(mission.biome) : null;
   const alert = mission.alertKind !== 'none' ? t(`AlertKind.${mission.alertKind}`) : null;
@@ -64,8 +90,8 @@ export function MissionRow({ mission }: { mission: Mission }) {
   return (
     <li
       className={cn(
-        'grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-2 border-l-2 px-2 py-1.5',
-        rowTone,
+        'grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-2 rounded-sm border-l-[3px] px-2 py-1.5',
+        tone,
       )}
     >
       <Tooltip>
@@ -88,12 +114,12 @@ export function MissionRow({ mission }: { mission: Mission }) {
                 </span>
               )}
             </span>
-            <span className="flex items-center font-display text-xs font-extrabold tabular-nums">
+            <span className="flex items-center gap-0.5 font-display text-xs font-extrabold tabular-nums">
               <GameIcon
                 group="ui"
                 names={['power']}
                 fallback={PowerIcon}
-                className="size-3 text-legendary"
+                className="size-3 fill-current text-white"
               />
               {pl}
             </span>
@@ -121,32 +147,38 @@ export function MissionRow({ mission }: { mission: Mission }) {
         </TooltipContent>
       </Tooltip>
 
-      <div className="min-w-0 self-end leading-tight">
-        <p className="truncate text-sm font-semibold">{name}</p>
-        <p className="flex items-center gap-1 truncate text-xs text-muted-foreground">
-          {alertFallback && (
-            <GameIcon
-              group="alerts"
-              names={[mission.alertKind]}
-              fallback={alertFallback}
-              label={alert ?? undefined}
-              className="size-3.5 shrink-0"
-            />
+      <div className="flex min-w-0 items-start gap-1">
+        <p className="min-w-0 flex-1 truncate text-sm leading-tight font-semibold">{name}</p>
+        <span className="flex shrink-0 items-center gap-0.5 text-muted-foreground">
+          {alertFallback && alert && (
+            <CornerIcon label={alert}>
+              <GameIcon
+                group="alerts"
+                names={[mission.alertKind]}
+                fallback={alertFallback}
+                className="size-3.5"
+              />
+            </CornerIcon>
           )}
-          <span className="truncate">{place ?? alert}</span>
-        </p>
+          {place && (
+            <CornerIcon label={place}>
+              <MapPin aria-hidden className="size-3.5" />
+            </CornerIcon>
+          )}
+        </span>
       </div>
 
-      <ul className="flex flex-wrap items-center gap-x-2 gap-y-1 self-start pt-1">
+      <ul className="flex flex-wrap items-center gap-x-2 gap-y-1 self-end">
         {vbucks > 0 && (
           <li>
             <Tooltip>
               <TooltipTrigger asChild>
                 <span
                   tabIndex={0}
-                  className="inline-flex items-center gap-1 rounded-sm bg-vbucks px-1.5 py-0.5 text-xs font-extrabold text-black"
+                  data-rarity="legendary"
+                  className="reward-tile inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs font-extrabold text-white ring-1 ring-[var(--rarity-legendary-hi)] [text-shadow:0_1px_1px_rgb(0_0_0/0.6)]"
                 >
-                  <VbucksIcon className="text-black" />
+                  <VbucksIcon className="text-white" />
                   {vbucks}
                 </span>
               </TooltipTrigger>

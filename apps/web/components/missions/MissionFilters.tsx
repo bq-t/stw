@@ -132,8 +132,9 @@ export function MissionFilters({
             spacing={1}
             className="flex-wrap"
           >
-            {REWARD_CATEGORIES.filter((c) => c !== 'vbucks').map((c) => (
+            {REWARD_CATEGORIES.map((c) => (
               <ToggleGroupItem key={c} value={c} className={itemClass}>
+                {c === 'vbucks' && <VbucksIcon className="size-3.5" />}
                 {t(`RewardCategory.${c}`)}
               </ToggleGroupItem>
             ))}

@@ -4,7 +4,7 @@
     "description": "Today's Fortnite Save the World missions, V-Bucks alerts and a guide to farming V-Bucks."
   },
   "Nav": {
-    "tracker": "Missions",
+    "tracker": "Today's Missions",
     "dailyQuests": "Daily Quests",
     "questline": "Questline",
     "sideQuests": "Side Quests",
@@ -116,7 +116,9 @@
     "yesterday": "Yesterday",
     "week": "7 days",
     "month": "30 days",
-    "title": "V-Bucks in alerts"
+    "title": "V-Bucks in alerts",
+    "farm": "Let's Farm",
+    "foundersInfo": "V-Bucks from mission alerts go only to Founders (owners of a Founder's Pack). Other players get X-Ray Tickets instead."
   },
   "Mission": {
     "powerLevel": "Power level",

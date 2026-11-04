@@ -1,7 +1,9 @@
 'use client';
 
 import type { VbucksHistory } from '@stw/shared';
+import { Info } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { VbucksIcon } from './VbucksIcon';
 
 function sumDays(history: VbucksHistory, today: string, from: number, to: number): number {
@@ -15,15 +17,17 @@ function sumDays(history: VbucksHistory, today: string, from: number, to: number
   return total;
 }
 
-/** One compact strip: V-Bucks in alerts today / yesterday / 7 / 30 days. */
+/** One strip: V-Bucks in alerts today / yesterday / 7 / 30 days + "Let's Farm" (V-Bucks filter). */
 export function VbucksStats({
   history,
   today,
   todayTotal,
+  onFarm,
 }: {
   history: VbucksHistory | undefined;
   today: string | undefined;
   todayTotal: number | undefined;
+  onFarm: () => void;
 }) {
   const t = useTranslations('Stats');
   const ready = history && today && todayTotal !== undefined;
@@ -37,11 +41,23 @@ export function VbucksStats({
   return (
     <section
       aria-label={t('title')}
-      className="flex flex-wrap items-center gap-x-5 gap-y-1 rounded-md border border-border bg-card px-3 py-2"
+      className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-md border border-border bg-card px-3 py-2"
     >
       <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground uppercase">
         <VbucksIcon />
         {t('title')}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              aria-label={t('foundersInfo')}
+              className="rounded-full text-muted-foreground hover:text-foreground"
+            >
+              <Info aria-hidden className="size-3.5" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-64 normal-case">{t('foundersInfo')}</TooltipContent>
+        </Tooltip>
       </span>
       {items.map((it) => (
         <span key={it.label} className="flex items-baseline gap-1.5">
@@ -53,6 +69,9 @@ export function VbucksStats({
           </span>
         </span>
       ))}
+      <button type="button" onClick={onFarm} className="fn-button ml-auto">
+        <span>{t('farm')}</span>
+      </button>
     </section>
   );
 }
