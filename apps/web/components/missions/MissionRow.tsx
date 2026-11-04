@@ -79,7 +79,7 @@ export function MissionRow({ mission }: { mission: Mission }) {
   const rarity = maxRarity(rewards.map((r) => r.itemId));
   const tone =
     vbucks > 0
-      ? 'border-vbucks bg-[var(--vbucks-glow)]'
+      ? 'vbucks-card border-vbucks bg-[var(--vbucks-glow)]'
       : rarity
         ? RARITY_ROW[rarity]
         : 'border-transparent bg-surface/40';
