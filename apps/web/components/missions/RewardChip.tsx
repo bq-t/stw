@@ -19,6 +19,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { GameIcon } from './GameIcon';
 import { useItemName } from './labels';
 
 const ICONS: Record<RewardCategory, LucideIcon> = {
@@ -52,7 +53,6 @@ export function RewardChip({ reward, muted = false }: { reward: Reward; muted?: 
   const t = useTranslations();
   const itemName = useItemName();
   const category = rewardCategory(reward.itemId);
-  const Icon = ICONS[category];
   const rarity = reward.rarity ?? rarityOf(reward.itemId);
   const name = itemName(reward.itemId);
 
@@ -71,7 +71,12 @@ export function RewardChip({ reward, muted = false }: { reward: Reward; muted?: 
             muted && 'text-muted-foreground',
           )}
         >
-          <Icon aria-hidden className="size-3.5" />
+          <GameIcon
+            group="rewards"
+            names={[reward.itemId.split(':').pop() ?? reward.itemId, `category-${category}`]}
+            fallback={ICONS[category]}
+            className="size-4"
+          />
           <span className="sr-only">{name}</span>
           {reward.quantity > 0 && formatQty(reward.quantity)}
         </span>

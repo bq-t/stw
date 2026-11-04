@@ -61,12 +61,11 @@ export function allRewards(mission: Mission): Reward[] {
   return [...mission.alertRewards, ...mission.baseRewards];
 }
 
-/** V-Bucks first (largest first), then other alerts, then by power level ascending (progression order). */
+/** Power level ascending (progression order); V-Bucks do not change the order, only the look. */
 export function compareMissions(a: Mission, b: Mission): number {
   return (
-    vbucksOf(b) - vbucksOf(a) ||
-    Number(hasAlert(b)) - Number(hasAlert(a)) ||
     a.powerLevel - b.powerLevel ||
+    Number(hasAlert(b)) - Number(hasAlert(a)) ||
     a.tileIndex - b.tileIndex
   );
 }

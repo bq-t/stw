@@ -74,7 +74,7 @@ function Tracker() {
       <MissionFilters value={filters} onChange={setFilters} />
 
       {!missions.data ? (
-        <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
           {Array.from({ length: 4 }, (_, i) => (
             <Skeleton key={i} className="h-72" />
           ))}
@@ -91,7 +91,7 @@ function Tracker() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 items-start gap-3 xl:grid-cols-2">
+        <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-4">
           {byZone.map(({ zone, missions: list }) => (
             <ZoneSection key={zone} zone={zone} missions={list} />
           ))}

@@ -103,23 +103,22 @@ describe('matchesFilters', () => {
 });
 
 describe('compareMissions', () => {
-  it('puts V-Bucks first, then alerts, then power level ascending', () => {
+  it('sorts by power level only; V-Bucks do not jump the queue', () => {
     const list = [
-      mission({ id: 'low', powerLevel: 5 }),
+      mission({ id: 'pl40', powerLevel: 40 }),
+      mission({ id: 'vb58', powerLevel: 58, alertRewards: [vbucks(80)] }),
+      mission({ id: 'pl19', powerLevel: 19 }),
       mission({
-        id: 'alert',
+        id: 'pl40-alert',
+        powerLevel: 40,
         alertRewards: [{ itemId: 'Hero:x', quantity: 1, isVbucks: false }],
       }),
-      mission({ id: 'vb50', alertRewards: [vbucks(50)] }),
-      mission({ id: 'high', powerLevel: 99 }),
-      mission({ id: 'vb80', alertRewards: [vbucks(80)] }),
     ];
     expect(list.sort(compareMissions).map((m) => m.id)).toEqual([
-      'vb80',
-      'vb50',
-      'alert',
-      'low',
-      'high',
+      'pl19',
+      'pl40-alert',
+      'pl40',
+      'vb58',
     ]);
   });
 });

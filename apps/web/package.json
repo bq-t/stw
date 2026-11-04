@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "icons": "node scripts/icons-manifest.mjs",
+    "predev": "node scripts/icons-manifest.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/icons-manifest.mjs",
     "build": "next build",
     "lint": "eslint",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "node scripts/icons-manifest.mjs && next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@stw/shared": "workspace:*",
