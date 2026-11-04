@@ -15,7 +15,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "auth:setup": "tsx --env-file-if-exists=.env scripts/setup-device-auth.ts",
-    "fetch:world": "tsx --env-file-if-exists=.env scripts/fetch-world-info.ts"
+    "fetch:world": "tsx --env-file-if-exists=.env scripts/fetch-world-info.ts",
+    "test": "pnpm -r --if-present test"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

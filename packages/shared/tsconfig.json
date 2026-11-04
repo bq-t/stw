@@ -3,5 +3,5 @@
   "compilerOptions": {
     "lib": ["ES2022", "DOM"]
   },
-  "include": ["src/**/*.ts", "src/**/*.json"]
+  "include": ["src/**/*.ts", "src/**/*.json", "test/**/*.ts", "test/**/*.json"]
 }

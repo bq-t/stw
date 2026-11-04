@@ -44,6 +44,7 @@ export function missionTypeOf(generator: string): string {
     .replace(/^MissionGen_/, '')
     .replace(/_C$/, '')
     .replace(/^(\d+)Gate_/, '')
+    .replace(/^Group_/, '') // group is a separate flag on Mission
     .replace(/_/g, '');
   return name
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')

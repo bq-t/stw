@@ -24,6 +24,7 @@ pnpm dev:web            # http://localhost:3000
 pnpm dev:worker         # http://localhost:8787, trigger cron: curl "localhost:8787/__scheduled?cron=*/15+*+*+*+*"
 pnpm typecheck          # all packages
 pnpm lint
+pnpm test               # vitest for packages/shared (parser, filters, history)
 pnpm format
 pnpm auth:setup         # create device auth for the dedicated Epic account → .env
 pnpm fetch:world [file] # fetch world/info (or parse a saved fixture) and print what parse.ts sees
@@ -47,6 +48,7 @@ pnpm --filter web build # static export to apps/web/out
 - All UI text goes through next-intl (`apps/web/messages/en.json` and `ru.json`), both files updated together.
 - Design: dark navy, rarity colors only as borders/stripes, V-Bucks is the only bright accent. No purple-pink gradients, glassmorphism, emoji in UI.
 - TypeScript strict. pnpm 11 refuses packages younger than 1 day: pick a slightly older version rather than relaxing the policy.
+- Change parse.ts → extend packages/shared/test (synthetic world-info fixture there is committed; real ones in /fixtures are not).
 - Versions: TypeScript stays on 6.0.x (typescript-eslint does not support 7 yet); ESLint 9 (eslint-config-next does not support 10 yet).
 
 ## Open TODOs (stage 2, need a real `world/info` response)
