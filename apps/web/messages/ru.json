@@ -1,0 +1,125 @@
+{
+  "Meta": {
+    "siteName": "StW V-Bucks Guide",
+    "description": "Миссии Fortnite «Сражение с Бурей» на сегодня, алерты с В-баксами и гайд по их фарму."
+  },
+  "Nav": {
+    "tracker": "Миссии",
+    "dailyQuests": "Ежедневные задания",
+    "questline": "Сюжет",
+    "sideQuests": "Побочные задания",
+    "guide": "Гайд по В-баксам",
+    "faq": "FAQ",
+    "language": "Язык"
+  },
+  "Tracker": {
+    "title": "Миссии на сегодня",
+    "nextRotation": "До обновления",
+    "rotationAt": "Миссии обновляются каждый день в {time} по вашему времени",
+    "loading": "Загружаем миссии…",
+    "error": "Не удалось загрузить миссии. Пробуем снова…",
+    "updating": "Пока показываем вчерашние миссии: сегодняшние ещё обновляются",
+    "vbucksToday": "В-баксов сегодня",
+    "demo": "Демо-данные: живой источник пока не подключён",
+    "empty": "Под фильтры не подходит ни одна миссия",
+    "resetFilters": "Сбросить фильтры",
+    "missionsCount": "{count, plural, one {# миссия} few {# миссии} many {# миссий} other {# миссии}}"
+  },
+  "Reward": {
+    "foundersOnly": "В-баксы за алерты получают только обладатели набора основателя. Остальные игроки получают рентгеновские билеты."
+  },
+  "Footer": {
+    "disclaimer": "Сайт не связан с Epic Games и не одобрен ею. Fortnite — товарный знак Epic Games, Inc.",
+    "creatorCode": "Код автора (Support-A-Creator)",
+    "privacy": "Конфиденциальность"
+  },
+  "Placeholder": {
+    "soon": "Страница скоро появится."
+  },
+  "Discord": {
+    "join": "Наш Discord"
+  },
+  "Zone": {
+    "stonewood": "Камнелесье",
+    "plankerton": "Планкертон",
+    "canny-valley": "Вещая долина",
+    "twine-peaks": "Линч-Пикс"
+  },
+  "MissionType": {
+    "fight-the-storm": "Битва с бурей",
+    "ride-the-lightning": "Оседлать молнию",
+    "retrieve-the-data": "Добыть данные",
+    "evacuate-the-shelter": "Эвакуация убежища",
+    "deliver-the-bomb": "Доставить бомбу",
+    "repair-the-shelter": "Починить убежище",
+    "eliminate-and-collect": "Уничтожить и собрать",
+    "build-the-radar-grid": "Построить радарную сеть",
+    "launch-the-rocket": "Запустить ракету",
+    "destroy-the-encampments": "Уничтожить лагеря",
+    "fight-the-category-2-storm": "Буря 2-й категории",
+    "fight-the-category-3-storm": "Буря 3-й категории",
+    "fight-the-category-4-storm": "Буря 4-й категории",
+    "resupply": "Пополнение припасов",
+    "survive-the-storm": "Пережить бурю",
+    "hit-the-road": "В путь",
+    "refuel-the-homebase": "Заправить базу",
+    "data-retrieval": "Сбор данных"
+  },
+  "AlertKind": {
+    "mini-boss": "Мини-босс",
+    "mega-alert": "Мега-алерт",
+    "storm-king": "Король бури",
+    "storm": "Буря",
+    "elemental-fire": "Огонь",
+    "elemental-nature": "Природа",
+    "elemental-water": "Вода",
+    "other": "Алерт",
+    "none": ""
+  },
+  "RewardCategory": {
+    "vbucks": "В-баксы",
+    "xray": "Рентгеновские билеты",
+    "evo": "Материалы эволюции",
+    "perk": "Улучшения перков",
+    "schematic": "Чертежи",
+    "hero": "Герои",
+    "survivor": "Выжившие",
+    "defender": "Защитники",
+    "other": "Другое"
+  },
+  "Filters": {
+    "zone": "Зона",
+    "alert": "Миссии",
+    "alertAll": "Все",
+    "alertAlerts": "С алертом",
+    "alertVbucks": "В-баксы",
+    "reward": "Награда",
+    "powerLevel": "Уровень силы",
+    "any": "Любая"
+  },
+  "Stats": {
+    "today": "Сегодня",
+    "yesterday": "Вчера",
+    "week": "7 дней",
+    "month": "30 дней",
+    "title": "В-баксы в алертах"
+  },
+  "Mission": {
+    "powerLevel": "Уровень силы",
+    "group": "Групповая миссия",
+    "alertReward": "Награда за алерт",
+    "unknownPl": "Уровень силы пока неизвестен"
+  },
+  "Biome": {
+    "forest": "Лес",
+    "grasslands": "Равнины",
+    "suburbs": "Пригород",
+    "city": "Город",
+    "industrial": "Промзона",
+    "desert": "Пустыня",
+    "swamp": "Болото",
+    "mountains": "Горы",
+    "lakes": "Озёра",
+    "arctic": "Арктика"
+  }
+}

@@ -1,0 +1,8 @@
+# Copy to .dev.vars for `pnpm dev`. Values come from `pnpm auth:setup` (root .env).
+# Game client the device auth belongs to (see packages/shared/src/epic/constants.ts)
+EPIC_CLIENT=fortniteAndroidGameClient
+EPIC_ACCOUNT_ID=
+EPIC_DEVICE_ID=
+EPIC_DEVICE_SECRET=
+# Optional: Discord channel webhook for V-Bucks notifications
+DISCORD_WEBHOOK_URL=

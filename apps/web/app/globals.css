@@ -1,0 +1,118 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+/*
+ * One dark theme only (tech plan, "Дизайн-направление"):
+ * deep navy background, cards one step lighter, rarity colors only as borders/stripes,
+ * V-Bucks is the single bright accent on the page.
+ * shadcn/ui tokens (--background, --card, ...) point at the same palette.
+ */
+:root {
+  --bg: #0b1324;
+  --surface: #121c33;
+  --surface-2: #1a2642;
+  --line: #26355a;
+  --text: #e8eefc;
+  --text-dim: #8d9bbd;
+
+  --vbucks: #3fa9ff;
+  --vbucks-glow: rgb(63 169 255 / 0.18);
+
+  --rarity-common: #9aa3b5;
+  --rarity-uncommon: #5bc236;
+  --rarity-rare: #3d8bff;
+  --rarity-epic: #b04dff;
+  --rarity-legendary: #ff8a1f;
+  --rarity-mythic: #f4c83d;
+
+  /* shadcn/ui */
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--surface);
+  --card-foreground: var(--text);
+  --popover: var(--surface-2);
+  --popover-foreground: var(--text);
+  --primary: var(--vbucks);
+  --primary-foreground: #04101f;
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--text);
+  --muted: var(--surface-2);
+  --muted-foreground: var(--text-dim);
+  --accent: var(--surface-2);
+  --accent-foreground: var(--text);
+  --destructive: #ff5a5a;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--vbucks);
+  --radius: 0.375rem;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-vbucks: var(--vbucks);
+  --color-common: var(--rarity-common);
+  --color-uncommon: var(--rarity-uncommon);
+  --color-rare: var(--rarity-rare);
+  --color-epic: var(--rarity-epic);
+  --color-legendary: var(--rarity-legendary);
+  --color-mythic: var(--rarity-mythic);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+
+  --font-display: var(--font-unbounded);
+  --font-sans: var(--font-onest), system-ui, sans-serif;
+  --font-heading: var(--font-unbounded);
+}
+
+html {
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background font-sans text-foreground;
+  }
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Slanted tabs and buttons give the game feel without illustrations. */
+@utility skew-tab {
+  transform: skewX(-8deg);
+  & > * {
+    transform: skewX(8deg);
+  }
+}

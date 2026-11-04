@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Packages allowed to run install scripts (pnpm 11 blocks them by default).
+allowBuilds:
+  esbuild: true
+  workerd: true
+  sharp: false
+  unrs-resolver: false
+  '@parcel/watcher': false
+  '@swc/core': false

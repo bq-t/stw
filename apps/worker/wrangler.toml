@@ -1,0 +1,26 @@
+name = "stw-vbucks-worker"
+main = "src/index.ts"
+compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Every 15 minutes. A run exits right away once today's snapshot is saved,
+# so this costs one KV read per run and survives late rotations on Epic's side.
+[triggers]
+crons = ["*/15 * * * *"]
+
+# Create with: pnpm wrangler kv namespace create MISSIONS
+# then paste the id here.
+[[kv_namespaces]]
+binding = "MISSIONS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[vars]
+# Comma-separated origins allowed by CORS. localhost is always allowed.
+ALLOWED_ORIGINS = "https://stw-vbucks.pages.dev"
+SITE_URL = "https://stw-vbucks.pages.dev"
+
+[observability]
+enabled = true
+
+# Secrets (wrangler secret put <NAME>), see .dev.vars.example:
+# EPIC_CLIENT, EPIC_ACCOUNT_ID, EPIC_DEVICE_ID, EPIC_DEVICE_SECRET, DISCORD_WEBHOOK_URL (optional)

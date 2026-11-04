@@ -1,0 +1,21 @@
+# Cloudflare Pages. The build has out/en/... and out/ru/...; English is served without a prefix.
+# Rules run before static files, so assets must pass through explicitly before the catch-all.
+
+# Static assets and root files: serve as is.
+/_next/*      /_next/:splat    200
+/icons/*      /icons/:splat    200
+/favicon.ico  /favicon.ico     200
+/sitemap.xml  /sitemap.xml     200
+/robots.txt   /robots.txt      200
+
+# No duplicate /en URLs for search engines.
+/en           /                301
+/en/*         /:splat          301
+
+# Russian lives under /ru.
+/ru           /ru              200
+/ru/*         /ru/:splat       200
+
+# Everything else is English.
+/             /en              200
+/*            /en/:splat       200
