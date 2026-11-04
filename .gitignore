@@ -24,3 +24,6 @@ fixtures/
 .DS_Store
 Thumbs.db
 *.log
+
+# raw icons dropped by hand, sorted into apps/web/public/icons by Claude
+icons-inbox/

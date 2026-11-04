@@ -1,15 +1,15 @@
 'use client';
 
 import { rewardCategory, type RewardCategory, type Reward } from '@stw/shared';
-import { rarityOf } from '@stw/shared/items';
+import { iconNames, rarityOf } from '@stw/shared/items';
 import {
   CircleArrowUp,
-  Sparkles,
-  Star,
   Coins,
   FlaskConical,
   Package,
   ShieldHalf,
+  Sparkles,
+  Star,
   Swords,
   Ticket,
   Users,
@@ -18,7 +18,6 @@ import {
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
 import { GameIcon } from './GameIcon';
 import { useItemName } from './labels';
 
@@ -36,20 +35,12 @@ const ICONS: Record<RewardCategory, LucideIcon> = {
   other: Package,
 };
 
-const RARITY_BORDER: Record<string, string> = {
-  common: 'border-common',
-  uncommon: 'border-uncommon',
-  rare: 'border-rare',
-  epic: 'border-epic',
-  legendary: 'border-legendary',
-  mythic: 'border-mythic',
-};
-
 function formatQty(n: number): string {
   return n >= 1000 ? `${Math.round(n / 100) / 10}k` : String(n);
 }
 
-export function RewardChip({ reward, muted = false }: { reward: Reward; muted?: boolean }) {
+/** Reward as a Fortnite-style tile: rarity gradient, icon, amount in the corner. */
+export function RewardChip({ reward }: { reward: Reward }) {
   const t = useTranslations();
   const itemName = useItemName();
   const category = rewardCategory(reward.itemId);
@@ -61,24 +52,21 @@ export function RewardChip({ reward, muted = false }: { reward: Reward; muted?: 
       <TooltipTrigger asChild>
         <span
           tabIndex={0}
-          className={cn(
-            'inline-flex items-center gap-1 rounded-sm border-l-2 bg-surface-2 py-0.5 pr-2 pl-1.5 text-xs tabular-nums',
-            reward.isVbucks
-              ? 'border-vbucks font-semibold text-vbucks'
-              : rarity
-                ? RARITY_BORDER[rarity]
-                : 'border-transparent',
-            muted && 'text-muted-foreground',
-          )}
+          data-rarity={rarity}
+          className="reward-tile relative inline-flex size-9 items-center justify-center overflow-hidden rounded-[3px] ring-1 ring-black/50"
         >
           <GameIcon
             group="rewards"
-            names={[reward.itemId.split(':').pop() ?? reward.itemId, `category-${category}`]}
+            names={iconNames(reward.itemId, category)}
             fallback={ICONS[category]}
-            className="size-4"
+            className="size-8 drop-shadow-[0_1px_1px_rgb(0_0_0/0.6)]"
           />
           <span className="sr-only">{name}</span>
-          {reward.quantity > 0 && formatQty(reward.quantity)}
+          {reward.quantity > 1 && (
+            <span className="absolute right-0 bottom-0 rounded-tl-sm bg-black/70 px-0.5 text-[10px] leading-tight font-bold text-white tabular-nums">
+              {formatQty(reward.quantity)}
+            </span>
+          )}
         </span>
       </TooltipTrigger>
       <TooltipContent className="max-w-64">
@@ -86,7 +74,10 @@ export function RewardChip({ reward, muted = false }: { reward: Reward; muted?: 
           {name}
           {reward.quantity > 0 && ` × ${reward.quantity}`}
         </p>
-        <p className="text-xs opacity-80">{t(`RewardCategory.${category}`)}</p>
+        <p className="text-xs opacity-80">
+          {t(`RewardCategory.${category}`)}
+          {rarity && ` · ${t(`Rarity.${rarity}`)}`}
+        </p>
         {reward.isVbucks && <p className="mt-1 text-xs">{t('Reward.foundersOnly')}</p>}
       </TooltipContent>
     </Tooltip>

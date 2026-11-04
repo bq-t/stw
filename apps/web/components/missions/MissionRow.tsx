@@ -1,17 +1,25 @@
 'use client';
 
-import { vbucksOf, type Mission } from '@stw/shared';
+import { vbucksOf, type Mission, type Rarity } from '@stw/shared';
+import { maxRarity } from '@stw/shared/items';
 import { Coins, UsersRound } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { ALERT_ICONS, FallbackMissionIcon, MISSION_ICONS, PowerIcon, stormCategory } from './icons';
 import { useBiomeLabel, useMissionTypeLabel } from './labels';
-import { GameIcon } from './GameIcon';
+import { GameIcon, gameIconSrc } from './GameIcon';
 import { RewardChip } from './RewardChip';
 
 /** Shown on every alert and not useful for choosing a mission (freethevbucks hides it too). */
 const HIDDEN_REWARDS = new Set(['AccountResource:campaign_event_currency']);
+
+/** Rows with an epic or better alert reward are tinted in that rarity's colour. */
+const RARITY_ROW: Partial<Record<Rarity, string>> = {
+  epic: 'border-epic bg-epic/10',
+  legendary: 'border-legendary bg-legendary/10',
+  mythic: 'border-mythic bg-mythic/10',
+};
 
 /** Compact row: type icon · power · name/location, alert rewards underneath. Fits a 4-column layout. */
 export function MissionRow({ mission }: { mission: Mission }) {
@@ -24,12 +32,29 @@ export function MissionRow({ mission }: { mission: Mission }) {
   const alertFallback = ALERT_ICONS[mission.alertKind];
   const rewards = mission.alertRewards.filter((r) => !r.isVbucks && !HIDDEN_REWARDS.has(r.itemId));
   const name = missionType(mission.missionType);
+  const type = mission.missionType;
+  const own = mission.isGroup ? [`${type}-group`, type] : [type];
+  const iconNamesList = [
+    ...own,
+    ...(category
+      ? mission.isGroup
+        ? ['fight-the-storm-group', 'fight-the-storm']
+        : ['fight-the-storm']
+      : []),
+  ];
+  // Storm category badge only when there is no icon drawn for that category.
+  const showCategory = category !== null && !gameIconSrc('missions', ...own);
+  const rarity = maxRarity(rewards.map((r) => r.itemId));
+  const rowTone =
+    vbucks > 0
+      ? 'border-vbucks bg-[var(--vbucks-glow)]'
+      : ((rarity && RARITY_ROW[rarity]) ?? 'border-transparent');
 
   return (
     <li
       className={cn(
-        'grid grid-cols-[1.75rem_3rem_minmax(0,1fr)] items-center gap-x-2 gap-y-1 border-l-2 px-2 py-1.5',
-        vbucks > 0 ? 'border-vbucks bg-[var(--vbucks-glow)]' : 'border-transparent',
+        'grid grid-cols-[2rem_3rem_minmax(0,1fr)] items-center gap-x-2 gap-y-1 border-l-2 px-2 py-1.5',
+        rowTone,
       )}
     >
       <Tooltip>
@@ -37,15 +62,15 @@ export function MissionRow({ mission }: { mission: Mission }) {
           <span
             tabIndex={0}
             aria-label={name}
-            className="relative flex size-7 items-center justify-center rounded-sm bg-surface-2"
+            className="relative flex size-8 items-center justify-center rounded-sm bg-surface-2"
           >
             <GameIcon
               group="missions"
-              names={[mission.missionType, ...(category ? ['fight-the-storm'] : [])]}
+              names={iconNamesList}
               fallback={typeFallback}
-              className="size-5"
+              className="size-6"
             />
-            {category && (
+            {showCategory && (
               <span className="absolute -right-1 -bottom-1 rounded-sm bg-background px-0.5 text-[10px] leading-none font-bold">
                 {category}
               </span>
@@ -110,7 +135,7 @@ export function MissionRow({ mission }: { mission: Mission }) {
                   tabIndex={0}
                   className="inline-flex items-center gap-1 rounded-sm bg-vbucks px-2 py-0.5 text-xs font-bold text-primary-foreground"
                 >
-                  <GameIcon group="ui" names={['vbucks']} fallback={Coins} className="size-3.5" />
+                  <GameIcon group="ui" names={['vbucks']} fallback={Coins} className="size-4" />
                   {t('Mission.vbucksAmount', { count: vbucks })}
                 </span>
               </TooltipTrigger>

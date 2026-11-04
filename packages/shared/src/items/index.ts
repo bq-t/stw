@@ -87,6 +87,32 @@ export function rarityOf(itemId: string): Rarity | undefined {
   return code ? RARITY_BY_CODE[code] : undefined;
 }
 
+export const RARITY_ORDER: readonly Rarity[] = [
+  'common',
+  'uncommon',
+  'rare',
+  'epic',
+  'legendary',
+  'mythic',
+];
+
+/** Highest rarity among the given item IDs, or undefined if none has one. */
+export function maxRarity(itemIds: string[]): Rarity | undefined {
+  let best = -1;
+  for (const id of itemIds) {
+    const r = rarityOf(id);
+    if (r) best = Math.max(best, RARITY_ORDER.indexOf(r));
+  }
+  return best >= 0 ? RARITY_ORDER[best] : undefined;
+}
+
+/** Icon lookup names for an item: exact name, name without rarity/tier, then category. */
+export function iconNames(itemId: string, category: string): string[] {
+  const name = (itemId.split(':').pop() ?? itemId).toLowerCase();
+  const base = name.replace(/_(c|uc|r|vr|sr|ur)(_t\d\d)?$/, '').replace(/_t\d\d$/, '');
+  return [name, base, `category-${category}`];
+}
+
 /** "Hero:hid_commando_011_sr_t01" → "Commando 011". */
 export function readableItemId(itemId: string): string {
   const name = itemId.split(':').pop() ?? itemId;

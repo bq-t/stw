@@ -73,7 +73,8 @@
     "fight-the-gunslinger": "Бой со стрелком",
     "vinderman-mansion": "Особняк Виндермана",
     "dudebro": "Дудебро",
-    "storm-shield-defense": "Защита штормового щита"
+    "storm-shield-defense": "Защита штормового щита",
+    "hunt-the-titan": "Охота на титана"
   },
   "AlertKind": {
     "mini-boss": "Мини-босс",
@@ -157,5 +158,13 @@
     "links": "На Discord и другие сайты действуют их собственные правила конфиденциальности.",
     "contactTitle": "Связь",
     "contact": "Вопросы о конфиденциальности: напишите нам в Discord."
+  },
+  "Rarity": {
+    "common": "Обычный",
+    "uncommon": "Необычный",
+    "rare": "Редкий",
+    "epic": "Эпический",
+    "legendary": "Легендарный",
+    "mythic": "Мифический"
   }
 }

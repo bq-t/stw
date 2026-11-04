@@ -19,12 +19,25 @@
   --vbucks: #3fa9ff;
   --vbucks-glow: rgb(63 169 255 / 0.18);
 
-  --rarity-common: #9aa3b5;
-  --rarity-uncommon: #5bc236;
-  --rarity-rare: #3d8bff;
-  --rarity-epic: #b04dff;
-  --rarity-legendary: #ff8a1f;
-  --rarity-mythic: #f4c83d;
+  /* Fortnite rarity colours: grey, green, blue, purple, gold. *-hi / *-lo = tile gradient. */
+  --rarity-common: #a7adb8;
+  --rarity-common-hi: #b9bdc4;
+  --rarity-common-lo: #575c66;
+  --rarity-uncommon: #69bb1e;
+  --rarity-uncommon-hi: #87d93c;
+  --rarity-uncommon-lo: #1f5a11;
+  --rarity-rare: #3cb5fd;
+  --rarity-rare-hi: #5cc8ff;
+  --rarity-rare-lo: #12428f;
+  --rarity-epic: #c25aff;
+  --rarity-epic-hi: #d283ff;
+  --rarity-epic-lo: #4c1f8a;
+  --rarity-legendary: #f2b13a;
+  --rarity-legendary-hi: #ffd166;
+  --rarity-legendary-lo: #9a4f0e;
+  --rarity-mythic: #ffe066;
+  --rarity-mythic-hi: #fff1a8;
+  --rarity-mythic-lo: #b88a12;
 
   /* shadcn/ui */
   --background: var(--bg);
@@ -107,6 +120,37 @@ html {
   [role='button']:not(:disabled) {
     cursor: pointer;
   }
+}
+
+/* Reward tile as in Fortnite: radial gradient in the rarity colour. */
+.reward-tile {
+  --hi: var(--surface-2);
+  --lo: var(--surface-2);
+  background: radial-gradient(circle at 50% 30%, var(--hi), var(--lo) 85%);
+}
+.reward-tile[data-rarity='common'] {
+  --hi: var(--rarity-common-hi);
+  --lo: var(--rarity-common-lo);
+}
+.reward-tile[data-rarity='uncommon'] {
+  --hi: var(--rarity-uncommon-hi);
+  --lo: var(--rarity-uncommon-lo);
+}
+.reward-tile[data-rarity='rare'] {
+  --hi: var(--rarity-rare-hi);
+  --lo: var(--rarity-rare-lo);
+}
+.reward-tile[data-rarity='epic'] {
+  --hi: var(--rarity-epic-hi);
+  --lo: var(--rarity-epic-lo);
+}
+.reward-tile[data-rarity='legendary'] {
+  --hi: var(--rarity-legendary-hi);
+  --lo: var(--rarity-legendary-lo);
+}
+.reward-tile[data-rarity='mythic'] {
+  --hi: var(--rarity-mythic-hi);
+  --lo: var(--rarity-mythic-lo);
 }
 
 /* Slanted tabs and buttons give the game feel without illustrations. */

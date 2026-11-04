@@ -73,7 +73,8 @@
     "fight-the-gunslinger": "Fight the Gunslinger",
     "vinderman-mansion": "Vinderman's Mansion",
     "dudebro": "Dudebro",
-    "storm-shield-defense": "Storm Shield Defense"
+    "storm-shield-defense": "Storm Shield Defense",
+    "hunt-the-titan": "Hunt the Titan"
   },
   "AlertKind": {
     "mini-boss": "Mini-boss",
@@ -157,5 +158,13 @@
     "links": "Links to Discord and other sites follow those sites' own privacy policies.",
     "contactTitle": "Contact",
     "contact": "Questions about privacy: write to us on Discord."
+  },
+  "Rarity": {
+    "common": "Common",
+    "uncommon": "Uncommon",
+    "rare": "Rare",
+    "epic": "Epic",
+    "legendary": "Legendary",
+    "mythic": "Mythic"
   }
 }

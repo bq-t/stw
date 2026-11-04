@@ -125,6 +125,7 @@ describe('missionTypeOf (real generator names)', () => {
     ['MissionGen_RefuelTheBase', 'refuel-the-homebase'],
     ['MissionGen_T2_R1_BuildtheRadarGrid', 'build-the-radar-grid'],
     ['MissionGen_TheOutpost_PvE_03', 'storm-shield-defense'],
+    ['MissionGen_HTM', 'hunt-the-titan'],
   ])('%s → %s', (cls, expected) => {
     expect(missionTypeOf(`/SaveTheWorld/World/MissionGens/${cls}.${cls}_C`)).toBe(expected);
   });

@@ -108,6 +108,8 @@ const MISSION_ABBR: Record<string, string> = {
   fightthegunslinger: 'fight-the-gunslinger',
   vindermanmansion: 'vinderman-mansion',
   dudebro: 'dudebro',
+  htm: 'hunt-the-titan',
+  huntthetitan: 'hunt-the-titan',
   theoutpost: 'storm-shield-defense',
 };
 
