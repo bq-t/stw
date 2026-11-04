@@ -1,10 +1,12 @@
 import { z } from 'zod';
 
-// Lenient schema of the world/info response: we only validate the fields parse.ts reads.
-// If Epic changes any of them, validation fails loudly instead of the site showing garbage.
-// TODO(stage 2): tighten against a real response saved in fixtures/.
+// Schema of the world/info response, checked against a real response on 2026-11-04
+// (fixtures/world-info-2026-11-04.json, not committed). We validate only the fields
+// parse.ts reads; everything else passes through. If Epic changes any of them,
+// validation fails loudly instead of the site showing garbage.
 
-const localizedText = z.record(z.string(), z.string()).optional();
+/** With Accept-Language set, Epic returns plain strings; without it, a { locale: text } map. */
+const localizedText = z.union([z.string(), z.record(z.string(), z.string())]).optional();
 
 export const rewardItemSchema = z.looseObject({
   itemType: z.string(),
@@ -21,6 +23,13 @@ const rewardsSchema = z
 export const theaterSchema = z.looseObject({
   uniqueId: z.string(),
   displayName: localizedText,
+  tiles: z
+    .array(
+      z.looseObject({
+        zoneTheme: z.string().optional(),
+      }),
+    )
+    .default([]),
 });
 
 export const availableMissionSchema = z.looseObject({
@@ -67,6 +76,7 @@ export const worldInfoSchema = z.looseObject({
 });
 
 export type RawWorldInfo = z.infer<typeof worldInfoSchema>;
+export type RawTheater = z.infer<typeof theaterSchema>;
 export type RawMission = z.infer<typeof availableMissionSchema>;
 export type RawMissionAlert = z.infer<typeof missionAlertSchema>;
 export type RawRewardItem = z.infer<typeof rewardItemSchema>;

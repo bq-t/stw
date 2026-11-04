@@ -1,9 +1,11 @@
 'use client';
 
 import { rewardCategory, type RewardCategory, type Reward } from '@stw/shared';
-import { itemInfo } from '@stw/shared/items';
+import { rarityOf } from '@stw/shared/items';
 import {
   CircleArrowUp,
+  Sparkles,
+  Star,
   Coins,
   FlaskConical,
   Package,
@@ -22,6 +24,8 @@ import { useItemName } from './labels';
 const ICONS: Record<RewardCategory, LucideIcon> = {
   vbucks: Coins,
   xray: Ticket,
+  event: Star,
+  xp: Sparkles,
   evo: FlaskConical,
   perk: CircleArrowUp,
   schematic: Wrench,
@@ -49,7 +53,7 @@ export function RewardChip({ reward, muted = false }: { reward: Reward; muted?: 
   const itemName = useItemName();
   const category = rewardCategory(reward.itemId);
   const Icon = ICONS[category];
-  const rarity = reward.rarity ?? itemInfo(reward.itemId)?.rarity;
+  const rarity = reward.rarity ?? rarityOf(reward.itemId);
   const name = itemName(reward.itemId);
 
   return (
@@ -69,12 +73,13 @@ export function RewardChip({ reward, muted = false }: { reward: Reward; muted?: 
         >
           <Icon aria-hidden className="size-3.5" />
           <span className="sr-only">{name}</span>
-          {formatQty(reward.quantity)}
+          {reward.quantity > 0 && formatQty(reward.quantity)}
         </span>
       </TooltipTrigger>
       <TooltipContent className="max-w-64">
         <p className="font-semibold">
-          {name} × {reward.quantity}
+          {name}
+          {reward.quantity > 0 && ` × ${reward.quantity}`}
         </p>
         <p className="text-xs opacity-80">{t(`RewardCategory.${category}`)}</p>
         {reward.isVbucks && <p className="mt-1 text-xs">{t('Reward.foundersOnly')}</p>}

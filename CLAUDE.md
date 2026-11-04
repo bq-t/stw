@@ -52,9 +52,9 @@ pnpm seed:local         # demo snapshot + history into the Worker LOCAL KV (then
 - Change parse.ts → extend packages/shared/test (synthetic world-info fixture there is committed; real ones in /fixtures are not).
 - Versions: TypeScript stays on 6.0.x (typescript-eslint does not support 7 yet); ESLint 9 (eslint-config-next does not support 10 yet).
 
-## Open TODOs (stage 2, need a real `world/info` response)
+## Open TODOs
 
-- `parse.ts`: verify zone theater IDs, mission-type names, `POWER_LEVEL_BY_ROW`, alert categories, group detection, biome.
+- `parse.ts` is built from the real 2026-11-04 response (excerpt in `packages/shared/test/world-info.2026-11-04.json`). Still to confirm in game: the PL ladder values (tier → PL), mission types `HTM` and `PtS`. After an Epic patch run `pnpm fetch:world` and check its "Unmapped" section.
 - RU names of zones, mission types, biomes and alert kinds in `messages/ru.json` were written from memory: check against the game's Russian localization.
 - `rewardCategory()` in `packages/shared/src/missions.ts`: check prefixes against real reward IDs.
 - `epic/constants.ts`: `fortniteIOSGameClient` returned `client_disabled` on 2026-11-04; default is now `fortniteAndroidGameClient`, unverified.

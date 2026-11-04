@@ -2,13 +2,15 @@
 // so `pnpm dev:worker` serves data and the site can run against it before the
 // real Epic feed works.
 //
-//   pnpm seed:local
+//   pnpm seed:local                                   # demo data
+//   pnpm seed:local fixtures/world-info-YYYY-MM-DD.json # a real saved response
 //   pnpm dev:worker
 //   NEXT_PUBLIC_API_URL=http://localhost:8787 pnpm dev:web
 
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { addToHistory, parseWorldInfo } from '@stw/shared';
 import { demoHistory, demoSnapshot } from '@stw/shared/demo';
 
 const WORKER_DIR = resolve(import.meta.dirname, '..', 'apps', 'worker');
@@ -26,11 +28,15 @@ function put(key: string, value: unknown): void {
   console.log(`  ${key}`);
 }
 
-const snapshot = demoSnapshot();
+const file = process.argv[2];
+const snapshot = file
+  ? parseWorldInfo(JSON.parse(readFileSync(resolve(file), 'utf8')))
+  : demoSnapshot();
+const history = file ? addToHistory(null, snapshot) : demoHistory();
 mkdirSync(TMP, { recursive: true });
-console.log('Seeding local KV (demo data):');
+console.log(`Seeding local KV (${file ? file : 'demo data'}):`);
 put('snapshot:current', snapshot);
 put(`snapshot:${snapshot.date}`, snapshot);
-put('history:vbucks', demoHistory());
+put('history:vbucks', history);
 put('health', { lastSuccessAt: snapshot.fetchedAt, lastSnapshotDate: snapshot.date });
 console.log(`Done: ${snapshot.missions.length} missions, ${snapshot.vbucksTotal} V-Bucks.`);

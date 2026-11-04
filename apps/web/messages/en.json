@@ -63,7 +63,17 @@
     "survive-the-storm": "Survive the Storm",
     "hit-the-road": "Hit the Road",
     "refuel-the-homebase": "Refuel the Homebase",
-    "data-retrieval": "Data Retrieval"
+    "data-retrieval": "Data Retrieval",
+    "evacuate-the-survivors": "Evacuate the Survivors",
+    "launch-the-balloon": "Launch the Balloon",
+    "deploy-the-probe": "Deploy the Probe",
+    "build-off": "Build Off",
+    "build-the-memorial": "Build the Memorial",
+    "stabilize-the-rift": "Stabilize the Rift",
+    "fight-the-gunslinger": "Fight the Gunslinger",
+    "vinderman-mansion": "Vinderman's Mansion",
+    "dudebro": "Dudebro",
+    "storm-shield-defense": "Storm Shield Defense"
   },
   "AlertKind": {
     "mini-boss": "Mini-boss",
@@ -85,7 +95,9 @@
     "hero": "Heroes",
     "survivor": "Survivors",
     "defender": "Defenders",
-    "other": "Other"
+    "other": "Other",
+    "event": "Event Tickets",
+    "xp": "Experience"
   },
   "Filters": {
     "zone": "Zone",
@@ -120,8 +132,12 @@
     "desert": "Desert",
     "swamp": "Swamp",
     "mountains": "Mountains",
-    "lakes": "Lakes",
-    "arctic": "Arctic"
+    "lakes": "Lakeside",
+    "arctic": "Arctic",
+    "ghost-town": "Ghost Town",
+    "route-99": "Route 99",
+    "island": "Island",
+    "outpost": "Storm Shield"
   },
   "Privacy": {
     "title": "Privacy",

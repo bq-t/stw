@@ -4,11 +4,23 @@ import { ZONES } from './types';
 // Pure helpers over our own types: used by the site (filters, sorting) and the Worker (Discord).
 
 export type RewardCategory =
-  'vbucks' | 'xray' | 'evo' | 'perk' | 'schematic' | 'hero' | 'survivor' | 'defender' | 'other';
+  | 'vbucks'
+  | 'xray'
+  | 'event'
+  | 'xp'
+  | 'evo'
+  | 'perk'
+  | 'schematic'
+  | 'hero'
+  | 'survivor'
+  | 'defender'
+  | 'other';
 
 export const REWARD_CATEGORIES: readonly RewardCategory[] = [
   'vbucks',
   'xray',
+  'event',
+  'xp',
   'evo',
   'perk',
   'schematic',
@@ -18,12 +30,15 @@ export const REWARD_CATEGORIES: readonly RewardCategory[] = [
   'other',
 ];
 
-/** Category of an Epic item ID. TODO(stage 2): check against real reward IDs. */
+/** Category of an Epic item ID (checked against the 2026-11-04 response). */
 export function rewardCategory(itemId: string): RewardCategory {
   const [type = '', name = ''] = itemId.toLowerCase().split(':');
   if (itemId === 'AccountResource:currency_mtxswap') return 'vbucks';
   if (name.startsWith('currency_xrayllama')) return 'xray';
-  if (name.startsWith('reagent_alteration') || name.startsWith('reagent_people')) return 'perk';
+  if (name === 'campaign_event_currency' || name.startsWith('eventcurrency')) return 'event';
+  if (name === 'personnelxp' || name === 'schematicxp' || name === 'heroxp' || name === 'peoplexp')
+    return 'xp';
+  if (name.startsWith('reagent_alteration')) return 'perk';
   if (name.startsWith('reagent_c_') || name.startsWith('reagent_evolve')) return 'evo';
   if (type === 'schematic') return 'schematic';
   if (type === 'hero') return 'hero';

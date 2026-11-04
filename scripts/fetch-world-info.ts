@@ -54,14 +54,32 @@ function summarize(snapshot: DaySnapshot): void {
     );
   }
 
-  // What still needs a mapping in parse.ts (stage 2).
+  // What parse.ts could not map: check these after Epic patches.
   const unique = (xs: string[]) => [...new Set(xs)].sort();
-  console.log('\nDifficulty rows (→ POWER_LEVEL_BY_ROW):');
-  console.log(unique(snapshot.missions.map((m) => m.difficultyRow)).join('\n'));
-  console.log('\nMission types:');
-  console.log(unique(snapshot.missions.map((m) => m.missionType)).join(', '));
-  console.log('\nAlert kinds:');
-  console.log(unique(snapshot.missions.map((m) => m.alertKind)).join(', '));
+  const plByZone = new Map<string, number[]>();
+  for (const m of snapshot.missions) {
+    plByZone.set(m.zone, [...(plByZone.get(m.zone) ?? []), m.powerLevel]);
+  }
+  console.log('\nPower levels by zone:');
+  for (const [zone, pls] of plByZone) {
+    console.log(`  ${zone}: ${[...new Set(pls)].sort((a, b) => a - b).join(' ')}`);
+  }
+
+  const noPl = snapshot.missions.filter((m) => m.powerLevel === 0);
+  console.log(
+    `\nNo power level (${noPl.length}): ${unique(noPl.map((m) => m.difficultyRow)).join(', ')}`,
+  );
+
+  const known =
+    /^(fight|ride|retrieve|repair|evacuate|deliver|destroy|launch|build|eliminate|refuel|resupply|deploy|hit|stabilize|vinderman|dudebro|storm-shield)/;
+  const unknownTypes = snapshot.missions.filter((m) => !known.test(m.missionType));
+  console.log('\nUnmapped mission types:');
+  const lines = unknownTypes.map(
+    (m) => `${m.missionType} <- ${m.missionGenerator.split('.').pop()} (${m.zone})`,
+  );
+  for (const t of unique(lines)) console.log(`  ${t}`);
+  console.log(`\nNo biome: ${snapshot.missions.filter((m) => !m.biome).length} missions`);
+  console.log('Alert kinds:', unique(snapshot.missions.map((m) => m.alertKind)).join(', '));
 }
 
 async function main(): Promise<void> {

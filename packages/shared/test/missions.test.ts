@@ -124,7 +124,11 @@ describe('rewardCategory', () => {
     ['Hero:hid_commando_sony_sr_t01', 'hero'],
     ['Worker:workerbasic_sr_t01', 'survivor'],
     ['Defender:did_defenderpistol_basic_vr_t01', 'defender'],
-    ['AccountResource:heroxp', 'other'],
+    ['AccountResource:heroxp', 'xp'],
+    ['AccountResource:campaign_event_currency', 'event'],
+    ['AccountResource:reagent_alteration_ele_fire', 'perk'],
+    ['Hero:hid_starter_custom', 'hero'],
+    ['CardPack:zcp_voucher_basicpack_outpost_theater1', 'other'],
   ] as const)('%s → %s', (id, expected) => {
     expect(rewardCategory(id)).toBe(expected);
   });

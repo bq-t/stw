@@ -1,0 +1,5262 @@
+{
+  "_comment": "Trimmed excerpt of a real world/info response from 2026-11-04 (game data only). Tiles not used by the kept missions are emptied.",
+  "theaters": [
+    {
+      "uniqueId": "33A2311D4AE64B361CCE27BC9F313C8B",
+      "displayName": "Stonewood",
+      "tiles": [
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheSuburbs/BP_ZT_TheSuburbs.BP_ZT_TheSuburbs_C"
+        },
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheGrasslands/BP_ZT_TheGrasslands.BP_ZT_TheGrasslands_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheGrasslands/BP_ZT_TheGrasslands.BP_ZT_TheGrasslands_C"
+        },
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheSuburbs/BP_ZT_TheSuburbs.BP_ZT_TheSuburbs_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheSuburbs/BP_ZT_TheSuburbs.BP_ZT_TheSuburbs_C"
+        },
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheCity/BP_ZT_TheCity.BP_ZT_TheCity_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheIndustrialPark/BP_ZT_TheIndustrialPark.BP_ZT_TheIndustrialPark_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Outposts/BP_ZT_TheOutpost_PvE_01.BP_ZT_TheOutpost_PvE_01_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "uniqueId": "8633333E41A86F67F78EAEAF25BF4735",
+      "displayName": "Stonewood",
+      "tiles": [
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Onboarding/ZT_OnboardingFort/BP_ZT_Onboarding_Fort.BP_ZT_Onboarding_Fort_C"
+        }
+      ]
+    },
+    {
+      "uniqueId": "D477605B4FA48648107B649CE97FCF27",
+      "displayName": "Plankerton",
+      "tiles": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/AD/BP_ZT_AD_TheCity.BP_ZT_AD_TheCity_C"
+        },
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/AD/BP_ZT_AD_TheSuburbs.BP_ZT_AD_TheSuburbs_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Outposts/BP_ZT_TheOutpost_PvE_02.BP_ZT_TheOutpost_PvE_02_C"
+        },
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheGrasslands/BP_ZT_TheGrasslands.BP_ZT_TheGrasslands_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheIndustrialPark/BP_ZT_TheIndustrialPark.BP_ZT_TheIndustrialPark_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Onboarding/BP_ZT_VindermansLab.BP_ZT_VindermansLab_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/AD/BP_ZT_AD_Lakeside.BP_ZT_AD_Lakeside_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/AD/BP_ZT_AD_Lakeside.BP_ZT_AD_Lakeside_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/AD/BP_ZT_AD_Lakeside.BP_ZT_AD_Lakeside_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/AD/BP_ZT_AD2_TheGrasslands.BP_ZT_AD2_TheGrasslands_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheIndustrialPark/BP_ZT_TheIndustrialPark.BP_ZT_TheIndustrialPark_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheIndustrialPark/BP_ZT_TheIndustrialPark.BP_ZT_TheIndustrialPark_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "uniqueId": "D9A801C5444D1C74D1B7DAB5C7C12C5B",
+      "displayName": "Twine Peaks",
+      "tiles": [
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Route99/BP_ZT_Route99_Bunker_2.BP_ZT_Route99_Bunker_2_C"
+        },
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheCity/BP_ZT_TheCity.BP_ZT_TheCity_C"
+        },
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheSuburbs/BP_ZT_TheSuburbs.BP_ZT_TheSuburbs_C"
+        },
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/AD/BP_ZT_AD2_TheGrasslands.BP_ZT_AD2_TheGrasslands_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Route99/BP_ZT_Route99_Bunker_2.BP_ZT_Route99_Bunker_2_C"
+        },
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/AD/BP_ZT_AD2_TheGrasslands.BP_ZT_AD2_TheGrasslands_C"
+        },
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Route99/BP_ZT_Route99_Bunker_2.BP_ZT_Route99_Bunker_2_C"
+        },
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheSuburbs/BP_ZT_TheSuburbs.BP_ZT_TheSuburbs_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheIndustrialPark/BP_ZT_TheIndustrialPark.BP_ZT_TheIndustrialPark_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Arid/BP_ZT_Desert_Bunker.BP_ZT_Desert_Bunker_C"
+        },
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheCity/BP_ZT_TheCity.BP_ZT_TheCity_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheCity/BP_ZT_TheCity.BP_ZT_TheCity_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "uniqueId": "DBB6E92A4EDE30B76C94C7BA3852C473",
+      "displayName": "Hexsylvania Venture Zone",
+      "tiles": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_HF_Castle.BP_ZT_TRV_HF_Castle_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_HF_Castle.BP_ZT_TRV_HF_Castle_C"
+        },
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_SW.BP_ZT_TRV_SW_C"
+        },
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_SW.BP_ZT_TRV_SW_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_HF_Castle.BP_ZT_TRV_HF_Castle_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_HF_CastleB.BP_ZT_TRV_HF_CastleB_C"
+        },
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_SW.BP_ZT_TRV_SW_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_SW.BP_ZT_TRV_SW_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_HF_Castle.BP_ZT_TRV_HF_Castle_C"
+        },
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_SW.BP_ZT_TRV_SW_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_HF_CastleB.BP_ZT_TRV_HF_CastleB_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Spooky/BP_ZT_TRV_SlasherCamp.BP_ZT_TRV_SlasherCamp_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "uniqueId": "E6ECBD064B153234656CB4BDE6743870",
+      "displayName": "Canny Valley",
+      "tiles": [
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Route99/BP_ZT_Route99_Bunker_2.BP_ZT_Route99_Bunker_2_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Arid/BP_ZT_Desert_Bunker.BP_ZT_Desert_Bunker_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Arid/BP_ZT_Desert_Bunker.BP_ZT_Desert_Bunker_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Route99/BP_ZT_Route99_2.BP_ZT_Route99_2_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/AD/BP_ZT_AD2_TheGrasslands.BP_ZT_AD2_TheGrasslands_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Route99/BP_ZT_Route99_Bunker_2.BP_ZT_Route99_Bunker_2_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheSuburbs/BP_ZT_TheSuburbs_Arid.BP_ZT_TheSuburbs_Arid_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_TheCity/BP_ZT_TheCity_Arid.BP_ZT_TheCity_Arid_C"
+        },
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/Outposts/BP_ZT_TheOutpost_PvE_03.BP_ZT_TheOutpost_PvE_03_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Route99/BP_ZT_Route99_Bunker_2.BP_ZT_Route99_Bunker_2_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_DUDEBRO/BP_ZT_DUDEBRO.BP_ZT_DUDEBRO_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {
+          "zoneTheme": "/STW_Zones/World/ZoneThemes/ZT_Route99/BP_ZT_Route99_Bunker_2.BP_ZT_Route99_Bunker_2_C"
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    }
+  ],
+  "missions": [
+    {
+      "theaterId": "33A2311D4AE64B361CCE27BC9F313C8B",
+      "availableMissions": [
+        {
+          "missionGuid": "6e908424-6a85-404f-a1df-574bca269331",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T04",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t04",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t04",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t04",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_EliminateAndCollect.MissionGen_EliminateAndCollect_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Start_Zone4"
+          },
+          "tileIndex": 1,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "3a29af11-ec3c-429c-bd3a-fcde0abbdaf4",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T03",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_eventscaling_t03",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t03",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t03",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_1Gate_Group.MissionGen_1Gate_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Start_Group_Zone3"
+          },
+          "tileIndex": 2,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "930086ce-930f-46bf-9019-e01638ba7eb9",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T05",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t05",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t05",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t05",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_T1_VHT_LtB.MissionGen_T1_VHT_LtB_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Start_Zone5"
+          },
+          "tileIndex": 21,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "323d9f4f-8b50-437d-9149-08a04d877b2c",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T05",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_verylow",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t05",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t05",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t05",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_1Gate_Group.MissionGen_1Gate_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Start_Group_Zone5"
+          },
+          "tileIndex": 10,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "f62f42c6-b39e-4f1b-9015-6569fe321054",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T06",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t06",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t06",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t06",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_T1_VHT_Cat1FtS.MissionGen_T1_VHT_Cat1FtS_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Zone1"
+          },
+          "tileIndex": 12,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "07fcc761-ec38-4dac-9f5f-60053d1d21bf",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T03",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t03",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t03",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t03",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_T1_MT_RtD.MissionGen_T1_MT_RtD_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Start_Zone3"
+          },
+          "tileIndex": 19,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "8d3228c7-2775-4735-8b09-83d8f6fa03df",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T04",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_verylow",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t04",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t04",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t04",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RideTheLightning_Group.MissionGen_RideTheLightning_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Start_Group_Zone4"
+          },
+          "tileIndex": 44,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "bfb9315f-0e06-4f33-9e31-3192acaee6ff",
+          "missionRewards": {
+            "tierGroupName": "Outpost_Select_Theater1",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_voucher_basicpack_outpost_theater1",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_heroxp_outpost_theater1",
+                "quantity": 1
+              }
+            ]
+          },
+          "bonusMissionRewards": {
+            "tierGroupName": "Outpost_Select_Bonus_Theater1",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_eventscaling_t03",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {
+            "Endurance": {
+              "tierGroupName": "Endurance_Select_Theater1",
+              "items": [
+                {
+                  "itemType": "CardPack:zcp_endurance_t01",
+                  "quantity": 1
+                }
+              ]
+            },
+            "Wargames": {
+              "tierGroupName": "WarGames_Select_Theater1",
+              "items": [
+                {
+                  "itemType": "CardPack:zcp_ironcity_t01",
+                  "quantity": 1
+                }
+              ]
+            }
+          },
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_TheOutpost_PvE_01.MissionGen_TheOutpost_PvE_01_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Start_Outpost1"
+          },
+          "tileIndex": 64,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "theaterId": "8633333E41A86F67F78EAEAF25BF4735",
+      "availableMissions": [
+        {
+          "missionGuid": "ccd53127-71bd-41e9-babf-1db3e2670271",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Tutorial",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_tutorial_melee",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_tutorial_trap",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_tutorial_ranged",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_Onboarding_Fort.MissionGen_Onboarding_Fort_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Tutorial_Zone1"
+          },
+          "tileIndex": 0,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "theaterId": "D477605B4FA48648107B649CE97FCF27",
+      "availableMissions": [
+        {
+          "missionGuid": "835eba82-0def-46f7-a328-2875e556dc5d",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T06",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t06",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t06",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t06",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_1/MissionGen_T2_R1_1Gate.MissionGen_T2_R1_1Gate_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Zone1"
+          },
+          "tileIndex": 7,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "8dafed54-db01-4af5-9aaa-767f50db3f71",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T10",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_uc",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_uc",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_uc",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_uc",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t10",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t10",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t10",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_2/MissionGen_RtS_Group.MissionGen_RtS_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Group_Zone5"
+          },
+          "tileIndex": 6,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "24775e13-2a13-4a49-ad22-ddd6e8fd0159",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T07",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t07",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t07",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t07",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_2/MissionGen_T2_R2_RtS.MissionGen_T2_R2_RtS_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Zone2"
+          },
+          "tileIndex": 140,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "ec4ea840-b692-4a86-bd1e-ac2ba110b935",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T10",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t10",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t10",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t10",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_5/MissionGen_T2_R5_RtD.MissionGen_T2_R5_RtD_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Zone5"
+          },
+          "tileIndex": 20,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "49a3e6ba-f760-460c-89ed-ed37f5ec062e",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T10",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t10",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_generic_low",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t10",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_5/MissionGen_T2_R5_PtS.MissionGen_T2_R5_PtS_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Zone5"
+          },
+          "tileIndex": 37,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "a84a8059-a01b-4be5-a4a4-a80d76fe169f",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T09",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t09",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_low",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t09",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_3/MissionGen_T2_R3_1Gate.MissionGen_T2_R3_1Gate_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Zone4"
+          },
+          "tileIndex": 29,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "eb7b51a9-c9d6-4fec-8136-4d4736a21a3b",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T08",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t08",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t08",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t08",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_2/MissionGen_T2_R2_RtL.MissionGen_T2_R2_RtL_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Zone3"
+          },
+          "tileIndex": 102,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "e6c2e408-9b65-4334-b3a7-82c3662cb0e3",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T07",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_generic_verylow",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t07",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t07",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t07",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_2Gates_Group.MissionGen_2Gates_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Group_Zone2"
+          },
+          "tileIndex": 46,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "e41d3df8-d7f4-4254-a857-643a7d6e0b42",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T06",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_low",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t06",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t06",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t06",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_2Gates_Group.MissionGen_2Gates_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Group_Zone1"
+          },
+          "tileIndex": 80,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "a96b3bbe-cd5d-40d5-bfa7-2e41d3ce6bb5",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T08",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_low",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t08",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t08",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t08",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RideTheLightning_Group_PVE02on.MissionGen_RideTheLightning_Group_PVE02on_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Group_Zone3"
+          },
+          "tileIndex": 147,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "d1085349-90a3-4793-b9a0-4ee82a7762cc",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T09",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t02_verylow",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t09",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t09",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t09",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_2Gates_Group.MissionGen_2Gates_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Group_Zone4"
+          },
+          "tileIndex": 159,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "0246a3ab-a2ad-438d-a533-cf5a812c36a8",
+          "missionRewards": {
+            "tierGroupName": "Outpost_Select_Theater2",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_voucher_basicpack_outpost_theater2",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_heroxp_outpost_theater2",
+                "quantity": 1
+              }
+            ]
+          },
+          "bonusMissionRewards": {
+            "tierGroupName": "Outpost_Select_Bonus_Theater2",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_low",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {
+            "Endurance": {
+              "tierGroupName": "Endurance_Select_Theater2",
+              "items": [
+                {
+                  "itemType": "CardPack:zcp_endurance_t02",
+                  "quantity": 1
+                }
+              ]
+            },
+            "Wargames": {
+              "tierGroupName": "WarGames_Select_Theater2",
+              "items": [
+                {
+                  "itemType": "CardPack:zcp_ironcity_t02",
+                  "quantity": 1
+                }
+              ]
+            }
+          },
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_TheOutpost_PvE_02.MissionGen_TheOutpost_PvE_02_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Normal_Outpost1"
+          },
+          "tileIndex": 17,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "theaterId": "D9A801C5444D1C74D1B7DAB5C7C12C5B",
+      "availableMissions": [
+        {
+          "missionGuid": "11291487-d925-4dd1-838d-16a382039356",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T19",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t19",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_generic_veryhigh",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t19",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/CannyValley/MissionGen_T3_R5_BuildtheRadarGrid.MissionGen_T3_R5_BuildtheRadarGrid_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Zone4"
+          },
+          "tileIndex": 1,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "44d55425-1ed2-4a88-b66b-d95bc8f74b14",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T18",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_eventscaling_t18",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/STW_Mission_Hunt/MissionGen_HTM.MissionGen_HTM_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Group_Zone3"
+          },
+          "tileIndex": 2,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "fb277c96-e9f1-450d-a8d7-d1a7934ec00d",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T18",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t04_verylow",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t18",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t18",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t18",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RideTheLightning_Group_PVE02on.MissionGen_RideTheLightning_Group_PVE02on_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Group_Zone3"
+          },
+          "tileIndex": 20,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "c4870836-92c6-4836-ac2e-0cee23d84597",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T19",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_eventscaling_t19",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/STW_Mission_Hunt/MissionGen_HTM.MissionGen_HTM_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Group_Zone4"
+          },
+          "tileIndex": 5,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "b2bfbf7b-0dbf-4c6b-a003-3590d0717307",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T19",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_sr",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_vr",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_sr",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_sr",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t19",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t19",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t19",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/ParentMissionGens/MissionGen_DtB_Group.MissionGen_DtB_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Group_Zone4"
+          },
+          "tileIndex": 7,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "3ce006b2-8aae-4f86-8e35-57d9f0a054bf",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T20",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t20",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t20",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t20",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/CannyValley/MissionGen_T3_R5_3Gates.MissionGen_T3_R5_3Gates_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Zone5"
+          },
+          "tileIndex": 27,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "ddceba13-4dc3-4dc6-b5fc-aa3c6001cf9e",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T18",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t18",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_vr",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t18",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/CannyValley/MissionGen_T3_R5_RtS.MissionGen_T3_R5_RtS_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Zone3"
+          },
+          "tileIndex": 22,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "cf046e2f-df3b-4ae3-a89c-b3f598ded0bb",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T20",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t03_low",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t20",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t20",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t20",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RetrieveTheData_Group_PVE02on.MissionGen_RetrieveTheData_Group_PVE02on_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Group_Zone5"
+          },
+          "tileIndex": 26,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "47f0517e-c798-4de1-8829-379ce3a25902",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T20",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t04_verylow",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t20",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t20",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t20",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_5/MissionGen_EtShelter_Group.MissionGen_EtShelter_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Group_Zone5"
+          },
+          "tileIndex": 39,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "cbc458fd-2b1d-4acc-81c1-bc7b22f6fa6f",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T17",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_sr",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_r_extreme",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_sr",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_uc_extreme",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t17",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t17",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t17",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/ParentMissionGens/MissionGen_DtB_Group.MissionGen_DtB_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Group_Zone2"
+          },
+          "tileIndex": 52,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "b557a599-5bb7-46a8-8197-6ac9c3b941fe",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T17",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t04_verylow",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t17",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t17",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t17",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RideTheLightning_Group_PVE02on.MissionGen_RideTheLightning_Group_PVE02on_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Nightmare_Group_Zone2"
+          },
+          "tileIndex": 63,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "79874147-048a-4134-b870-3a907ecc74a3",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T21",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_generic_extreme",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t21",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t21",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t21",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_2/MissionGen_RtS_Group.MissionGen_RtS_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Endgame_Group_Zone1"
+          },
+          "tileIndex": 55,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "theaterId": "DBB6E92A4EDE30B76C94C7BA3852C473",
+      "availableMissions": [
+        {
+          "missionGuid": "eb39f11e-175b-4d11-b258-b5ad3f560c7f",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_T07",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t07",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t07",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t07",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t07",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_2/MissionGen_T2_R2_RtL.MissionGen_T2_R2_RtL_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Zone07"
+          },
+          "tileIndex": 19,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "b2104486-85f6-4ae8-bffa-15c3d6864cab",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_T05",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t05",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_verylow",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t05",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t05",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_T1_VHT_Cat1FtS.MissionGen_T1_VHT_Cat1FtS_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Zone05"
+          },
+          "tileIndex": 32,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "825b5a87-c6f8-44b3-8416-670a0fec5bef",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_T09",
+            "items": [
+              {
+                "itemType": "AccountResource:peoplexp",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t09",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t09",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t09",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/TRV/MissionGen_TrapTheStorm.MissionGen_TrapTheStorm_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Zone09"
+          },
+          "tileIndex": 7,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "1952a593-bdf9-4733-b308-9f23c13ecac8",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_Group_T07",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_generic_verylow",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t07",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t07",
+                "quantity": 2
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t07",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t07",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RetrieveTheData_Group_PVE02on.MissionGen_RetrieveTheData_Group_PVE02on_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Group_Zone07"
+          },
+          "tileIndex": 17,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "0498a1ba-ff1e-4c36-9d77-cfd8c43c5d8f",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_Group_T07",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_low",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t07",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t07",
+                "quantity": 2
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t07",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t07",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RideTheLightning_Group_PVE02on.MissionGen_RideTheLightning_Group_PVE02on_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Group_Zone07"
+          },
+          "tileIndex": 20,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "59ed7323-9ee9-4817-9f06-77738f6bcd4d",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_T03",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t03",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_verylow",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t03",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t03",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/TRV/MissionGen_TRV_GateSingle.MissionGen_TRV_GateSingle_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Zone03"
+          },
+          "tileIndex": 201,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "49be2012-3df4-42f1-9a6c-7ba647237ce1",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_Group_T05",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_verylow",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t05",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t05",
+                "quantity": 2
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t05",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t05",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_1Gate_Group.MissionGen_1Gate_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Group_Zone05"
+          },
+          "tileIndex": 25,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "c0fcf450-95d8-4937-8fcd-910c744ef8e6",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_T11",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t11",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_c_t02_low",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t11",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t11",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/TRV/MissionGen_TrapTheStorm.MissionGen_TrapTheStorm_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Zone11"
+          },
+          "tileIndex": 45,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "cd7d7b9c-8aa2-4130-a05c-f16d90562703",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_Group_T09",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_generic_low",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t09",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t09",
+                "quantity": 2
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t09",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t09",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_2/MissionGen_RtS_Group.MissionGen_RtS_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Group_Zone09"
+          },
+          "tileIndex": 30,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "cf382357-c664-4c41-a38f-6e78a2858dd9",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_Group_T09",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_generic_low",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t09",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t09",
+                "quantity": 2
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t09",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t09",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RetrieveTheData_Group_PVE02on.MissionGen_RetrieveTheData_Group_PVE02on_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Group_Zone09"
+          },
+          "tileIndex": 39,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "cb540936-63da-426b-8f7f-58110d43bae1",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_Group_T11",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_medium",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t11",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t11",
+                "quantity": 2
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t11",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t11",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RetrieveTheData_Group_PVE02on.MissionGen_RetrieveTheData_Group_PVE02on_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Group_Zone11"
+          },
+          "tileIndex": 59,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "fe3c318c-0c9b-49fd-9c47-1f560616559f",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Phoenix_Group_T11",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t02_low",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t11",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_phoenixxp_t11",
+                "quantity": 2
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t11",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t11",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_3Gates_Group.MissionGen_3Gates_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Phoenix_Group_Zone11"
+          },
+          "tileIndex": 49,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "theaterId": "E6ECBD064B153234656CB4BDE6743870",
+      "availableMissions": [
+        {
+          "missionGuid": "fe852fd4-0410-453d-ab3d-91da33330e75",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T12",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_uc",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_uc",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_r",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_upgrade_r",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t12",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t12",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t12",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_2/MissionGen_RtS_Group.MissionGen_RtS_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Group_Zone2"
+          },
+          "tileIndex": 4,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "1a6b8d8d-d0f1-410b-b0bd-a5bbd7e248dc",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T12",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t12",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_generic_medium",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t12",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/ParentMissionGens/MissionGen_T2_4Gates.MissionGen_T2_4Gates_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Zone2"
+          },
+          "tileIndex": 11,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "6b83952e-ec08-4599-b6c6-7768e8b615ed",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T13",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t13",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t13",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t13",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/CannyValley/MissionGen_T3_R5_RtS.MissionGen_T3_R5_RtS_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Zone3"
+          },
+          "tileIndex": 18,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "a7e802b7-3bf4-4f94-8850-925d4e65b557",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T13",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t13",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t13",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t13",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/CannyValley/MissionGen_T3_R5_1Gate.MissionGen_T3_R5_1Gate_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Zone3"
+          },
+          "tileIndex": 75,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "82e5429b-71f6-4723-a19d-af8df5fd2299",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T11",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t11",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t11",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t11",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/CannyValley/MissionGen_T3_R5_EtShelter.MissionGen_T3_R5_EtShelter_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Zone1"
+          },
+          "tileIndex": 48,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "022c948e-6ce8-4424-afa2-29a0c86440ee",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T11",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t02_low",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t11",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t11",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t11",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RideTheLightning_Group_PVE02on.MissionGen_RideTheLightning_Group_PVE02on_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Group_Zone1"
+          },
+          "tileIndex": 32,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "2af42553-c9d0-4d5a-896e-5d344fe52400",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T14",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t14",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t14",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t14",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_EliminateAndCollect_WR.MissionGen_EliminateAndCollect_WR_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Zone4"
+          },
+          "tileIndex": 84,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "3483ed64-466f-4f49-8bcf-0bca41c8dd16",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T13",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_alteration_generic_high",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t13",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t13",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t13",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/Plankerton/Region_2/MissionGen_RtS_Group.MissionGen_RtS_Group_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Group_Zone3"
+          },
+          "tileIndex": 67,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "3be93c83-bb82-456b-b3a8-617a4d110970",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T14",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_eventscaling_t14",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/STW_Mission_Hunt/MissionGen_HTM.MissionGen_HTM_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Group_Zone4"
+          },
+          "tileIndex": 99,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "59b5b20d-5b2b-459b-be64-015aa4366a9f",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_T15",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_personnelxp_t15",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t15",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t15",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Zone5_Dudebro"
+          },
+          "tileIndex": 132,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "ddad8303-20ba-4c39-b896-61ebfb17c2e7",
+          "missionRewards": {
+            "tierGroupName": "Mission_Select_Group_T15",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_reagent_c_t01_medium",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_eventscaling_t15",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_personnelxp_t15",
+                "quantity": 4
+              },
+              {
+                "itemType": "CardPack:zcp_schematicxp_t15",
+                "quantity": 4
+              }
+            ]
+          },
+          "overrideMissionRewards": {},
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_RideTheLightning_Group_PVE02on.MissionGen_RideTheLightning_Group_PVE02on_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Group_Zone5"
+          },
+          "tileIndex": 168,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        },
+        {
+          "missionGuid": "fb2b55af-3dcc-46af-a8f5-fa7997ab0985",
+          "missionRewards": {
+            "tierGroupName": "Outpost_Select_Theater3",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_voucher_basicpack_outpost_theater3",
+                "quantity": 1
+              },
+              {
+                "itemType": "CardPack:zcp_heroxp_outpost_theater3",
+                "quantity": 1
+              }
+            ]
+          },
+          "bonusMissionRewards": {
+            "tierGroupName": "Outpost_Select_Bonus_Theater3",
+            "items": [
+              {
+                "itemType": "CardPack:zcp_eventscaling_t12",
+                "quantity": 1
+              }
+            ]
+          },
+          "overrideMissionRewards": {
+            "Endurance": {
+              "tierGroupName": "Endurance_Select_Theater3",
+              "items": [
+                {
+                  "itemType": "CardPack:zcp_endurance_t03",
+                  "quantity": 1
+                }
+              ]
+            },
+            "Wargames": {
+              "tierGroupName": "WarGames_Select_Theater3",
+              "items": [
+                {
+                  "itemType": "CardPack:zcp_ironcity_t03",
+                  "quantity": 1
+                }
+              ]
+            }
+          },
+          "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_TheOutpost_PvE_03.MissionGen_TheOutpost_PvE_03_C",
+          "missionDifficultyInfo": {
+            "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
+            "rowName": "Theater_Hard_Outpost1"
+          },
+          "tileIndex": 87,
+          "availableUntil": "2026-11-05T00:00:00.000Z"
+        }
+      ]
+    }
+  ],
+  "missionAlerts": [
+    {
+      "theaterId": "33A2311D4AE64B361CCE27BC9F313C8B",
+      "availableMissionAlerts": [
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_02",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "2ab5bcc9-f8e0-4c4b-a5ea-7a622d946889",
+          "tileIndex": 12,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:6",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_uc_t01",
+                "attributes": {
+                  "desired_level": 11
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_c_t02",
+                "quantity": 5
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 52
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL9",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_01",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "0576913f-e86a-47f4-a406-b210ea00d1a2",
+          "tileIndex": 19,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:3",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_c_t01",
+                "attributes": {
+                  "desired_level": 6
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_c_t01",
+                "quantity": 5
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 50
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL5",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_02",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "18c2f2ef-6215-45e6-a671-7d82c36ba840",
+          "tileIndex": 21,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:5",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_c_t01",
+                "attributes": {
+                  "desired_level": 9
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "Defender:did_defenderassault_basic_c_t01",
+                "attributes": {
+                  "Alteration": {
+                    "LootTierGroup": "AlterationTG.Defender.Assault.C",
+                    "Tier": 0
+                  },
+                  "desired_level": 8
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:eventcurrency_scaling",
+                "quantity": 140
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 50
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL9",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_CramSessionPassiveStorm_01",
+          "categoryName": "Storm_CramSessionPassiveStorm",
+          "spreadDataName": "None",
+          "missionAlertGuid": "f63a3961-c560-4923-b11b-afd46cd1759d",
+          "tileIndex": 1,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_StormLow:4",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_c_t01",
+                "attributes": {
+                  "desired_level": 8
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "Defender:did_defendermelee_basic_c_t01",
+                "attributes": {
+                  "Alteration": {
+                    "LootTierGroup": "AlterationTG.Defender.Melee.C",
+                    "Tier": 0
+                  },
+                  "desired_level": 7
+                },
+                "quantity": 1
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.MutantStorm.DL5",
+            "items": [
+              {
+                "itemType": "GameplayModifier:gm_soldier_damage_buff",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_01",
+          "categoryName": "MegaAlertCategory",
+          "spreadDataName": "None",
+          "missionAlertGuid": "f848f3e4-b88a-4596-9b3d-b4b6b9b85fa0",
+          "tileIndex": 10,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p:5",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_r_t01",
+                "attributes": {
+                  "desired_level": 7
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 50
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlertTG.Stonewood",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_hideonminimap",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_01",
+          "categoryName": "MegaAlertCategory",
+          "spreadDataName": "None",
+          "missionAlertGuid": "fbc735ca-005c-46b8-a66a-544b3167f543",
+          "tileIndex": 44,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p:4",
+            "items": [
+              {
+                "itemType": "Hero:hid_outlander_007_r_t01",
+                "attributes": {
+                  "desired_level": 8
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 50
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlertTG.Stonewood",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnenemyrangeresistpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_lifeleech",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_01",
+          "categoryName": "MegaAlertCategory",
+          "spreadDataName": "None",
+          "missionAlertGuid": "c4b5f18a-f355-4751-bebe-9ab41a9c84f1",
+          "tileIndex": 2,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p:3",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_uc_t01",
+                "attributes": {
+                  "desired_level": 4
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 50
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlertTG.Stonewood",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_applyspeedmods",
+                "quantity": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "theaterId": "8633333E41A86F67F78EAEAF25BF4735",
+      "availableMissionAlerts": []
+    },
+    {
+      "theaterId": "D477605B4FA48648107B649CE97FCF27",
+      "availableMissionAlerts": [
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_02",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "6a1a309b-0327-4035-a15c-60b923d215b5",
+          "tileIndex": 7,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:6",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_uc_t01",
+                "attributes": {
+                  "desired_level": 10
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_c_t01",
+                "quantity": 10
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 52
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL9",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_02",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "bd15e2c4-db91-4a8c-b6a1-aea541c683ef",
+          "tileIndex": 140,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:7",
+            "items": [
+              {
+                "itemType": "Worker:managerdoctor_c_t01",
+                "attributes": {
+                  "desired_level": 12
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "Worker:workerbasic_uc_t01",
+                "attributes": {
+                  "desired_level": 11
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 40
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 55
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL9",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_03",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "30aa707c-ee26-4b2e-9489-4751a7ffb160",
+          "tileIndex": 29,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:9",
+            "items": [
+              {
+                "itemType": "Hero:hid_constructor_rushbase_uc_t01",
+                "attributes": {
+                  "desired_level": 17
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_c_t02",
+                "quantity": 5
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 65
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_03",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "1e748543-98b9-4a07-8727-4e836bc11c3e",
+          "tileIndex": 102,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:8",
+            "items": [
+              {
+                "itemType": "Hero:hid_ninja_015_f_v1_uc_t01",
+                "attributes": {
+                  "desired_level": 15
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 45
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 60
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_LightningPassive_01",
+          "categoryName": "Storm_LightningPassive",
+          "spreadDataName": "None",
+          "missionAlertGuid": "6571440e-7c3e-47dd-9546-40804b69a880",
+          "tileIndex": 20,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Seasonal_PassiveNature:10",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_upgrade_r",
+                "quantity": 70
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_nature",
+                "quantity": 140
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Lightning.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:gm_player_ondmgdealt_lifeleech",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnenemyrangeresistpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:elementalzonenatureenableitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_01",
+          "categoryName": "MegaAlertCategory",
+          "spreadDataName": "None",
+          "missionAlertGuid": "856cfae2-6f1a-494f-aee4-58fa3ef829d3",
+          "tileIndex": 46,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p:7",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_r_t01",
+                "attributes": {
+                  "desired_level": 12
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 55
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlertTG.Stonewood",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondeath_explode",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgreceived_speedbuff",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_01",
+          "categoryName": "MegaAlertCategory",
+          "spreadDataName": "None",
+          "missionAlertGuid": "f09ae62c-89c3-4bd5-ab64-518e8a4629ea",
+          "tileIndex": 80,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p:6",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 82
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 52
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlertTG.Stonewood",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_areaheal",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossF_01",
+          "categoryName": "MegaAlertCategory_MinibossF",
+          "spreadDataName": "None",
+          "missionAlertGuid": "61285633-6cc0-4cea-aa4e-d72a393b59c1",
+          "tileIndex": 6,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Fire:10",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 143
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 140
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 72
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Fire.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_applyspeedmods",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossF_01",
+          "categoryName": "MegaAlertCategory_MinibossF",
+          "spreadDataName": "None",
+          "missionAlertGuid": "10f4a96f-4932-45b1-b1d7-9b5194b04a86",
+          "tileIndex": 159,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Fire:9",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t02",
+                "quantity": 18
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 130
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 65
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Fire.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_areaheal",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossI_01",
+          "categoryName": "MegaAlertCategory_MinibossI",
+          "spreadDataName": "None",
+          "missionAlertGuid": "ce4e744a-eca9-44cf-a5f8-e929de345de8",
+          "tileIndex": 147,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Ice:8",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 102
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_water",
+                "quantity": 120
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 60
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Ice.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonewaterenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_areaheal",
+                "quantity": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "theaterId": "D9A801C5444D1C74D1B7DAB5C7C12C5B",
+      "availableMissionAlerts": [
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_04",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "3ca379b3-7e88-4516-8697-e0185dccd793",
+          "tileIndex": 22,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:18",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_vr_t01",
+                "attributes": {
+                  "desired_level": 31
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_upgrade_r",
+                "quantity": 145
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 115
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_FirePassive_02",
+          "categoryName": "Storm_FirePassive",
+          "spreadDataName": "None",
+          "missionAlertGuid": "94815bb0-a9d9-43ea-9cf8-25aef2bb4ff8",
+          "tileIndex": 1,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Seasonal_PassiveFire:19",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_vr_t01",
+                "attributes": {
+                  "desired_level": 30
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 220
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Fire.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:gm_outlander_damage_buff",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnenemyrangeresistpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_areaheal",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondeath_explode",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_LightningPassive_03",
+          "categoryName": "Storm_LightningPassive",
+          "spreadDataName": "None",
+          "missionAlertGuid": "464edf9d-5e46-43e8-a1e3-1c175f841302",
+          "tileIndex": 27,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Seasonal_PassiveNature:20",
+            "items": [
+              {
+                "itemType": "Worker:managerengineer_vr_t01",
+                "attributes": {
+                  "desired_level": 31
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "Hero:hid_constructor_basehyper_vr_t01",
+                "attributes": {
+                  "desired_level": 36
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_nature",
+                "quantity": 230
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Lightning.DL40",
+            "items": [
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondmgdealt_metalcorrosion",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_hideonminimap",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:elementalzonenatureenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossF_03",
+          "categoryName": "MegaAlertCategory_MinibossF",
+          "spreadDataName": "None",
+          "missionAlertGuid": "48f43471-b3e6-406a-96f2-accdb0f7d49a",
+          "tileIndex": 55,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Fire:21",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 297
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 240
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 122
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Fire.DL40",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondeath_explode",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_areaheal",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_slowdownfoe",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossF_02",
+          "categoryName": "MegaAlertCategory_MinibossF",
+          "spreadDataName": "None",
+          "missionAlertGuid": "bfac73e2-14c3-40d8-9e85-8c27c1568c52",
+          "tileIndex": 2,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Fire:18",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_upgrade_vr",
+                "quantity": 205
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 210
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 115
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Fire.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_areaheal",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondmgdealt_metalcorrosion",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossF_02",
+          "categoryName": "MegaAlertCategory_MinibossF",
+          "spreadDataName": "None",
+          "missionAlertGuid": "cd18c127-c6db-4615-8341-f7cee4a3c7f2",
+          "tileIndex": 7,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Fire:19",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 297
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 220
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 118
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Fire.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_applyspeedmods",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_slowdownfoe",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossF_02",
+          "categoryName": "MegaAlertCategory_MinibossF",
+          "spreadDataName": "None",
+          "missionAlertGuid": "e6941a9d-7772-4635-992d-a08a07372f23",
+          "tileIndex": 63,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Fire:17",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 276
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 200
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 112
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Fire.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_onhitweakenbuildings",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_lifeleech",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossI_03",
+          "categoryName": "MegaAlertCategory_MinibossI",
+          "spreadDataName": "None",
+          "missionAlertGuid": "6bc8b6cf-baf4-41c4-a0d8-db169457a6e2",
+          "tileIndex": 26,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Ice:20",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_upgrade_vr",
+                "quantity": 225
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_water",
+                "quantity": 230
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 120
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Ice.DL40",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonewaterenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_areaheal",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_lifeleech",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossI_02",
+          "categoryName": "MegaAlertCategory_MinibossI",
+          "spreadDataName": "None",
+          "missionAlertGuid": "9767e2c4-cb9a-4db7-abb9-28911d7077b7",
+          "tileIndex": 52,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Ice:17",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t02",
+                "quantity": 43
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_water",
+                "quantity": 200
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 112
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Ice.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonewaterenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnenemyrangeresistpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_applyspeedmods",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_slowdownfoe",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossI_03",
+          "categoryName": "MegaAlertCategory_MinibossI",
+          "spreadDataName": "None",
+          "missionAlertGuid": "39704392-ba76-49b1-b654-6c71815606b7",
+          "tileIndex": 39,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Ice:20",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t03",
+                "quantity": 41
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_water",
+                "quantity": 230
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 120
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Ice.DL40",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonewaterenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_onhitweakenbuildings",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondmgdealt_metalcorrosion",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossI_02",
+          "categoryName": "MegaAlertCategory_MinibossI",
+          "spreadDataName": "None",
+          "missionAlertGuid": "6a1925ba-219e-4347-aca0-503f5107861c",
+          "tileIndex": 20,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Ice:18",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_upgrade_vr",
+                "quantity": 205
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_water",
+                "quantity": 210
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 115
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Ice.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonewaterenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_applyspeedmods",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondmgdealt_metalcorrosion",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossL_02",
+          "categoryName": "MegaAlertCategory_MinibossL",
+          "spreadDataName": "None",
+          "missionAlertGuid": "c9e82919-7d49-4627-a04b-f8d856a56d9c",
+          "tileIndex": 5,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Lightning:19",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 297
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_nature",
+                "quantity": 220
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 118
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Lightning.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonenatureenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_applyspeedmods",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondmgdealt_metalcorrosion",
+                "quantity": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "theaterId": "DBB6E92A4EDE30B76C94C7BA3852C473",
+      "availableMissionAlerts": [
+        {
+          "name": "MissionAlert_Storm_Phoenix_CramMiniBoss_02",
+          "categoryName": "Storm_Phoenix_CramMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "2d99c17d-b8e6-4513-aec4-9c9903fb062e",
+          "tileIndex": 32,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Phoenix_CramMiniboss:5",
+            "items": [
+              {
+                "itemType": "Defender:did_defenderpistol_basic_c_t01",
+                "attributes": {
+                  "Alteration": {
+                    "LootTierGroup": "AlterationTG.Defender.Pistol.C",
+                    "Tier": 0
+                  },
+                  "desired_level": 7
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:eventcurrency_scaling",
+                "quantity": 140
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 50
+              },
+              {
+                "itemType": "AccountResource:phoenixxp_reward",
+                "quantity": 2650
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL9",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_Phoenix_CramMiniBoss_02",
+          "categoryName": "Storm_Phoenix_CramMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "185a8ce4-58ba-47db-bcc1-0860ecb521a4",
+          "tileIndex": 19,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Phoenix_CramMiniboss:7",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t01",
+                "quantity": 10
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 40
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 55
+              },
+              {
+                "itemType": "AccountResource:phoenixxp_reward",
+                "quantity": 3200
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL9",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_Phoenix_CramMiniBoss_01",
+          "categoryName": "Storm_Phoenix_CramMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "e679eb69-d3fc-4a74-83ce-8a08ddbf4bfe",
+          "tileIndex": 201,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Phoenix_CramMiniboss:3",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_c_t01",
+                "attributes": {
+                  "desired_level": 5
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:eventcurrency_scaling",
+                "quantity": 120
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 50
+              },
+              {
+                "itemType": "AccountResource:phoenixxp_reward",
+                "quantity": 2175
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL5",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_Phoenix_01",
+          "categoryName": "MegaAlertCategory_Phoenix",
+          "spreadDataName": "None",
+          "missionAlertGuid": "954d04f7-9cb0-4c5d-a3ac-6c159c3534cb",
+          "tileIndex": 25,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_Phoenix:5",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t02",
+                "quantity": 4
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 50
+              },
+              {
+                "itemType": "AccountResource:phoenixxp_reward",
+                "quantity": 2650
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlertTG.Stonewood",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnenemyrangeresistpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_lifeleech",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_Phoenix_01",
+          "categoryName": "MegaAlertCategory_Phoenix",
+          "spreadDataName": "None",
+          "missionAlertGuid": "71a913f2-7b7b-45c0-b153-2a0ce916cf43",
+          "tileIndex": 20,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_Phoenix:7",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t02",
+                "quantity": 10
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 55
+              },
+              {
+                "itemType": "AccountResource:phoenixxp_reward",
+                "quantity": 3200
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlertTG.Stonewood",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_applyspeedmods",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_Phoenix_01",
+          "categoryName": "MegaAlertCategory_Phoenix",
+          "spreadDataName": "None",
+          "missionAlertGuid": "6759128f-66a1-4ab2-8e3a-8d390e4fdcb7",
+          "tileIndex": 17,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_Phoenix:7",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_upgrade_uc",
+                "quantity": 123
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 55
+              },
+              {
+                "itemType": "AccountResource:phoenixxp_reward",
+                "quantity": 3200
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlertTG.Stonewood",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnenemyrangeresistpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_slowdownfoe",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_Phoenix_IcePassive_01",
+          "categoryName": "Storm_Phoenix_IcePassive",
+          "spreadDataName": "None",
+          "missionAlertGuid": "10d84fa7-fb28-4bdd-9cbe-6f22885e02d2",
+          "tileIndex": 45,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Phoenix_PassiveWater:11",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t01",
+                "quantity": 42
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_water",
+                "quantity": 140
+              },
+              {
+                "itemType": "AccountResource:phoenixxp_reward",
+                "quantity": 4700
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Ice.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:gm_player_energy_damagebuff",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_lifeleech",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondmgdealt_metalcorrosion",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:elementalzonewaterenableitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_Phoenix_LightningPassive_01",
+          "categoryName": "Storm_Phoenix_LightningPassive",
+          "spreadDataName": "None",
+          "missionAlertGuid": "10b30815-809b-446f-a27e-b1032e883deb",
+          "tileIndex": 7,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Phoenix_PassiveNature:9",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t01",
+                "quantity": 40
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_nature",
+                "quantity": 130
+              },
+              {
+                "itemType": "AccountResource:phoenixxp_reward",
+                "quantity": 3875
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Lightning.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:gm_outlander_damage_buff",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondmgdealt_metalcorrosion",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_applyspeedmods",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:elementalzonenatureenableitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_Phoenix_CrambossL_01",
+          "categoryName": "MegaAlertCategory_Phoenix_CrambossL",
+          "spreadDataName": "None",
+          "missionAlertGuid": "583b35eb-c008-4942-be2d-4550885a4bf6",
+          "tileIndex": 49,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_Phoenix_Lightning:11",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_upgrade_uc",
+                "quantity": 205
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_nature",
+                "quantity": 140
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 80
+              },
+              {
+                "itemType": "AccountResource:phoenixxp_reward",
+                "quantity": 4700
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Lightning.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonenatureenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_onhitweakenbuildings",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_Phoenix_CrambossI_01",
+          "categoryName": "MegaAlertCategory_Phoenix_CrambossI",
+          "spreadDataName": "None",
+          "missionAlertGuid": "57577cf7-e2e7-4a58-b282-afa14d620b40",
+          "tileIndex": 59,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_Phoenix_Ice:11",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t01",
+                "quantity": 47
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_water",
+                "quantity": 140
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 80
+              },
+              {
+                "itemType": "AccountResource:phoenixxp_reward",
+                "quantity": 4700
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Ice.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonewaterenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_onhitweakenbuildings",
+                "quantity": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "theaterId": "E6ECBD064B153234656CB4BDE6743870",
+      "availableMissionAlerts": [
+        {
+          "name": "MissionAlert_DudebroCategory_03",
+          "categoryName": "DudebroCategory",
+          "spreadDataName": "None",
+          "missionAlertGuid": "f2993f3d-44bd-4d82-a653-b37f5eefed24",
+          "tileIndex": 132,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Dudebro:15",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 95
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_03",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "fc25f35c-b163-4687-b5aa-d8dbf9aeba06",
+          "tileIndex": 11,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:12",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_r_t01",
+                "attributes": {
+                  "desired_level": 23
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_upgrade_uc",
+                "quantity": 95
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 88
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_03",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "012a5740-6586-49ad-b7fa-22c0470abcb4",
+          "tileIndex": 75,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:13",
+            "items": [
+              {
+                "itemType": "AccountResource:currency_mtxswap",
+                "quantity": 50
+              },
+              {
+                "itemType": "AccountResource:reagent_c_t02",
+                "quantity": 10
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 92
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_03",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "7a675ea0-f12f-4a84-a199-5064944128ba",
+          "tileIndex": 18,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:13",
+            "items": [
+              {
+                "itemType": "Defender:did_defenderassault_basic_m_r_t01",
+                "attributes": {
+                  "Alteration": {
+                    "LootTierGroup": "AlterationTG.Defender.Assault.R",
+                    "Tier": 0
+                  },
+                  "desired_level": 21
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "Defender:did_defenderpistol_basic_r_t01",
+                "attributes": {
+                  "Alteration": {
+                    "LootTierGroup": "AlterationTG.Defender.Pistol.R",
+                    "Tier": 0
+                  },
+                  "desired_level": 25
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 85
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 92
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_CramSessionMiniBoss_03",
+          "categoryName": "Storm_CramSessionMiniBoss",
+          "spreadDataName": "None",
+          "missionAlertGuid": "8b1441b4-5e39-4870-9d4d-653476dbb877",
+          "tileIndex": 48,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_CramMiniBoss:11",
+            "items": [
+              {
+                "itemType": "Worker:workerbasic_r_t01",
+                "attributes": {
+                  "desired_level": 19
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_upgrade_uc",
+                "quantity": 95
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 80
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Miniboss.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_Storm_FirePassive_02",
+          "categoryName": "Storm_FirePassive",
+          "spreadDataName": "None",
+          "missionAlertGuid": "99b91a0c-93a6-4749-b2fc-dc2a60904433",
+          "tileIndex": 84,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Seasonal_PassiveFire:14",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_generic",
+                "quantity": 110
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 170
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "Seasonal.Fire.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:gm_trap_buff",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgreceived_speedbuff",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_areaheal",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondmgdealt_metalcorrosion",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossF_01",
+          "categoryName": "MegaAlertCategory_MinibossF",
+          "spreadDataName": "None",
+          "missionAlertGuid": "2ab9f8ac-50ff-4f36-b485-392c71cc9566",
+          "tileIndex": 32,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Fire:11",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_alteration_upgrade_r",
+                "quantity": 164
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 140
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 80
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Fire.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_onhitweakenbuildings",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossF_01",
+          "categoryName": "MegaAlertCategory_MinibossF",
+          "spreadDataName": "None",
+          "missionAlertGuid": "6f70df33-e419-4f8e-8b53-b4c54ad17a2b",
+          "tileIndex": 67,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Fire:13",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t02",
+                "quantity": 32
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 160
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 92
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Fire.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_basehusk_ondeath_explode",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_onhitweakenbuildings",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossF_02",
+          "categoryName": "MegaAlertCategory_MinibossF",
+          "spreadDataName": "None",
+          "missionAlertGuid": "3122fceb-7a14-42fb-946d-f1682dbd9c72",
+          "tileIndex": 168,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Fire:15",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t03",
+                "quantity": 22
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_fire",
+                "quantity": 180
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 102
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Fire.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonefireenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_onhitweakenbuildings",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_lifeleech",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossI_01",
+          "categoryName": "MegaAlertCategory_MinibossI",
+          "spreadDataName": "None",
+          "missionAlertGuid": "8f0adce3-610a-4853-b706-0624613d3c75",
+          "tileIndex": 4,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Ice:12",
+            "items": [
+              {
+                "itemType": "Hero:hid_commando_009_m_vr_t01",
+                "attributes": {
+                  "desired_level": 19
+                },
+                "quantity": 1
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_water",
+                "quantity": 150
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 88
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Ice.DL16",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonewaterenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawnplayerslowpool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_onhitweakenbuildings",
+                "quantity": 1
+              }
+            ]
+          }
+        },
+        {
+          "name": "MissionAlert_MegaAlertCategory_MinibossI_02",
+          "categoryName": "MegaAlertCategory_MinibossI",
+          "spreadDataName": "None",
+          "missionAlertGuid": "25353a94-2ed3-41fc-b787-5f3f1428c801",
+          "tileIndex": 99,
+          "availableUntil": "2026-11-05T00:00:00.000Z",
+          "totalSpreadRefreshes": 0,
+          "missionAlertRewards": {
+            "tierGroupName": "MissionAlert_Megalert_4p_Ice:14",
+            "items": [
+              {
+                "itemType": "AccountResource:reagent_c_t02",
+                "quantity": 34
+              },
+              {
+                "itemType": "AccountResource:reagent_alteration_ele_water",
+                "quantity": 170
+              },
+              {
+                "itemType": "AccountResource:campaign_event_currency",
+                "quantity": 98
+              }
+            ]
+          },
+          "missionAlertModifiers": {
+            "tierGroupName": "MegaAlert.Ice.DL28",
+            "items": [
+              {
+                "itemType": "GameplayModifier:elementalzonewaterenableitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:minibossenableprimarymissionitem",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondeath_spawndamagepool",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_onhitweakenbuildings",
+                "quantity": 1
+              },
+              {
+                "itemType": "GameplayModifier:gm_enemy_ondmgdealt_slowdownfoe",
+                "quantity": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

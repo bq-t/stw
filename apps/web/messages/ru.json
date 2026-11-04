@@ -63,7 +63,17 @@
     "survive-the-storm": "Пережить бурю",
     "hit-the-road": "В путь",
     "refuel-the-homebase": "Заправить базу",
-    "data-retrieval": "Сбор данных"
+    "data-retrieval": "Сбор данных",
+    "evacuate-the-survivors": "Эвакуация выживших",
+    "launch-the-balloon": "Запуск аэростата",
+    "deploy-the-probe": "Запуск зонда",
+    "build-off": "Стройка",
+    "build-the-memorial": "Построить мемориал",
+    "stabilize-the-rift": "Стабилизировать разлом",
+    "fight-the-gunslinger": "Бой со стрелком",
+    "vinderman-mansion": "Особняк Виндермана",
+    "dudebro": "Дудебро",
+    "storm-shield-defense": "Защита штормового щита"
   },
   "AlertKind": {
     "mini-boss": "Мини-босс",
@@ -85,7 +95,9 @@
     "hero": "Герои",
     "survivor": "Выжившие",
     "defender": "Защитники",
-    "other": "Другое"
+    "other": "Другое",
+    "event": "Билеты события",
+    "xp": "Опыт"
   },
   "Filters": {
     "zone": "Зона",
@@ -121,7 +133,11 @@
     "swamp": "Болото",
     "mountains": "Горы",
     "lakes": "Озёра",
-    "arctic": "Арктика"
+    "arctic": "Арктика",
+    "ghost-town": "Город-призрак",
+    "route-99": "Шоссе 99",
+    "island": "Остров",
+    "outpost": "Штормовой щит"
   },
   "Privacy": {
     "title": "Конфиденциальность",

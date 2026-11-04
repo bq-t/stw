@@ -1,7 +1,9 @@
 import type { Rarity } from '../types';
 
-// Item catalog: Epic item ID → names and icon. Filled from a FModel export (stage 4).
+// Item catalog: Epic item ID → names and icon. Resources seen in the 2026-11-04 response
+// are listed here; the rest (heroes, survivors, schematics) comes from the FModel export.
 // Items missing from the catalog are shown with a readable form of their ID.
+// TODO: check RU names against the game's Russian localization.
 
 export interface ItemInfo {
   name: { en: string; ru: string };
@@ -11,39 +13,87 @@ export interface ItemInfo {
   category?: string;
 }
 
+const res = (en: string, ru: string, rarity?: Rarity): ItemInfo => ({
+  name: { en, ru },
+  rarity,
+  category: 'resource',
+});
+
 export const ITEMS: Record<string, ItemInfo> = {
-  'AccountResource:currency_mtxswap': {
-    name: { en: 'V-Bucks', ru: 'В-баксы' },
-    category: 'currency',
-  },
-  'AccountResource:currency_xrayllama': {
-    name: { en: 'X-Ray Tickets', ru: 'Рентгеновские билеты' },
-    category: 'currency',
-  },
-  'AccountResource:heroxp': {
-    name: { en: 'Hero XP', ru: 'Опыт героев' },
-    category: 'xp',
-  },
-  'AccountResource:schematicxp': {
-    name: { en: 'Schematic XP', ru: 'Опыт чертежей' },
-    category: 'xp',
-  },
-  'AccountResource:personnelxp': {
-    name: { en: 'Survivor XP', ru: 'Опыт выживших' },
-    category: 'xp',
-  },
-  // TODO(stage 4): the rest comes from the FModel export.
+  'AccountResource:currency_mtxswap': res('V-Bucks', 'В-баксы'),
+  'AccountResource:currency_xrayllama': res('X-Ray Tickets', 'Рентгеновские билеты'),
+  'AccountResource:campaign_event_currency': res('Event Tickets', 'Билеты события'),
+  'AccountResource:eventcurrency_scaling': res('Event Tickets', 'Билеты события'),
+  'AccountResource:heroxp': res('Hero XP', 'Опыт героев'),
+  'AccountResource:schematicxp': res('Schematic XP', 'Опыт чертежей'),
+  'AccountResource:personnelxp': res('Survivor XP', 'Опыт выживших'),
+  'AccountResource:peoplexp': res('Survivor XP', 'Опыт выживших'),
+  'AccountResource:reagent_c_t01': res('Pure Drop of Rain', 'Чистая капля дождя', 'uncommon'),
+  'AccountResource:reagent_c_t02': res('Lightning in a Bottle', 'Молния в бутылке', 'rare'),
+  'AccountResource:reagent_c_t03': res('Eye of the Storm', 'Глаз бури', 'epic'),
+  'AccountResource:reagent_c_t04': res('Storm Shard', 'Осколок бури', 'legendary'),
+  'AccountResource:reagent_alteration_upgrade_uc': res(
+    'Uncommon PERK-UP!',
+    'Необычное улучшение перка',
+    'uncommon',
+  ),
+  'AccountResource:reagent_alteration_upgrade_r': res(
+    'Rare PERK-UP!',
+    'Редкое улучшение перка',
+    'rare',
+  ),
+  'AccountResource:reagent_alteration_upgrade_vr': res(
+    'Epic PERK-UP!',
+    'Эпическое улучшение перка',
+    'epic',
+  ),
+  'AccountResource:reagent_alteration_upgrade_sr': res(
+    'Legendary PERK-UP!',
+    'Легендарное улучшение перка',
+    'legendary',
+  ),
+  'AccountResource:reagent_alteration_generic': res('RE-PERK!', 'Смена перка', 'rare'),
+  'AccountResource:reagent_alteration_ele_fire': res('Fire-UP!', 'Огненное улучшение', 'rare'),
+  'AccountResource:reagent_alteration_ele_water': res('Frost-UP!', 'Ледяное улучшение', 'rare'),
+  'AccountResource:reagent_alteration_ele_nature': res(
+    'Amp-UP!',
+    'Электрическое улучшение',
+    'rare',
+  ),
 };
 
 export function itemInfo(itemId: string): ItemInfo | undefined {
   return ITEMS[itemId];
 }
 
-/** "Schematic:sid_assault_auto_vr_ore_t01" → "Assault Auto Vr Ore T01". */
+const RARITY_BY_CODE: Record<string, Rarity> = {
+  c: 'common',
+  uc: 'uncommon',
+  r: 'rare',
+  vr: 'epic',
+  sr: 'legendary',
+  ur: 'mythic',
+};
+
+/** Rarity from the ID's rarity code: "Hero:hid_commando_011_sr_t01" → legendary. */
+export function rarityOf(itemId: string): Rarity | undefined {
+  const known = ITEMS[itemId]?.rarity;
+  if (known) return known;
+  const code = itemId
+    .toLowerCase()
+    .split(/[_:]/)
+    .reverse()
+    .find((part) => part in RARITY_BY_CODE);
+  return code ? RARITY_BY_CODE[code] : undefined;
+}
+
+/** "Hero:hid_commando_011_sr_t01" → "Commando 011". */
 export function readableItemId(itemId: string): string {
   const name = itemId.split(':').pop() ?? itemId;
   return name
-    .replace(/^(sid|cid|wid|tid)_/i, '')
+    .replace(/^(sid|cid|wid|tid|hid|did)_/i, '')
+    .replace(/_(c|uc|r|vr|sr|ur)(_t\d\d)?$/i, '')
+    .replace(/_t\d\d$/i, '')
     .split('_')
     .filter(Boolean)
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
