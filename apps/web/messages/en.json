@@ -118,7 +118,8 @@
     "month": "30 days",
     "title": "V-Bucks in alerts",
     "farm": "Let's Farm",
-    "foundersInfo": "V-Bucks from mission alerts go only to Founders (owners of a Founder's Pack). Other players get X-Ray Tickets instead."
+    "foundersInfo": "V-Bucks from mission alerts go only to Founders (owners of a Founder's Pack). Other players get X-Ray Tickets instead.",
+    "noVbucksToday": "No V-Bucks today"
   },
   "Mission": {
     "powerLevel": "Power level",

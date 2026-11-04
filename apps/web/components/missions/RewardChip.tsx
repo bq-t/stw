@@ -2,39 +2,12 @@
 
 import { rewardCategory, type RewardCategory, type Reward } from '@stw/shared';
 import { iconNames, itemInfo, rarityOf } from '@stw/shared/items';
-import {
-  CircleArrowUp,
-  Coins,
-  FlaskConical,
-  Package,
-  ShieldHalf,
-  Sparkles,
-  Star,
-  Swords,
-  Ticket,
-  Users,
-  Wrench,
-  type LucideIcon,
-} from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { GameIcon } from './GameIcon';
+import { REWARD_ICONS } from './icons';
 import { useItemName } from './labels';
-
-const ICONS: Record<RewardCategory, LucideIcon> = {
-  vbucks: Coins,
-  xray: Ticket,
-  event: Star,
-  xp: Sparkles,
-  evo: FlaskConical,
-  perk: CircleArrowUp,
-  schematic: Wrench,
-  hero: Swords,
-  survivor: Users,
-  defender: ShieldHalf,
-  other: Package,
-};
 
 function formatQty(n: number): string {
   return n >= 1000 ? `${Math.round(n / 100) / 10}k` : String(n);
@@ -56,14 +29,14 @@ function RewardTile({
     <span
       data-rarity={rarity}
       className={cn(
-        'reward-tile inline-flex shrink-0 items-center justify-center overflow-hidden ring-1 ring-black/50',
+        'reward-tile inline-flex shrink-0 items-center justify-center overflow-hidden',
         size === 'sm' ? 'size-4 rounded-[2px]' : 'size-16 rounded-[4px]',
       )}
     >
       <GameIcon
         group="rewards"
         names={iconNames(reward.itemId, category)}
-        fallback={ICONS[category]}
+        fallback={REWARD_ICONS[category]}
         className={size === 'sm' ? 'size-3.5' : 'size-14 drop-shadow-[0_1px_2px_rgb(0_0_0/0.6)]'}
       />
     </span>
@@ -91,7 +64,7 @@ export function RewardChip({ reward }: { reward: Reward }) {
       <TooltipTrigger asChild>
         <span
           tabIndex={0}
-          className="inline-flex items-center gap-0.5 rounded-sm text-xs font-semibold tabular-nums"
+          className="inline-flex items-center gap-1 rounded-sm text-xs font-semibold tabular-nums"
         >
           <RewardTile reward={reward} category={category} rarity={rarity} size="sm" />
           <span className="sr-only">{name}</span>

@@ -162,7 +162,7 @@ export function MissionRow({ mission }: { mission: Mission }) {
           )}
           {place && (
             <CornerIcon label={place}>
-              <MapPin aria-hidden className="size-3.5" />
+              <MapPin aria-hidden className="size-3.5 fill-current [&>circle]:fill-background" />
             </CornerIcon>
           )}
         </span>

@@ -28,19 +28,27 @@ export function ZoneSection({
       aria-labelledby={`zone-${zone}`}
       className="flex flex-col overflow-hidden rounded-md border border-border bg-card"
     >
-      <header className="flex items-baseline gap-2 border-b border-border px-3 py-2">
-        <h2 id={`zone-${zone}`} className="font-display text-sm font-extrabold uppercase">
+      <header
+        className="zone-header flex items-center gap-3 border-b border-border px-3 py-2.5"
+        style={{ '--zone-bg': `url(/images/zones/${zone}.webp)` } as React.CSSProperties}
+      >
+        <h2
+          id={`zone-${zone}`}
+          className="font-display text-sm font-extrabold uppercase [text-shadow:0_1px_2px_rgb(0_0_0/0.8)]"
+        >
           {t(`Zone.${zone}`)}
         </h2>
-        <span className="text-xs text-muted-foreground">
-          {t('Tracker.missionsCount', { count: missions.length })}
-        </span>
-        {vbucks > 0 && (
-          <span className="ml-auto inline-flex items-center gap-1 self-center font-display text-sm font-extrabold text-vbucks [text-shadow:0_0_8px_var(--rarity-legendary)]">
-            <VbucksIcon className="drop-shadow-[0_0_6px_var(--rarity-legendary)]" />
-            {vbucks}
+        <span className="ml-auto flex items-center gap-3">
+          {vbucks > 0 && (
+            <span className="vbucks-glow inline-flex items-center gap-1 font-display text-sm font-extrabold">
+              <VbucksIcon />
+              {vbucks}
+            </span>
+          )}
+          <span className="text-xs text-foreground/80 [text-shadow:0_1px_2px_rgb(0_0_0/0.8)]">
+            {t('Tracker.missionsCount', { count: missions.length })}
           </span>
-        )}
+        </span>
       </header>
       <ul
         className={cn(

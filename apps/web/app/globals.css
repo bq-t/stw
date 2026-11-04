@@ -17,8 +17,10 @@
   --text-dim: #8d9bbd;
 
   /* V-Bucks are gold, as in the game. UI accent (selected filters, links, focus) stays blue. */
-  --vbucks: #ffc93c;
-  --vbucks-glow: rgb(255 201 60 / 0.14);
+  /* V-Bucks use the legendary colour, as the V-Bucks reward does in the game. */
+  --vbucks: #ffb15c;
+  --vbucks-glow: rgb(238 138 44 / 0.14);
+  --vbucks-shine: #ee8a2c;
   --accent-ui: #3fa9ff;
 
   /* Fortnite rarity colours: grey, green, blue, purple, orange-gold (legendary), yellow (mythic). *-hi / *-lo = tile gradient. */
@@ -129,31 +131,39 @@ html {
 .reward-tile {
   --hi: var(--surface-2);
   --lo: var(--surface-2);
+  --edge: var(--line);
   background: radial-gradient(circle at 50% 30%, var(--hi), var(--lo) 85%);
+  box-shadow: 0 0 0 1px var(--edge);
 }
 .reward-tile[data-rarity='common'] {
   --hi: var(--rarity-common-hi);
   --lo: var(--rarity-common-lo);
+  --edge: var(--rarity-common);
 }
 .reward-tile[data-rarity='uncommon'] {
   --hi: var(--rarity-uncommon-hi);
   --lo: var(--rarity-uncommon-lo);
+  --edge: var(--rarity-uncommon);
 }
 .reward-tile[data-rarity='rare'] {
   --hi: var(--rarity-rare-hi);
   --lo: var(--rarity-rare-lo);
+  --edge: var(--rarity-rare);
 }
 .reward-tile[data-rarity='epic'] {
   --hi: var(--rarity-epic-hi);
   --lo: var(--rarity-epic-lo);
+  --edge: var(--rarity-epic);
 }
 .reward-tile[data-rarity='legendary'] {
   --hi: var(--rarity-legendary-hi);
   --lo: var(--rarity-legendary-lo);
+  --edge: var(--rarity-legendary);
 }
 .reward-tile[data-rarity='mythic'] {
   --hi: var(--rarity-mythic-hi);
   --lo: var(--rarity-mythic-lo);
+  --edge: var(--rarity-mythic);
 }
 
 /* Fortnite-style call-to-action: yellow, slanted, heavy uppercase. */
@@ -163,12 +173,15 @@ html {
   height: 2rem;
   padding: 0 1rem;
   transform: skewX(-8deg);
-  border-radius: 2px;
+  border-radius: 0;
   background: linear-gradient(180deg, #fff36b 0%, #ffd91a 55%, #f2b90c 100%);
   box-shadow:
     inset 0 -3px 0 rgb(0 0 0 / 0.18),
     0 0 0 1px #8a6200;
-  color: #1a1400;
+  color: #fff;
+  text-shadow:
+    0 1px 0 rgb(90 60 0 / 0.9),
+    0 0 3px rgb(90 60 0 / 0.6);
   font-family: var(--font-unbounded), system-ui, sans-serif;
   font-weight: 800;
   font-size: 0.8rem;
@@ -191,6 +204,39 @@ html {
 .fn-button:focus-visible {
   outline: 2px solid var(--accent-ui);
   outline-offset: 2px;
+}
+
+/* Icon and number glow together. */
+.vbucks-glow {
+  color: var(--vbucks);
+  filter: drop-shadow(0 0 5px var(--vbucks-shine));
+}
+
+/* Zone header with a blurred zone picture behind it. */
+.zone-header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.zone-header::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  z-index: -2;
+  background: var(--zone-bg) center / cover no-repeat;
+  filter: blur(3px) saturate(1.1);
+}
+.zone-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    rgb(11 19 36 / 0.82) 0%,
+    rgb(11 19 36 / 0.45) 60%,
+    rgb(11 19 36 / 0.7) 100%
+  );
 }
 
 /* Slanted tabs and buttons give the game feel without illustrations. */

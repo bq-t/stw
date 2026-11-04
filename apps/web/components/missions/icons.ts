@@ -1,6 +1,15 @@
-import type { AlertKind } from '@stw/shared';
+import type { AlertKind, RewardCategory } from '@stw/shared';
 import {
   Antenna,
+  CircleArrowUp,
+  Coins,
+  FlaskConical,
+  ShieldHalf,
+  Sparkles,
+  Star,
+  Swords,
+  Ticket,
+  Wrench,
   Bomb,
   CloudLightning,
   Crosshair,
@@ -61,6 +70,36 @@ export const ALERT_ICONS: Partial<Record<AlertKind, LucideIcon>> = {
   'elemental-fire': Flame,
   'elemental-nature': Leaf,
   'elemental-water': Droplets,
+};
+
+/** Lucide fallbacks for reward categories. */
+export const REWARD_ICONS: Record<RewardCategory, LucideIcon> = {
+  vbucks: Coins,
+  xray: Ticket,
+  event: Star,
+  xp: Sparkles,
+  evo: FlaskConical,
+  perk: CircleArrowUp,
+  schematic: Wrench,
+  hero: Swords,
+  survivor: Users,
+  defender: ShieldHalf,
+  other: Package,
+};
+
+/** Game icon names that represent a whole reward category (filter buttons). */
+export const REWARD_CATEGORY_ICON_NAMES: Record<RewardCategory, string[]> = {
+  vbucks: ['currency_mtxswap'],
+  xray: ['currency_xrayllama'],
+  event: ['eventcurrency_scaling', 'campaign_event_currency'],
+  xp: ['heroxp'],
+  evo: ['reagent_c_t04'],
+  perk: ['reagent_alteration_upgrade_sr'],
+  schematic: ['category-schematic'],
+  hero: ['category-hero'],
+  survivor: ['category-survivor'],
+  defender: ['category-defender'],
+  other: [],
 };
 
 export { MapPin as FallbackMissionIcon, Zap as PowerIcon };

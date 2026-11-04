@@ -1,7 +1,7 @@
 'use client';
 
 import type { VbucksHistory } from '@stw/shared';
-import { Info } from 'lucide-react';
+import { Frown, Info } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { VbucksIcon } from './VbucksIcon';
@@ -32,7 +32,7 @@ export function VbucksStats({
   const t = useTranslations('Stats');
   const ready = history && today && todayTotal !== undefined;
   const items = [
-    { label: t('today'), value: ready ? todayTotal : null, accent: true },
+    { label: t('today'), value: ready ? todayTotal : null, today: true },
     { label: t('yesterday'), value: ready ? sumDays(history, today, 1, 1) : null },
     { label: t('week'), value: ready ? todayTotal + sumDays(history, today, 1, 6) : null },
     { label: t('month'), value: ready ? todayTotal + sumDays(history, today, 1, 29) : null },
@@ -63,15 +63,24 @@ export function VbucksStats({
         <span key={it.label} className="flex items-baseline gap-1.5">
           <span className="text-xs text-muted-foreground">{it.label}</span>
           <span
-            className={`font-display text-lg font-extrabold tabular-nums ${it.accent ? 'text-vbucks' : ''}`}
+            className={`font-display text-lg font-extrabold tabular-nums ${
+              it.today ? (it.value ? 'vbucks-glow' : 'text-foreground') : 'text-foreground/55'
+            }`}
           >
             {it.value ?? '–'}
           </span>
         </span>
       ))}
-      <button type="button" onClick={onFarm} className="fn-button ml-auto">
-        <span>{t('farm')}</span>
-      </button>
+      {ready && todayTotal === 0 ? (
+        <span className="ml-auto inline-flex items-center gap-1.5 rounded-sm border border-border bg-surface-2 px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+          <Frown aria-hidden className="size-4" />
+          {t('noVbucksToday')}
+        </span>
+      ) : (
+        <button type="button" onClick={onFarm} className="fn-button ml-auto">
+          <span>{t('farm')}</span>
+        </button>
+      )}
     </section>
   );
 }

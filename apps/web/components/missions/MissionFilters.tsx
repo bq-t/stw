@@ -19,6 +19,8 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Slider } from '@/components/ui/slider';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { GameIcon } from './GameIcon';
+import { REWARD_CATEGORY_ICON_NAMES, REWARD_ICONS } from './icons';
 import { VbucksIcon } from './VbucksIcon';
 
 const itemClass =
@@ -134,7 +136,16 @@ export function MissionFilters({
           >
             {REWARD_CATEGORIES.map((c) => (
               <ToggleGroupItem key={c} value={c} className={itemClass}>
-                {c === 'vbucks' && <VbucksIcon className="size-3.5" />}
+                {c === 'vbucks' ? (
+                  <VbucksIcon className="size-3.5" />
+                ) : (
+                  <GameIcon
+                    group="rewards"
+                    names={REWARD_CATEGORY_ICON_NAMES[c]}
+                    fallback={REWARD_ICONS[c]}
+                    className="size-4"
+                  />
+                )}
                 {t(`RewardCategory.${c}`)}
               </ToggleGroupItem>
             ))}

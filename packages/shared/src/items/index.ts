@@ -73,14 +73,14 @@ export const ITEMS: Record<string, ItemInfo> = {
   'AccountResource:campaign_event_currency': res(
     'Event Tickets',
     'Билеты события',
-    undefined,
+    'common',
     'Currency of the current event; spent in the Event Store.',
     'Валюта текущего события, тратится в магазине события.',
   ),
   'AccountResource:eventcurrency_scaling': res(
     'Event Tickets',
     'Билеты события',
-    undefined,
+    'common',
     'Buys Event Llamas in the Event Store.',
     'Покупка лам события в магазине события.',
   ),
