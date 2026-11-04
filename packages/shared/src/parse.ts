@@ -239,6 +239,17 @@ function toReward(item: RawRewardItem): Reward {
   };
 }
 
+/** Same item listed twice (e.g. two epic survivors) → one reward with the summed amount. */
+export function mergeRewards(rewards: Reward[]): Reward[] {
+  const merged: Reward[] = [];
+  for (const r of rewards) {
+    const same = merged.find((m) => m.itemId === r.itemId && m.rarity === r.rarity);
+    if (same) same.quantity += r.quantity;
+    else merged.push({ ...r });
+  }
+  return merged;
+}
+
 // ---------- snapshot ----------
 
 function toMission(
@@ -259,8 +270,8 @@ function toMission(
     difficultyRow: row,
     tileIndex: raw.tileIndex,
     alertKind: alertKindOf(alert),
-    alertRewards: (alert?.missionAlertRewards?.items ?? []).map(toReward),
-    baseRewards: (raw.missionRewards?.items ?? []).map(toReward),
+    alertRewards: mergeRewards((alert?.missionAlertRewards?.items ?? []).map(toReward)),
+    baseRewards: mergeRewards((raw.missionRewards?.items ?? []).map(toReward)),
     isGroup: isGroupMission(raw),
   };
 }

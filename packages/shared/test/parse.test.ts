@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
 import {
+  mergeRewards,
   alertKindOf,
   alertsFingerprint,
   biomeOf,
@@ -80,6 +81,22 @@ describe('parseWorldInfo on a real response', () => {
   it('fingerprint is stable across days for the same alerts', () => {
     const next = parseWorldInfo(raw, new Date('2026-11-05T00:10:00Z'));
     expect(alertsFingerprint(next)).toBe(alertsFingerprint(snapshot));
+  });
+});
+
+describe('mergeRewards', () => {
+  it('sums the same item listed twice', () => {
+    const s = { itemId: 'Worker:workerbasic_vr_t01', quantity: 1, isVbucks: false };
+    const e = { itemId: 'AccountResource:reagent_c_t01', quantity: 36, isVbucks: false };
+    expect(mergeRewards([s, e, { ...s }])).toEqual([{ ...s, quantity: 2 }, e]);
+  });
+
+  it('is applied to real alerts (two epic survivors in Twine Peaks)', () => {
+    const snap = parseWorldInfo(raw, NOW);
+    for (const m of snap.missions) {
+      const ids = m.alertRewards.map((r) => r.itemId);
+      expect(new Set(ids).size).toBe(ids.length);
+    }
   });
 });
 

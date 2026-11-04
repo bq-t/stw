@@ -1,9 +1,9 @@
 'use client';
 
 import { vbucksOf, type Mission, type Zone } from '@stw/shared';
-import { Coins } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { MissionRow } from './MissionRow';
+import { VbucksIcon } from './VbucksIcon';
 
 /** Missions arrive already filtered and sorted (V-Bucks first). */
 export function ZoneSection({ zone, missions }: { zone: Zone; missions: Mission[] }) {
@@ -25,7 +25,7 @@ export function ZoneSection({ zone, missions }: { zone: Zone; missions: Mission[
         </span>
         {vbucks > 0 && (
           <span className="ml-auto inline-flex items-center gap-1 text-sm font-semibold text-vbucks">
-            <Coins aria-hidden className="size-4" />
+            <VbucksIcon />
             {vbucks}
           </span>
         )}

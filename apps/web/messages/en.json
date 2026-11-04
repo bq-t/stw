@@ -120,10 +120,13 @@
   },
   "Mission": {
     "powerLevel": "Power level",
-    "group": "Group mission",
+    "group": "Group mission: built for 4 players",
     "alertReward": "Alert reward",
     "unknownPl": "Power level not known yet",
-    "vbucksAmount": "{count} V-Bucks"
+    "vbucksAmount": "{count} V-Bucks",
+    "solo": "Solo or with friends",
+    "alert": "Alert",
+    "location": "Location"
   },
   "Biome": {
     "forest": "Forest",
@@ -166,5 +169,13 @@
     "epic": "Epic",
     "legendary": "Legendary",
     "mythic": "Mythic"
+  },
+  "RewardDescription": {
+    "hero": "Hero: playable character with abilities and perks.",
+    "survivor": "Survivor: slot into a squad to raise your power level.",
+    "lead": "Lead survivor: heads a survivor squad and boosts it when the personality matches.",
+    "defender": "Defender: an AI ally you place at the base during missions.",
+    "schematic": "Schematic: a weapon or trap you can craft.",
+    "xp": "Experience for leveling up."
   }
 }

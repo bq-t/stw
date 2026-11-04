@@ -84,7 +84,7 @@ function Tracker() {
           <p className="text-muted-foreground">{t('empty')}</p>
           <button
             type="button"
-            className="text-sm text-vbucks underline-offset-4 hover:underline"
+            className="text-sm text-accent-ui underline-offset-4 hover:underline"
             onClick={() => setFilters(DEFAULT_FILTERS)}
           >
             {t('resetFilters')}

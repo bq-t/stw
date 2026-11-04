@@ -19,9 +19,10 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Slider } from '@/components/ui/slider';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { VbucksIcon } from './VbucksIcon';
 
 const itemClass =
-  'h-7 px-2.5 text-xs data-[state=on]:bg-surface-2 data-[state=on]:text-foreground data-[state=on]:ring-1 data-[state=on]:ring-vbucks';
+  'h-7 px-2.5 text-xs data-[state=on]:bg-surface-2 data-[state=on]:text-foreground data-[state=on]:ring-1 data-[state=on]:ring-accent-ui';
 
 const ALERT_OPTIONS: { value: AlertFilter; label: string }[] = [
   { value: 'miniboss', label: 'alertMiniboss' },
@@ -90,6 +91,7 @@ export function MissionFilters({
             value={o.value}
             className={o.value === 'vbucks' ? `${itemClass} text-vbucks` : itemClass}
           >
+            {o.value === 'vbucks' && <VbucksIcon className="size-3.5" />}
             {t(`Filters.${o.label}`)}
           </ToggleGroupItem>
         ))}
@@ -115,7 +117,7 @@ export function MissionFilters({
           <Button
             variant="ghost"
             size="sm"
-            className={rewardCount ? 'h-7 ring-1 ring-vbucks' : 'h-7'}
+            className={rewardCount ? 'h-7 ring-1 ring-accent-ui' : 'h-7'}
           >
             {t('Filters.reward')}
             {rewardCount > 0 && <span className="tabular-nums">({rewardCount})</span>}

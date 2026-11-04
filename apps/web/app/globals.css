@@ -16,10 +16,12 @@
   --text: #e8eefc;
   --text-dim: #8d9bbd;
 
-  --vbucks: #3fa9ff;
-  --vbucks-glow: rgb(63 169 255 / 0.18);
+  /* V-Bucks are gold, as in the game. UI accent (selected filters, links, focus) stays blue. */
+  --vbucks: #ffc93c;
+  --vbucks-glow: rgb(255 201 60 / 0.14);
+  --accent-ui: #3fa9ff;
 
-  /* Fortnite rarity colours: grey, green, blue, purple, gold. *-hi / *-lo = tile gradient. */
+  /* Fortnite rarity colours: grey, green, blue, purple, orange-gold (legendary), yellow (mythic). *-hi / *-lo = tile gradient. */
   --rarity-common: #a7adb8;
   --rarity-common-hi: #b9bdc4;
   --rarity-common-lo: #575c66;
@@ -32,12 +34,12 @@
   --rarity-epic: #c25aff;
   --rarity-epic-hi: #d283ff;
   --rarity-epic-lo: #4c1f8a;
-  --rarity-legendary: #f2b13a;
-  --rarity-legendary-hi: #ffd166;
-  --rarity-legendary-lo: #9a4f0e;
-  --rarity-mythic: #ffe066;
-  --rarity-mythic-hi: #fff1a8;
-  --rarity-mythic-lo: #b88a12;
+  --rarity-legendary: #ee8a2c;
+  --rarity-legendary-hi: #ffb15c;
+  --rarity-legendary-lo: #8a3a0c;
+  --rarity-mythic: #ffe14d;
+  --rarity-mythic-hi: #fff4a8;
+  --rarity-mythic-lo: #a8820f;
 
   /* shadcn/ui */
   --background: var(--bg);
@@ -46,7 +48,7 @@
   --card-foreground: var(--text);
   --popover: var(--surface-2);
   --popover-foreground: var(--text);
-  --primary: var(--vbucks);
+  --primary: var(--accent-ui);
   --primary-foreground: #04101f;
   --secondary: var(--surface-2);
   --secondary-foreground: var(--text);
@@ -57,7 +59,7 @@
   --destructive: #ff5a5a;
   --border: var(--line);
   --input: var(--line);
-  --ring: var(--vbucks);
+  --ring: var(--accent-ui);
   --radius: 0.375rem;
 }
 
@@ -69,6 +71,7 @@
   --color-surface-2: var(--surface-2);
   --color-text: var(--text);
   --color-vbucks: var(--vbucks);
+  --color-accent-ui: var(--accent-ui);
   --color-common: var(--rarity-common);
   --color-uncommon: var(--rarity-uncommon);
   --color-rare: var(--rarity-rare);
