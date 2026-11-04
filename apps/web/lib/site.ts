@@ -12,6 +12,7 @@ export const PAGES = [
   '/side-quests',
   '/guide',
   '/faq',
+  '/privacy',
 ] as const;
 
 /** Absolute URL of a page in a locale: EN without a prefix, RU under /ru. */

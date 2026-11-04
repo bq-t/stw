@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 const CREATOR_CODE = process.env.NEXT_PUBLIC_CREATOR_CODE;
 
@@ -14,6 +15,11 @@ export function Footer() {
           </p>
         )}
         <p>{t('disclaimer')}</p>
+        <p>
+          <Link href="/privacy" className="underline-offset-4 hover:text-text hover:underline">
+            {t('privacy')}
+          </Link>
+        </p>
       </div>
     </footer>
   );
