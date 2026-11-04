@@ -21,7 +21,7 @@ describe('parseWorldInfo on a real response', () => {
     expect(new Set(snapshot.missions.map((m) => m.zone))).toEqual(
       new Set(['stonewood', 'plankerton', 'canny-valley', 'twine-peaks']),
     );
-    expect(snapshot.missions).toHaveLength(44);
+    expect(snapshot.missions).toHaveLength(41); // 44 minus 3 storm shield defenses
   });
 
   it('parses the V-Bucks alert of the day', () => {
@@ -60,17 +60,14 @@ describe('parseWorldInfo on a real response', () => {
       'twine-peaks': [76, 160],
     } as const;
     for (const m of snapshot.missions) {
-      if (m.missionType === 'storm-shield-defense') continue;
       const [lo, hi] = range[m.zone];
       expect(m.powerLevel, `${m.zone} ${m.difficultyRow}`).toBeGreaterThanOrEqual(lo);
       expect(m.powerLevel, `${m.zone} ${m.difficultyRow}`).toBeLessThanOrEqual(hi);
     }
   });
 
-  it('marks storm shield defenses and group missions', () => {
-    const ssd = snapshot.missions.filter((m) => m.missionType === 'storm-shield-defense');
-    expect(ssd.length).toBeGreaterThan(0);
-    expect(ssd.every((m) => m.powerLevel === 0)).toBe(true);
+  it('drops storm shield defenses and marks group missions', () => {
+    expect(snapshot.missions.some((m) => m.missionType === 'storm-shield-defense')).toBe(false);
     expect(snapshot.missions.filter((m) => m.isGroup).length).toBe(22);
   });
 
@@ -158,9 +155,13 @@ describe('alertKindOf (real categories)', () => {
 describe('biomeOf', () => {
   it.each([
     ['/STW_Zones/World/ZoneThemes/ZT_TheSuburbs/BP_ZT_TheSuburbs.BP_ZT_TheSuburbs_C', 'suburbs'],
-    ['/X/BP_ZT_AD2_TheGrasslands.BP_ZT_AD2_TheGrasslands_C', 'grasslands'],
-    ['/X/BP_ZT_TheIndustrialPark_Arid.BP_ZT_TheIndustrialPark_Arid_C', 'industrial'],
-    ['/X/BP_ZT_Route99_Bunker_1.BP_ZT_Route99_Bunker_1_C', 'route-99'],
+    ['/X/BP_ZT_AD2_TheGrasslands.BP_ZT_AD2_TheGrasslands_C', 'autumn-foothills'],
+    ['/X/BP_ZT_AD_TheCity.BP_ZT_AD_TheCity_C', 'autumn-city'],
+    ['/X/BP_ZT_AD_Lakeside.BP_ZT_AD_Lakeside_C', 'lakeside'],
+    ['/X/BP_ZT_TP_Island01.BP_ZT_TP_Island01_C', 'tropical'],
+    ['/X/BP_ZT_Desert_Bunker.BP_ZT_Desert_Bunker_C', 'desert'],
+    ['/X/BP_ZT_TheIndustrialPark_Arid.BP_ZT_TheIndustrialPark_Arid_C', 'industrial-park'],
+    ['/X/BP_ZT_Route99_Bunker_1.BP_ZT_Route99_Bunker_1_C', 'thunder-route-99'],
     ['/X/BP_ZT_VindermansLab.BP_ZT_VindermansLab_C', ''],
   ])('%s → %s', (theme, expected) => {
     expect(biomeOf(theme)).toBe(expected);

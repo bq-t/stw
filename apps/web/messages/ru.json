@@ -102,12 +102,13 @@
   "Filters": {
     "zone": "Зона",
     "alert": "Миссии",
-    "alertAll": "Все",
-    "alertAlerts": "С алертом",
+    "alertAll": "Все миссии",
+    "alertAlerts": "Все алерты",
     "alertVbucks": "В-баксы",
     "reward": "Награда",
     "powerLevel": "Уровень силы",
-    "any": "Любая"
+    "any": "Любая",
+    "alertMiniboss": "Мини-боссы"
   },
   "Stats": {
     "today": "Сегодня",
@@ -128,16 +129,19 @@
     "grasslands": "Равнины",
     "suburbs": "Пригород",
     "city": "Город",
-    "industrial": "Промзона",
     "desert": "Пустыня",
     "swamp": "Болото",
     "mountains": "Горы",
-    "lakes": "Озёра",
     "arctic": "Арктика",
     "ghost-town": "Город-призрак",
-    "route-99": "Шоссе 99",
-    "island": "Остров",
-    "outpost": "Штормовой щит"
+    "autumn-foothills": "Осенние предгорья",
+    "autumn-suburbs": "Осенний пригород",
+    "autumn-city": "Осенний город",
+    "autumn-industrial-park": "Осенняя промзона",
+    "lakeside": "Озёра",
+    "industrial-park": "Промзона",
+    "thunder-route-99": "Шоссе 99",
+    "tropical": "Тропики"
   },
   "Privacy": {
     "title": "Конфиденциальность",

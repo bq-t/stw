@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  DEFAULT_FILTERS,
   PL_MAX,
   PL_MIN,
   REWARD_CATEGORIES,
@@ -11,21 +12,23 @@ import {
   type RewardCategory,
   type Zone,
 } from '@stw/shared';
-import { RotateCcw } from 'lucide-react';
+import { ChevronDown, RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Slider } from '@/components/ui/slider';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
-function Group({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex min-w-0 flex-col gap-1.5">
-      <span className="text-xs font-semibold text-muted-foreground uppercase">{label}</span>
-      {children}
-    </div>
-  );
-}
+const itemClass =
+  'h-7 px-2.5 text-xs data-[state=on]:bg-surface-2 data-[state=on]:text-foreground data-[state=on]:ring-1 data-[state=on]:ring-vbucks';
+
+const ALERT_OPTIONS: { value: AlertFilter; label: string }[] = [
+  { value: 'miniboss', label: 'alertMiniboss' },
+  { value: 'alerts', label: 'alertAlerts' },
+  { value: 'all', label: 'alertAll' },
+  { value: 'vbucks', label: 'alertVbucks' },
+];
 
 /** Moves locally while dragging and commits to the URL on release. Re-keyed when the URL changes. */
 function PowerLevelSlider({
@@ -41,9 +44,15 @@ function PowerLevelSlider({
 }) {
   const [pl, setPl] = useState<[number, number]>([min, max]);
   return (
-    <Group label={`${label}: ${pl[0]}–${pl[1]}`}>
+    <div className="flex items-center gap-2">
+      <span className="text-xs whitespace-nowrap text-muted-foreground">
+        {label}:{' '}
+        <span className="font-semibold text-foreground tabular-nums">
+          {pl[0]}–{pl[1]}
+        </span>
+      </span>
       <Slider
-        className="w-48 max-w-full"
+        className="w-36"
         min={PL_MIN}
         max={PL_MAX}
         step={1}
@@ -51,12 +60,9 @@ function PowerLevelSlider({
         onValueChange={(v) => setPl([v[0] ?? PL_MIN, v[1] ?? PL_MAX])}
         onValueCommit={(v) => onCommit(v[0] ?? PL_MIN, v[1] ?? PL_MAX)}
       />
-    </Group>
+    </div>
   );
 }
-
-const itemClass =
-  'h-7 px-2.5 text-xs data-[state=on]:bg-surface-2 data-[state=on]:text-foreground data-[state=on]:ring-1 data-[state=on]:ring-vbucks';
 
 export function MissionFilters({
   value,
@@ -66,58 +72,72 @@ export function MissionFilters({
   onChange: (next: Filters) => void;
 }) {
   const t = useTranslations();
+  const rewardCount = value.rewards.length;
+
   return (
-    <div className="flex flex-wrap items-end gap-x-6 gap-y-4 rounded-md border border-border bg-card p-3">
-      <Group label={t('Filters.alert')}>
-        <ToggleGroup
-          type="single"
-          value={value.alert}
-          onValueChange={(v) => v && onChange({ ...value, alert: v as AlertFilter })}
-          spacing={1}
-        >
-          <ToggleGroupItem value="all" className={itemClass}>
-            {t('Filters.alertAll')}
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-border bg-card px-3 py-2">
+      <ToggleGroup
+        type="single"
+        value={value.alert}
+        onValueChange={(v) => v && onChange({ ...value, alert: v as AlertFilter })}
+        spacing={1}
+        aria-label={t('Filters.alert')}
+        className="max-w-full flex-wrap"
+      >
+        {ALERT_OPTIONS.map((o) => (
+          <ToggleGroupItem
+            key={o.value}
+            value={o.value}
+            className={o.value === 'vbucks' ? `${itemClass} text-vbucks` : itemClass}
+          >
+            {t(`Filters.${o.label}`)}
           </ToggleGroupItem>
-          <ToggleGroupItem value="alerts" className={itemClass}>
-            {t('Filters.alertAlerts')}
-          </ToggleGroupItem>
-          <ToggleGroupItem value="vbucks" className={`${itemClass} text-vbucks`}>
-            {t('Filters.alertVbucks')}
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </Group>
+        ))}
+      </ToggleGroup>
 
-      <Group label={t('Filters.zone')}>
-        <ToggleGroup
-          type="multiple"
-          value={value.zones}
-          onValueChange={(v) => onChange({ ...value, zones: v as Zone[] })}
-          spacing={1}
-          className="max-w-full flex-wrap"
-        >
-          {ZONES.map((z) => (
-            <ToggleGroupItem key={z} value={z} className={itemClass}>
-              {t(`Zone.${z}`)}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
-      </Group>
+      <ToggleGroup
+        type="multiple"
+        value={value.zones}
+        onValueChange={(v) => onChange({ ...value, zones: v as Zone[] })}
+        spacing={1}
+        aria-label={t('Filters.zone')}
+        className="max-w-full flex-wrap"
+      >
+        {ZONES.map((z) => (
+          <ToggleGroupItem key={z} value={z} className={itemClass}>
+            {t(`Zone.${z}`)}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
 
-      <Group label={t('Filters.reward')}>
-        <ToggleGroup
-          type="multiple"
-          value={value.rewards}
-          onValueChange={(v) => onChange({ ...value, rewards: v as RewardCategory[] })}
-          spacing={1}
-          className="max-w-full flex-wrap"
-        >
-          {REWARD_CATEGORIES.filter((c) => c !== 'vbucks').map((c) => (
-            <ToggleGroupItem key={c} value={c} className={itemClass}>
-              {t(`RewardCategory.${c}`)}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
-      </Group>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={rewardCount ? 'h-7 ring-1 ring-vbucks' : 'h-7'}
+          >
+            {t('Filters.reward')}
+            {rewardCount > 0 && <span className="tabular-nums">({rewardCount})</span>}
+            <ChevronDown aria-hidden />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent align="start" className="w-auto max-w-[min(32rem,90vw)] p-2">
+          <ToggleGroup
+            type="multiple"
+            value={value.rewards}
+            onValueChange={(v) => onChange({ ...value, rewards: v as RewardCategory[] })}
+            spacing={1}
+            className="flex-wrap"
+          >
+            {REWARD_CATEGORIES.filter((c) => c !== 'vbucks').map((c) => (
+              <ToggleGroupItem key={c} value={c} className={itemClass}>
+                {t(`RewardCategory.${c}`)}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </PopoverContent>
+      </Popover>
 
       <PowerLevelSlider
         key={`${value.plMin}-${value.plMax}`}
@@ -131,10 +151,8 @@ export function MissionFilters({
         <Button
           variant="ghost"
           size="sm"
-          className="ml-auto"
-          onClick={() =>
-            onChange({ zones: [], alert: 'all', rewards: [], plMin: PL_MIN, plMax: PL_MAX })
-          }
+          className="ml-auto h-7"
+          onClick={() => onChange(DEFAULT_FILTERS)}
         >
           <RotateCcw aria-hidden />
           {t('Tracker.resetFilters')}

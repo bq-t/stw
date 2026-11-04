@@ -102,12 +102,13 @@
   "Filters": {
     "zone": "Zone",
     "alert": "Missions",
-    "alertAll": "All",
-    "alertAlerts": "Alerts",
+    "alertAll": "All missions",
+    "alertAlerts": "All alerts",
     "alertVbucks": "V-Bucks",
     "reward": "Reward",
     "powerLevel": "Power level",
-    "any": "Any"
+    "any": "Any",
+    "alertMiniboss": "Mini-boss"
   },
   "Stats": {
     "today": "Today",
@@ -128,16 +129,19 @@
     "grasslands": "Grasslands",
     "suburbs": "Suburbs",
     "city": "City",
-    "industrial": "Industrial",
     "desert": "Desert",
     "swamp": "Swamp",
     "mountains": "Mountains",
-    "lakes": "Lakeside",
     "arctic": "Arctic",
     "ghost-town": "Ghost Town",
-    "route-99": "Route 99",
-    "island": "Island",
-    "outpost": "Storm Shield"
+    "autumn-foothills": "Autumn Foothills",
+    "autumn-suburbs": "Autumn Suburbs",
+    "autumn-city": "Autumn City",
+    "autumn-industrial-park": "Autumn Industrial Park",
+    "lakeside": "Lakeside",
+    "industrial-park": "Industrial Park",
+    "thunder-route-99": "Thunder Route 99",
+    "tropical": "Tropical"
   },
   "Privacy": {
     "title": "Privacy",

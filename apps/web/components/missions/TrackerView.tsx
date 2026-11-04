@@ -61,7 +61,7 @@ function Tracker() {
   const shown = byZone.reduce((s, z) => s + z.missions.length, 0);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3">
       {IS_DEMO && <Notice>{t('demo')}</Notice>}
       {missions.data && isStale(missions.data) && <Notice>{t('updating')}</Notice>}
       {missions.isError && !missions.data && <Notice>{t('error')}</Notice>}
@@ -74,9 +74,9 @@ function Tracker() {
       <MissionFilters value={filters} onChange={setFilters} />
 
       {!missions.data ? (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 8 }, (_, i) => (
-            <Skeleton key={i} className="h-36" />
+        <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
+          {Array.from({ length: 4 }, (_, i) => (
+            <Skeleton key={i} className="h-72" />
           ))}
         </div>
       ) : shown === 0 ? (
@@ -91,9 +91,11 @@ function Tracker() {
           </button>
         </div>
       ) : (
-        byZone.map(({ zone, missions: list }) => (
-          <ZoneSection key={zone} zone={zone} missions={list} />
-        ))
+        <div className="grid grid-cols-1 items-start gap-3 xl:grid-cols-2">
+          {byZone.map(({ zone, missions: list }) => (
+            <ZoneSection key={zone} zone={zone} missions={list} />
+          ))}
+        </div>
       )}
     </div>
   );

@@ -66,9 +66,19 @@ describe('URL filters', () => {
 });
 
 describe('matchesFilters', () => {
+  const ALL = { ...DEFAULT_FILTERS, alert: 'all' as const };
   const plain = mission({ powerLevel: 30 });
   const vb = mission({ powerLevel: 60, zone: 'canny-valley', alertRewards: [vbucks(50)] });
   const unknownPl = mission({ powerLevel: 0 });
+
+  it('shows only mini-boss alerts by default', () => {
+    const boss = mission({ alertKind: 'mini-boss', alertRewards: [vbucks(50)] });
+    const mega = mission({ alertKind: 'mega-alert', alertRewards: [vbucks(50)] });
+    expect(matchesFilters(boss, DEFAULT_FILTERS)).toBe(true);
+    expect(matchesFilters(mega, DEFAULT_FILTERS)).toBe(false);
+    expect(matchesFilters(plain, DEFAULT_FILTERS)).toBe(false);
+    expect(matchesFilters(mega, { ...DEFAULT_FILTERS, alert: 'alerts' })).toBe(true);
+  });
 
   it('filters by alert type', () => {
     const f = { ...DEFAULT_FILTERS, alert: 'vbucks' as const };
@@ -77,23 +87,23 @@ describe('matchesFilters', () => {
   });
 
   it('filters by zone and power level but never hides unknown power level', () => {
-    const f = { ...DEFAULT_FILTERS, zones: ['canny-valley' as const], plMin: 50, plMax: 70 };
+    const f = { ...ALL, zones: ['canny-valley' as const], plMin: 50, plMax: 70 };
     expect(matchesFilters(vb, f)).toBe(true);
-    expect(matchesFilters(plain, { ...DEFAULT_FILTERS, plMin: 50 })).toBe(false);
-    expect(matchesFilters(unknownPl, { ...DEFAULT_FILTERS, plMin: 50 })).toBe(true);
+    expect(matchesFilters(plain, { ...ALL, plMin: 50 })).toBe(false);
+    expect(matchesFilters(unknownPl, { ...ALL, plMin: 50 })).toBe(true);
   });
 
   it('filters by reward category', () => {
     const evo = mission({
       baseRewards: [{ itemId: 'AccountResource:reagent_c_t02', quantity: 5, isVbucks: false }],
     });
-    expect(matchesFilters(evo, { ...DEFAULT_FILTERS, rewards: ['evo'] })).toBe(true);
-    expect(matchesFilters(evo, { ...DEFAULT_FILTERS, rewards: ['hero'] })).toBe(false);
+    expect(matchesFilters(evo, { ...ALL, rewards: ['evo'] })).toBe(true);
+    expect(matchesFilters(evo, { ...ALL, rewards: ['hero'] })).toBe(false);
   });
 });
 
 describe('compareMissions', () => {
-  it('puts V-Bucks first, then alerts, then higher power level', () => {
+  it('puts V-Bucks first, then alerts, then power level ascending', () => {
     const list = [
       mission({ id: 'low', powerLevel: 5 }),
       mission({
@@ -108,8 +118,8 @@ describe('compareMissions', () => {
       'vb80',
       'vb50',
       'alert',
-      'high',
       'low',
+      'high',
     ]);
   });
 });

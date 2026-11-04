@@ -16,7 +16,7 @@ export default async function TrackerPage({ params }: PageProps<'/[locale]'>) {
   const t = await getTranslations('Tracker');
 
   return (
-    <section className="flex flex-col gap-6">
+    <section className="flex flex-col gap-3">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="font-display text-2xl font-extrabold uppercase">{t('title')}</h1>
         <RotationTimer />

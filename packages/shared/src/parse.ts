@@ -158,18 +158,22 @@ export function isGroupMission(raw: RawMission): boolean {
 
 // ---------- biome ----------
 
+/** Zone theme class → location key; names match the game ("Autumn City", "Thunder Route 99"). */
 const BIOMES: [RegExp, string][] = [
+  [/AD2?_TheGrasslands/i, 'autumn-foothills'],
+  [/AD_TheSuburbs/i, 'autumn-suburbs'],
+  [/AD_TheCity/i, 'autumn-city'],
+  [/AD_TheIndustrialPark/i, 'autumn-industrial-park'],
+  [/Lakeside/i, 'lakeside'],
   [/Suburb/i, 'suburbs'],
   [/Grassland/i, 'grasslands'],
-  [/Lakeside/i, 'lakes'],
-  [/Industrial/i, 'industrial'],
+  [/Industrial/i, 'industrial-park'],
   [/GhostTown/i, 'ghost-town'],
   [/City/i, 'city'],
   [/Forest/i, 'forest'],
   [/Desert/i, 'desert'],
-  [/Route99/i, 'route-99'],
-  [/Island/i, 'island'],
-  [/Outpost/i, 'outpost'],
+  [/Route99/i, 'thunder-route-99'],
+  [/TP_Island/i, 'tropical'],
 ];
 
 /** "/…/BP_ZT_TheSuburbs.BP_ZT_TheSuburbs_C" → "suburbs"; special maps → "". */
@@ -282,6 +286,8 @@ export function parseWorldInfo(raw: unknown, now: Date = new Date()): DaySnapsho
     }
 
     for (const mission of group.availableMissions) {
+      // Storm Shield Defenses are permanent, not timed missions.
+      if (missionTypeOf(mission.missionGenerator) === 'storm-shield-defense') continue;
       missions.push(toMission(zone, theater, mission, alertByTile.get(mission.tileIndex), date));
     }
   }

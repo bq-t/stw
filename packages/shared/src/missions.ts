@@ -61,19 +61,23 @@ export function allRewards(mission: Mission): Reward[] {
   return [...mission.alertRewards, ...mission.baseRewards];
 }
 
-/** V-Bucks first (largest first), then other alerts, then by power level, highest first. */
+/** V-Bucks first (largest first), then other alerts, then by power level ascending (progression order). */
 export function compareMissions(a: Mission, b: Mission): number {
   return (
     vbucksOf(b) - vbucksOf(a) ||
     Number(hasAlert(b)) - Number(hasAlert(a)) ||
-    b.powerLevel - a.powerLevel ||
+    a.powerLevel - b.powerLevel ||
     a.tileIndex - b.tileIndex
   );
 }
 
 // ---------- filters (state lives in the URL) ----------
 
-export type AlertFilter = 'all' | 'alerts' | 'vbucks';
+/**
+ * miniboss = "Timed Missions": mini-boss alerts, the only ones that can give V-Bucks (default).
+ * alerts = any mission alert; all = every mission; vbucks = only V-Bucks alerts.
+ */
+export type AlertFilter = 'miniboss' | 'alerts' | 'all' | 'vbucks';
 
 export interface MissionFilters {
   zones: Zone[];
@@ -88,7 +92,7 @@ export const PL_MAX = 160;
 
 export const DEFAULT_FILTERS: MissionFilters = {
   zones: [],
-  alert: 'all',
+  alert: 'miniboss',
   rewards: [],
   plMin: PL_MIN,
   plMax: PL_MAX,
@@ -112,7 +116,7 @@ export function filtersFromParams(params: URLSearchParams): MissionFilters {
   const plMax = int(max ?? null, PL_MAX);
   return {
     zones: list(params.get('zone'), ZONES),
-    alert: alert === 'alerts' || alert === 'vbucks' ? alert : 'all',
+    alert: alert === 'alerts' || alert === 'vbucks' || alert === 'all' ? alert : 'miniboss',
     rewards: list(params.get('reward'), REWARD_CATEGORIES),
     plMin: Math.min(plMin, plMax),
     plMax: Math.max(plMin, plMax),
@@ -122,7 +126,7 @@ export function filtersFromParams(params: URLSearchParams): MissionFilters {
 export function filtersToParams(f: MissionFilters): URLSearchParams {
   const p = new URLSearchParams();
   if (f.zones.length) p.set('zone', f.zones.join(','));
-  if (f.alert !== 'all') p.set('alert', f.alert);
+  if (f.alert !== 'miniboss') p.set('alert', f.alert);
   if (f.rewards.length) p.set('reward', f.rewards.join(','));
   if (f.plMin !== PL_MIN || f.plMax !== PL_MAX) p.set('pl', `${f.plMin}-${f.plMax}`);
   return p;
@@ -134,6 +138,7 @@ export function isDefaultFilters(f: MissionFilters): boolean {
 
 export function matchesFilters(m: Mission, f: MissionFilters): boolean {
   if (f.zones.length && !f.zones.includes(m.zone)) return false;
+  if (f.alert === 'miniboss' && m.alertKind !== 'mini-boss') return false;
   if (f.alert === 'alerts' && !hasAlert(m)) return false;
   if (f.alert === 'vbucks' && vbucksOf(m) === 0) return false;
   // Unknown power level (0) is never hidden by the range filter.
