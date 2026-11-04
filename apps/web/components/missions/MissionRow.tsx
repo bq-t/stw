@@ -106,7 +106,7 @@ export function MissionRow({ mission }: { mission: Mission }) {
                 group="missions"
                 names={iconNamesList}
                 fallback={MISSION_ICONS[type] ?? FallbackMissionIcon}
-                className="size-6"
+                className="size-6 fill-current"
               />
               {showCategory && (
                 <span className="absolute -right-1 -bottom-1 rounded-sm bg-background px-0.5 text-[10px] leading-none font-bold">
@@ -156,13 +156,16 @@ export function MissionRow({ mission }: { mission: Mission }) {
                 group="alerts"
                 names={[mission.alertKind]}
                 fallback={alertFallback}
-                className="size-3.5"
+                className="size-3.5 fill-current text-white"
               />
             </CornerIcon>
           )}
           {place && (
             <CornerIcon label={place}>
-              <MapPin aria-hidden className="size-3.5 fill-current [&>circle]:fill-background" />
+              <MapPin
+                aria-hidden
+                className="size-3.5 fill-white text-white [&>circle]:fill-surface-2 [&>circle]:text-surface-2"
+              />
             </CornerIcon>
           )}
         </span>

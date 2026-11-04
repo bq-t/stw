@@ -27,7 +27,7 @@ function Switch() {
           type="button"
           onClick={() => change(l)}
           aria-pressed={l === locale}
-          className={`skew-tab rounded-sm px-2 py-1 uppercase ${
+          className={`skew-tab rounded-none px-2 py-1 uppercase ${
             l === locale ? 'bg-surface-2 text-text' : 'text-muted-foreground hover:text-text'
           }`}
         >

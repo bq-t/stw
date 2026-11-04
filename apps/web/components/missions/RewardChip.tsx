@@ -37,7 +37,10 @@ function RewardTile({
         group="rewards"
         names={iconNames(reward.itemId, category)}
         fallback={REWARD_ICONS[category]}
-        className={size === 'sm' ? 'size-3.5' : 'size-14 drop-shadow-[0_1px_2px_rgb(0_0_0/0.6)]'}
+        className={cn(
+          'fill-current',
+          size === 'sm' ? 'size-3.5' : 'size-14 drop-shadow-[0_1px_2px_rgb(0_0_0/0.6)]',
+        )}
       />
     </span>
   );

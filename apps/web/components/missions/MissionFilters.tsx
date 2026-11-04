@@ -100,9 +100,9 @@ export function MissionFilters({
       </ToggleGroup>
 
       <ToggleGroup
-        type="multiple"
-        value={value.zones}
-        onValueChange={(v) => onChange({ ...value, zones: v as Zone[] })}
+        type="single"
+        value={value.zones[0] ?? ''}
+        onValueChange={(v) => onChange({ ...value, zones: v ? [v as Zone] : [] })}
         spacing={1}
         aria-label={t('Filters.zone')}
         className="max-w-full flex-wrap"
@@ -143,7 +143,7 @@ export function MissionFilters({
                     group="rewards"
                     names={REWARD_CATEGORY_ICON_NAMES[c]}
                     fallback={REWARD_ICONS[c]}
-                    className="size-4"
+                    className="size-4 fill-current"
                   />
                 )}
                 {t(`RewardCategory.${c}`)}

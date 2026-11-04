@@ -24,7 +24,7 @@ export function Header() {
             <Link
               key={item.key}
               href={item.href}
-              className="skew-tab rounded-sm px-3 py-1.5 text-muted-foreground transition-colors hover:bg-surface-2 hover:text-text"
+              className="skew-tab rounded-none px-3 py-1.5 text-muted-foreground transition-colors hover:bg-surface-2 hover:text-text"
             >
               <span>{t(`Nav.${item.key}`)}</span>
             </Link>
