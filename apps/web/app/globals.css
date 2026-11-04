@@ -208,9 +208,9 @@ html {
   outline-offset: 2px;
 }
 
-/* Icon and number glow together. */
+/* V-Bucks amounts: white number, icon and number glow together in the legendary colour. */
 .vbucks-glow {
-  color: var(--vbucks);
+  color: #fff;
   filter: drop-shadow(0 0 5px var(--vbucks-shine));
 }
 
