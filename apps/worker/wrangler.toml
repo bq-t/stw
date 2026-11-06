@@ -16,7 +16,10 @@ id = "528b8f2463174fb78f3ed6e68163f45d"
 [vars]
 # Comma-separated origins allowed by CORS. localhost is always allowed.
 ALLOWED_ORIGINS = "https://stw.bq-t.pro,https://stw-vbucks.pages.dev"
-SITE_URL = "https://stw.bq-t.pro"
+# Links and images in the Discord message. Switch to https://stw.bq-t.pro once the custom domain is attached.
+SITE_URL = "https://stw-vbucks.pages.dev"
+# Optional custom server emoji next to V-Bucks amounts in Discord, e.g. "<:vbucks:123456789012345678>".
+# DISCORD_VBUCKS_EMOJI = ""
 
 [observability]
 enabled = true

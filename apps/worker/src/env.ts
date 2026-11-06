@@ -8,4 +8,6 @@ export interface Env {
   EPIC_DEVICE_ID: string;
   EPIC_DEVICE_SECRET: string;
   DISCORD_WEBHOOK_URL?: string;
+  /** Custom server emoji shown next to V-Bucks amounts, e.g. "<:vbucks:123456789>". */
+  DISCORD_VBUCKS_EMOJI?: string;
 }

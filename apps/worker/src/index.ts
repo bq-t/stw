@@ -7,7 +7,7 @@ import {
 } from '@stw/shared';
 import { epicClient, fetchWorldInfo, loginWithDeviceAuth } from '@stw/shared/epic';
 import type { Env } from './env';
-import { notifyDiscord } from './notify/discord';
+import { buildDiscordMessage, postDiscord } from './notify/discord';
 import { Store } from './store';
 
 // ---------- scheduled: daily mission snapshot ----------
@@ -43,9 +43,14 @@ async function runDaily(env: Env, now: Date = new Date()): Promise<RunResult> {
     lastSnapshotDate: snapshot.date,
   });
 
-  if (env.DISCORD_WEBHOOK_URL && snapshot.vbucksTotal > 0) {
+  // Every day, with or without V-Bucks: the channel gets one message per rotation.
+  if (env.DISCORD_WEBHOOK_URL) {
     try {
-      await notifyDiscord(env.DISCORD_WEBHOOK_URL, snapshot, env.SITE_URL);
+      const message = buildDiscordMessage(snapshot, history, {
+        siteUrl: env.SITE_URL,
+        vbucksEmoji: env.DISCORD_VBUCKS_EMOJI,
+      });
+      await postDiscord(env.DISCORD_WEBHOOK_URL, message);
     } catch (err) {
       // A failed notification must not fail the day: the snapshot is already saved.
       console.error('discord', err);

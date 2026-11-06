@@ -10,7 +10,7 @@ Plans (source of truth for scope and decisions):
 ## Layout
 
 - `apps/web` — Next.js 16, App Router, `output: 'export'` (static HTML on Cloudflare Pages). See `apps/web/AGENTS.md`: read `node_modules/next/dist/docs/` before using Next APIs.
-- `apps/worker` — Cloudflare Worker: cron fetches Epic `world/info` → KV; serves `/api/missions`, `/api/history`, `/api/health`; Discord webhook.
+- `apps/worker` — Cloudflare Worker: cron fetches Epic `world/info` → KV; serves `/api/missions`, `/api/history`, `/api/health`; Discord webhook (`src/notify/discord.ts`: Components V2 card, one per rotation with or without V-Bucks; names from `apps/web/messages/en.json`, icons from `apps/web/lib/icons-manifest.json`, images loaded from `SITE_URL`; preview with `pnpm discord:preview`).
 - `packages/shared` — types, `parse.ts` (raw Epic → `DaySnapshot`), zod schema, Epic client (`src/epic`), item catalog (`src/items`). Imported as `@stw/shared`, `@stw/shared/epic`, `@stw/shared/items`.
 - `scripts/` — `setup-device-auth.ts` (one-time), `fetch-world-info.ts` (stage-2 check, saves to `fixtures/`).
 
@@ -30,6 +30,7 @@ pnpm auth:setup         # create device auth for the dedicated Epic account → 
 pnpm fetch:world [file] # fetch world/info (or parse a saved fixture) and print what parse.ts sees
 pnpm --filter web build # static export to apps/web/out
 pnpm seed:local         # demo snapshot + history into the Worker LOCAL KV (then dev:worker + dev:web with NEXT_PUBLIC_API_URL)
+pnpm discord:preview    # post today's Discord message (live Worker data) to DISCORD_WEBHOOK_URL from .env; --none = no-V-Bucks variant, --print = JSON only
 ```
 
 ## Deploy

@@ -27,6 +27,13 @@ curl "http://localhost:8787/__scheduled?cron=*/15+*+*+*+*"   # run the cron once
 curl http://localhost:8787/api/health
 ```
 
+## Discord
+
+One message per rotation (about 03:00 MSK), with the V-Bucks missions or a "no V-Bucks today" card, stats and links to the site.
+Webhook: Server Settings → Integrations → Webhooks → New Webhook → pick the channel → Copy URL, then
+`pnpm wrangler secret put DISCORD_WEBHOOK_URL`. Optional custom emoji: `DISCORD_VBUCKS_EMOJI` in `wrangler.toml`.
+Check the look without waiting for the rotation: `pnpm discord:preview` in the repo root (webhook from root `.env`).
+
 ## Behaviour
 
 - Cron every 15 minutes. If today's snapshot is already in KV, the run exits after one read.
