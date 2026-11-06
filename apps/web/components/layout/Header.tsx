@@ -7,7 +7,6 @@ const NAV = [
   { href: '/daily-quests', key: 'dailyQuests' },
   { href: '/questline', key: 'questline' },
   { href: '/side-quests', key: 'sideQuests' },
-  { href: '/guide', key: 'guide' },
   { href: '/faq', key: 'faq' },
 ] as const;
 

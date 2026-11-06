@@ -37,3 +37,19 @@ category-defender, category-schematic, category-perk, category-evo.
 ## ui/
 
 power (power level), vbucks (V-Bucks badge)
+
+## quests/
+
+Daily Quest icons, by the names in `apps/web/data/daily-quests.ts`:
+destroy, discovery, exterminate, missions, daily (category icons);
+constructor, ninja, outlander, soldier; assault-rifle, smg, shotgun, pistol, sniper-rifle,
+melee, trap; survivors, radar, safe, treasure, world-explorer.
+
+# Daily Quest screenshots
+
+Not icons: in-game screenshots of what to look for, shown when a quest card is opened.
+Put them into `public/images/quests/<quest id>/` as `1.webp`, `2.webp`… (shown in that order;
+png/jpg/avif also work). The quest id is the card's URL anchor, e.g. `/daily-quests#destroy-tvs`
+→ `public/images/quests/destroy-tvs/`. 16:9, about 1280px wide, WebP. A caption is optional:
+`captions: { '1': { en: '…', ru: '…' } }` on the quest in `data/daily-quests.ts`.
+A quest without screenshots simply shows none (husk kills, hero class quests…).

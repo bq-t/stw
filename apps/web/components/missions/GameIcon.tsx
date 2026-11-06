@@ -2,15 +2,16 @@ import type { LucideIcon } from 'lucide-react';
 import manifest from '@/lib/icons-manifest.json';
 import { cn } from '@/lib/utils';
 
-export type IconGroup = 'missions' | 'alerts' | 'rewards' | 'ui';
+export type IconGroup = 'missions' | 'alerts' | 'rewards' | 'ui' | 'quests';
 
 const ICONS = manifest as Record<IconGroup, Record<string, string>>;
 
 /** Path of the first game icon found among `names` in `group`, or null. */
 export function gameIconSrc(group: IconGroup, ...names: string[]): string | null {
   for (const name of names) {
-    const src = ICONS[group][name.toLowerCase()];
-    if (src) return src;
+    const key = name.toLowerCase();
+    // Own keys only: names like "constructor" would otherwise hit Object.prototype.
+    if (Object.hasOwn(ICONS[group], key)) return ICONS[group][key]!;
   }
   return null;
 }

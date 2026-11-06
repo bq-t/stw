@@ -1,20 +1,42 @@
 import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Placeholder } from '@/components/Placeholder';
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '@/i18n/routing';
 import { alternatesFor } from '@/lib/site';
+import { SIDE_CHECKED } from '@/data/side-quests';
+import { SideQuestsView } from '@/components/side-quests/SideQuestsView';
 
 export async function generateMetadata({
   params,
 }: PageProps<'/[locale]/side-quests'>): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'Nav' });
-  return { title: t('sideQuests'), alternates: alternatesFor('/side-quests', locale as Locale) };
+  const t = await getTranslations({ locale, namespace: 'SideQuests' });
+  return {
+    title: t('title'),
+    description: t('metaDescription'),
+    alternates: alternatesFor('/side-quests', locale as Locale),
+  };
 }
 
-export default async function Page({ params }: PageProps<'/[locale]/side-quests'>) {
+export default async function SideQuestsPage({ params }: PageProps<'/[locale]/side-quests'>) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations('Nav');
-  return <Placeholder title={t('sideQuests')} />;
+  const t = await getTranslations('SideQuests');
+  const format = await getFormatter();
+  const checked = format.dateTime(new Date(`${SIDE_CHECKED}T00:00:00Z`), {
+    dateStyle: 'long',
+    timeZone: 'UTC',
+  });
+
+  return (
+    <section className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
+          <h1 className="font-display text-2xl font-extrabold uppercase">{t('title')}</h1>
+          <p className="text-xs text-muted-foreground">{t('checked', { date: checked })}</p>
+        </div>
+        <p className="max-w-3xl text-sm text-muted-foreground">{t('intro')}</p>
+      </div>
+      <SideQuestsView />
+    </section>
+  );
 }
