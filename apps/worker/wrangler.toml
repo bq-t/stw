@@ -19,7 +19,7 @@ ALLOWED_ORIGINS = "https://stw.bq-t.pro,https://stw-vbucks.pages.dev"
 # Links and images in the Discord message.
 SITE_URL = "https://stw.bq-t.pro"
 # Optional custom server emoji next to V-Bucks amounts in Discord, e.g. "<:vbucks:123456789012345678>".
-# DISCORD_VBUCKS_EMOJI = ""
+DISCORD_VBUCKS_EMOJI = "<:vbucks:1568138713823838388>"
 
 [observability]
 enabled = true

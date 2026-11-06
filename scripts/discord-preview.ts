@@ -5,14 +5,23 @@
 //   pnpm discord:preview --none       # same day with the V-Bucks removed (the "no V-Bucks" variant)
 //   pnpm discord:preview --print      # print the JSON instead of posting
 //
-// Env (.env): DISCORD_WEBHOOK_URL, optional DISCORD_VBUCKS_EMOJI, API_URL (default: production Worker),
-// SITE_URL (default: https://stw.bq-t.pro).
+// Env (.env): DISCORD_WEBHOOK_URL; optional API_URL (default: production Worker),
+// SITE_URL and DISCORD_VBUCKS_EMOJI (default: the [vars] in apps/worker/wrangler.toml).
 
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import type { DaySnapshot, VbucksHistory } from '@stw/shared';
 import { buildDiscordMessage, postDiscord } from '../apps/worker/src/notify/discord';
 
+/** A `NAME = "value"` line from the Worker config, so the preview matches production. */
+function workerVar(name: string): string | undefined {
+  const toml = readFileSync(resolve(import.meta.dirname, '../apps/worker/wrangler.toml'), 'utf8');
+  return toml.match(new RegExp(`^${name}\\s*=\\s*"([^"]*)"`, 'm'))?.[1] || undefined;
+}
+
 const API_URL = process.env.API_URL ?? 'https://stw-vbucks-worker.w-bequiet.workers.dev';
-const SITE_URL = process.env.SITE_URL ?? 'https://stw.bq-t.pro';
+const SITE_URL = process.env.SITE_URL ?? workerVar('SITE_URL') ?? 'https://stw.bq-t.pro';
+const VBUCKS_EMOJI = process.env.DISCORD_VBUCKS_EMOJI ?? workerVar('DISCORD_VBUCKS_EMOJI');
 const args = new Set(process.argv.slice(2));
 
 async function get<T>(path: string): Promise<T> {
@@ -40,7 +49,7 @@ if (args.has('--none')) {
 
 const message = buildDiscordMessage(snapshot, history, {
   siteUrl: SITE_URL,
-  vbucksEmoji: process.env.DISCORD_VBUCKS_EMOJI || undefined,
+  vbucksEmoji: VBUCKS_EMOJI,
 });
 
 if (args.has('--print')) {
