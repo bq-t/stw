@@ -8,16 +8,15 @@ compatibility_flags = ["nodejs_compat"]
 [triggers]
 crons = ["*/15 * * * *"]
 
-# Create with: pnpm wrangler kv namespace create MISSIONS
-# then paste the id here.
+# Created with: pnpm wrangler kv namespace create MISSIONS
 [[kv_namespaces]]
 binding = "MISSIONS"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "528b8f2463174fb78f3ed6e68163f45d"
 
 [vars]
 # Comma-separated origins allowed by CORS. localhost is always allowed.
-ALLOWED_ORIGINS = "https://stw-vbucks.pages.dev"
-SITE_URL = "https://stw-vbucks.pages.dev"
+ALLOWED_ORIGINS = "https://stw.bq-t.pro,https://stw-vbucks.pages.dev"
+SITE_URL = "https://stw.bq-t.pro"
 
 [observability]
 enabled = true

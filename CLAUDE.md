@@ -32,11 +32,21 @@ pnpm --filter web build # static export to apps/web/out
 pnpm seed:local         # demo snapshot + history into the Worker LOCAL KV (then dev:worker + dev:web with NEXT_PUBLIC_API_URL)
 ```
 
+## Deploy
+
+- Site: Cloudflare Pages project `stw-vbucks`, Git integration (push to `main` builds it). Build command `pnpm --filter web build`, output `apps/web/out`, env `NEXT_PUBLIC_API_URL` = Worker URL, `NODE_VERSION=24`, `PNPM_VERSION=11.8.0`. Now on `stw-vbucks.pages.dev`; canonical/sitemap URL is already `https://stw.bq-t.pro` (custom domain to be attached by the owner; DNS of bq-t.pro is on Cloudflare).
+- Worker: `stw-vbucks-worker` on `https://stw-vbucks-worker.w-bequiet.workers.dev`, KV `MISSIONS`, secrets `EPIC_*` set. CI deploys it on push to `main` when the repo has `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` secrets. A new site domain goes into `ALLOWED_ORIGINS` in `apps/worker/wrangler.toml`.
+
 ## Web specifics
 
 - No `NEXT_PUBLIC_API_URL` → the tracker runs on generated demo data (`apps/web/lib/demo.ts`) with a "demo data" banner. Set it to the Worker URL (`http://localhost:8787` locally).
 - Filter state lives in the URL (`?zone=…&alert=vbucks&reward=evo&pl=40-80`); parsing/matching is pure code in `packages/shared/src/missions.ts`.
-- `public/_redirects` serves EN without a prefix. Cloudflare applies these rules BEFORE static files, so every root asset (`/_next/*`, `/icons/*`, `favicon.ico`, `sitemap.xml`, `robots.txt`) needs an explicit pass-through rule above the `/*` catch-all. Check after changes with `wrangler pages dev apps/web/out`.
+- Reference content (Daily Quests now, questline/side quests later) lives in `apps/web/data/*.ts` with `{ en, ru }` on every string, so TypeScript rejects a missing translation. UI chrome stays in `messages/*.json`.
+- Questline: `apps/web/data/questline.ts` (types, reward vocabulary, RU labels) + `questline-quests.ts` (244 quests, generated once from the Fortnite wiki and now edited by hand: do not regenerate). The "I'm here" marker lives in localStorage (`stw.questline.current`), read through `useSyncExternalStore` so the static HTML renders without it.
+- Side quests: `apps/web/data/side-quests.ts` (types, groups, V-Bucks summary) + `side-quests-data.ts` (wiki "Side Quests" and "Challenge Quests", generated once, edited by hand). Questline SSD 1–6, hidden and test quests from the wiki are left out. The FAQ V-Bucks table counts its one-time totals from the questline and side quest data.
+- There is no V-Bucks Guide page any more: the FAQ "V-Bucks" section replaced it.
+- Daily Quest screenshots: `public/images/quests/<quest id>/1.webp…`, picked up by `scripts/icons-manifest.mjs` → `lib/quest-shots.json` (see `apps/web/ICONS.md`).
+- `public/_redirects` serves EN without a prefix. Cloudflare applies these rules BEFORE static files, so every root asset (`/_next/*`, `/icons/*`, `/images/*`, `favicon.ico`, `sitemap.xml`, `robots.txt`) needs an explicit pass-through rule above the `/*` catch-all. Check after changes with `wrangler pages dev apps/web/out`.
 - shadcn/ui (radix-nova) lives in `components/ui`; its tokens (`--background`, `--muted`…) map to our palette in `globals.css`. `text-muted-foreground` is grey text; `bg-muted` is a surface.
 - Screenshots for visual checks: headless Chrome `--screenshot` against `pnpm dev:web` or `wrangler pages dev`.
 
@@ -53,6 +63,12 @@ pnpm seed:local         # demo snapshot + history into the Worker LOCAL KV (then
 - Versions: TypeScript stays on 6.0.x (typescript-eslint does not support 7 yet); ESLint 9 (eslint-config-next does not support 10 yet).
 
 ## Open TODOs
+
+- Side quests: SSD 10 = 150 V-Bucks follows freethevbucks and the wiki side quest list (single SSD 10 wiki pages say 100): check in game. Many Canny Valley side quests on the wiki ask for 22+–30+ zones, which looks like the old power scaling; check that they still exist. FAQ minimums (daily 100+, alerts 50+) come from the v37.50 rounding to 50.
+
+- Questline: quest names are EN on /ru too until the owner sends the game's Russian names. From the wiki, unchecked in game: rewards of Deeply Disturbing Simulations are unknown; the wiki lists "... While Screaming" twice in Plankerton (we keep one, so Plankerton has 51); some reward rarities and item kinds were guessed from wiki templates.
+
+- Daily Quests (`apps/web/data/daily-quests.ts`): screenshots for Destroy/Discovery/Safe/Treasure quests are still to be taken in game. RU quest names are our translation; check against the game, along with the RU label of "Replay Intro" and the tips marked as less certain (Safe locations, Arcade Machines, Exploration Party has no tip yet).
 
 - `parse.ts` is built from the real 2026-11-04 response (excerpt in `packages/shared/test/world-info.2026-11-04.json`). Still to confirm in game: the PL ladder values (tier → PL), mission types `HTM` and `PtS`. After an Epic patch run `pnpm fetch:world` and check its "Unmapped" section.
 - RU names of zones, mission types, biomes and alert kinds in `messages/ru.json` were written from memory: check against the game's Russian localization.

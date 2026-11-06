@@ -1,16 +1,16 @@
 import { routing, type Locale } from '@/i18n/routing';
 
-/** Public site URL without a trailing slash. Set NEXT_PUBLIC_SITE_URL once the domain is known. */
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://stw-vbucks.pages.dev'
-).replace(/\/$/, '');
+/** Public site URL without a trailing slash. Override with NEXT_PUBLIC_SITE_URL (e.g. for a preview deploy). */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://stw.bq-t.pro').replace(
+  /\/$/,
+  '',
+);
 
 export const PAGES = [
   '/',
   '/daily-quests',
   '/questline',
   '/side-quests',
-  '/guide',
   '/faq',
   '/privacy',
 ] as const;
