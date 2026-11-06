@@ -35,7 +35,7 @@ pnpm discord:preview    # post today's Discord message (live Worker data) to DIS
 
 ## Deploy
 
-- Site: Cloudflare Pages project `stw-vbucks`, Git integration (push to `main` builds it). Build command `pnpm --filter web build`, output `apps/web/out`, env `NEXT_PUBLIC_API_URL` = Worker URL, `NODE_VERSION=24`, `PNPM_VERSION=11.8.0`. Now on `stw-vbucks.pages.dev`; canonical/sitemap URL is already `https://stw.bq-t.pro` (custom domain to be attached by the owner; DNS of bq-t.pro is on Cloudflare).
+- Site: Cloudflare Pages project `stw-vbucks`, Git integration (push to `main` builds it). Build command `pnpm --filter web build`, output `apps/web/out`, env `NEXT_PUBLIC_API_URL` = Worker URL, `NODE_VERSION=24`, `PNPM_VERSION=11.8.0`. Live on `https://stw.bq-t.pro` (custom domain, DNS on Cloudflare) and `stw-vbucks.pages.dev`.
 - Worker: `stw-vbucks-worker` on `https://stw-vbucks-worker.w-bequiet.workers.dev`, KV `MISSIONS`, secrets `EPIC_*` set. CI deploys it on push to `main` when the repo has `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` secrets. A new site domain goes into `ALLOWED_ORIGINS` in `apps/worker/wrangler.toml`.
 
 ## Web specifics

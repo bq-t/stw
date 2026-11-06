@@ -6,13 +6,13 @@
 //   pnpm discord:preview --print      # print the JSON instead of posting
 //
 // Env (.env): DISCORD_WEBHOOK_URL, optional DISCORD_VBUCKS_EMOJI, API_URL (default: production Worker),
-// SITE_URL (default: https://stw-vbucks.pages.dev).
+// SITE_URL (default: https://stw.bq-t.pro).
 
 import type { DaySnapshot, VbucksHistory } from '@stw/shared';
 import { buildDiscordMessage, postDiscord } from '../apps/worker/src/notify/discord';
 
 const API_URL = process.env.API_URL ?? 'https://stw-vbucks-worker.w-bequiet.workers.dev';
-const SITE_URL = process.env.SITE_URL ?? 'https://stw-vbucks.pages.dev';
+const SITE_URL = process.env.SITE_URL ?? 'https://stw.bq-t.pro';
 const args = new Set(process.argv.slice(2));
 
 async function get<T>(path: string): Promise<T> {
