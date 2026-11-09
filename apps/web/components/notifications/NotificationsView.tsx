@@ -30,7 +30,7 @@ import {
 /** Subscriptions get every alert by default, not only the tracker's mini-bosses. */
 const START_FILTERS: Filters = { ...DEFAULT_FILTERS, alert: 'alerts' };
 
-type Notice = { tone: 'ok' | 'error'; text: string } | null;
+type Notice = { tone: 'ok' | 'error'; text: string; link?: { href: string; label: string } } | null;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -133,7 +133,14 @@ function NewSubscription({ full }: { full: boolean }) {
   const test = useMutation({
     mutationFn: () => testSubscription(filter(), locale),
     onSuccess: (r) => setNotice({ tone: 'ok', text: t('testSent', { count: r.found }) }),
-    onError: (err) => setNotice({ tone: 'error', text: errorText(err, t) }),
+    onError: (err) => {
+      const installUrl = err instanceof ApiError ? err.data.installUrl : undefined;
+      setNotice({
+        tone: 'error',
+        text: errorText(err, t),
+        link: typeof installUrl === 'string' ? { href: installUrl, label: t('addApp') } : undefined,
+      });
+    },
   });
 
   return (
@@ -175,8 +182,7 @@ function NewSubscription({ full }: { full: boolean }) {
           type="button"
           onClick={() => save.mutate()}
           disabled={!full || save.isPending}
-          className="fn-tab px-4 py-1.5"
-          aria-pressed="true"
+          className="fn-tab fn-tab-active px-4 py-1.5"
         >
           <span>{t('save')}</span>
         </button>
@@ -191,23 +197,42 @@ function NewSubscription({ full }: { full: boolean }) {
       </div>
       {!full && <p className="text-sm text-muted-foreground">{t('limit')}</p>}
       {notice && (
-        <p
-          role="status"
-          className={notice.tone === 'ok' ? 'text-sm text-accent-ui' : 'text-sm text-destructive'}
-        >
-          {notice.text}
-        </p>
+        <div role="status" className="flex flex-col items-start gap-2">
+          <p
+            className={notice.tone === 'ok' ? 'text-sm text-accent-ui' : 'text-sm text-destructive'}
+          >
+            {notice.text}
+          </p>
+          {notice.link && (
+            <a
+              href={notice.link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="fn-tab fn-tab-active px-4 py-1.5"
+            >
+              <span>{notice.link.label}</span>
+            </a>
+          )}
+        </div>
       )}
     </Section>
   );
 }
 
-function DmHelp() {
+function DmHelp({ installUrl }: { installUrl: string }) {
   const t = useTranslations('Notifications');
   return (
     <Section title={t('dmTitle')}>
       <p className="text-muted-foreground">{t('dmText')}</p>
       <div className="flex flex-wrap gap-2">
+        <a
+          href={installUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fn-tab fn-tab-active px-4 py-1.5"
+        >
+          <span>{t('addApp')}</span>
+        </a>
         <a
           href={DISCORD_URL}
           target="_blank"
@@ -235,7 +260,7 @@ function Subscriptions() {
     <>
       <SubscriptionList data={data} />
       <NewSubscription full={data.subscriptions.length < data.max} />
-      <DmHelp />
+      <DmHelp installUrl={data.installUrl} />
     </>
   );
 }

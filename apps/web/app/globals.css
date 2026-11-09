@@ -447,6 +447,7 @@ body::before {
   transform: skewX(-8deg) translateY(-1px);
 }
 .fn-tab[aria-pressed='true'],
+.fn-tab.fn-tab-active,
 .fn-tab[aria-current='page'] {
   background: var(--on-brand);
   color: #fff;

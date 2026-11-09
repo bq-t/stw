@@ -375,7 +375,7 @@
     },
     "subs": {
       "saved": "Subscription saved: {summary}. After each rotation (00:00 UTC) Fishstick sends matching missions to your DMs.",
-      "dmNote": "Discord lets the bot DM you only while you share a server with Fishstick and allow DMs from its members.",
+      "dmNote": "If no DMs arrive, add Fishstick to your account: {url}",
       "channelSaved": "Done: after each rotation Fishstick posts {summary} in {channel}.",
       "channelIntro": "Fishstick will post missions here after each rotation: {summary}",
       "limit": "You already have {max} subscriptions. Remove one with /subscriptions.",
@@ -413,13 +413,14 @@
     "save": "Subscribe",
     "test": "Send a test DM",
     "testSent": "Sent. Missions matching today: {count}.",
-    "cannotDm": "Discord does not let Fishstick DM you. You need a server in common with Fishstick (for example our Discord) with DMs from its members allowed. Then try again.",
+    "cannotDm": "Discord does not let Fishstick DM you yet. Add Fishstick to your Discord account, then try again.",
     "tooSoon": "One test a minute: try again shortly.",
     "limit": "You have the maximum number of subscriptions. Delete one first.",
     "error": "Something went wrong. Try again later.",
     "dmTitle": "Make sure the DMs reach you",
-    "dmText": "Discord delivers bot DMs only to people who share a server with Fishstick and allow DMs from that server’s members (Privacy Settings of the server).",
+    "dmText": "To get the DMs, add Fishstick to your Discord account (or share a server with it).",
     "joinServer": "Join our Discord",
-    "serverNote": "Alerts in a server channel: run /setup alerts in Discord (needs Manage Server)."
+    "serverNote": "Alerts in a server channel: run /setup alerts in Discord (needs Manage Server).",
+    "addApp": "Add Fishstick to my account"
   }
 }

@@ -32,7 +32,7 @@ import {
 } from './api';
 import APP_EMOJIS from './app-emojis.json';
 import { boardLocale, currentStatus } from './board';
-import { inviteUrl } from './commands';
+import { inviteUrl, userInstallUrl } from './commands';
 import { missionListMessage } from './render';
 import { buildStatusMessage, STATUS_REFRESH_ID } from './status';
 import { describeFilter, MAX_SUBSCRIPTIONS, parseRowFilter } from './subscriptions';
@@ -217,7 +217,10 @@ async function command(i: Interaction, env: Env, now: number) {
         now,
       );
       return ephemeral(
-        `${fmt(t.subs.saved, { summary: `**${describeFilter(f, locale)}**` })}\n-# ${t.subs.dmNote}`,
+        `${fmt(t.subs.saved, { summary: `**${describeFilter(f, locale)}**` })}\n-# ${fmt(
+          t.subs.dmNote,
+          { url: `<${userInstallUrl(env.DISCORD_CLIENT_ID ?? '')}>` },
+        )}`,
       );
     }
     case 'subscriptions': {

@@ -64,11 +64,17 @@ export interface SubscriptionItem {
 export interface SubscriptionsResponse {
   subscriptions: SubscriptionItem[];
   max: number;
+  /** Adds Fishstick to the user's Discord account, so it can DM them. */
+  installUrl: string;
 }
 
 /** Error code from the Worker ("limit", "cannot dm", "too soon", …) or "http". */
 export class ApiError extends Error {
-  constructor(readonly code: string) {
+  constructor(
+    readonly code: string,
+    /** Extra fields of the error body (e.g. installUrl for "cannot dm"). */
+    readonly data: Record<string, unknown> = {},
+  ) {
     super(code);
   }
 }
@@ -81,7 +87,7 @@ async function send<T>(method: string, path: string, body?: unknown): Promise<T>
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const data = (await res.json().catch(() => ({}))) as T & { error?: string };
-  if (!res.ok) throw new ApiError(data.error ?? 'http');
+  if (!res.ok) throw new ApiError(data.error ?? 'http', data as Record<string, unknown>);
   return data;
 }
 

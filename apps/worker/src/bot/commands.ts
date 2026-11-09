@@ -146,6 +146,11 @@ export const COMMANDS = [
 /** Permissions the bot asks for on a server install: View Channel, Send Messages, Embed Links. */
 export const BOT_PERMISSIONS = String((1 << 10) | (1 << 11) | (1 << 14));
 
+/** Install to the user's account (not a server): lets Fishstick DM them. */
+export function userInstallUrl(appId: string): string {
+  return `https://discord.com/oauth2/authorize?client_id=${appId}&integration_type=1&scope=applications.commands`;
+}
+
 export function inviteUrl(appId: string): string {
   return `https://discord.com/oauth2/authorize?client_id=${appId}`;
 }
