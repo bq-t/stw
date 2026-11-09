@@ -25,7 +25,8 @@
     "retrieve-the-data-group": "/icons/missions/retrieve-the-data-group.webp",
     "retrieve-the-data": "/icons/missions/retrieve-the-data.webp",
     "ride-the-lightning-group": "/icons/missions/ride-the-lightning-group.webp",
-    "ride-the-lightning": "/icons/missions/ride-the-lightning.webp"
+    "ride-the-lightning": "/icons/missions/ride-the-lightning.webp",
+    "storm-shield-defense": "/icons/missions/storm-shield-defense.webp"
   },
   "alerts": {
     "mini-boss": "/icons/alerts/mini-boss.webp"

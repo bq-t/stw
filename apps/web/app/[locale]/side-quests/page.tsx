@@ -34,7 +34,8 @@ export default async function SideQuestsPage({ params }: PageProps<'/[locale]/si
           <h1 className="font-display text-2xl font-extrabold uppercase">{t('title')}</h1>
           <p className="text-xs text-muted-foreground">{t('checked', { date: checked })}</p>
         </div>
-        <p className="max-w-3xl text-sm text-muted-foreground">{t('intro')}</p>
+        {/* One sentence per line: the message has \n between them. */}
+        <p className="max-w-3xl text-sm whitespace-pre-line text-muted-foreground">{t('intro')}</p>
       </div>
       <SideQuestsView />
     </section>

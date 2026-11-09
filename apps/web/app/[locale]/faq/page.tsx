@@ -48,27 +48,25 @@ export default async function FaqPage({ params }: PageProps<'/[locale]/faq'>) {
     <section className="flex max-w-4xl flex-col gap-6">
       <h1 className="font-display text-2xl font-extrabold uppercase">{t('title')}</h1>
 
-      <section id="vbucks" aria-labelledby="h-vbucks" className="flex flex-col gap-4">
-        <h2 id="h-vbucks" className="font-display text-lg font-extrabold uppercase">
-          {t('vbucks')}
-        </h2>
-
+      <section id="vbucks" aria-label={t('vbucks')} className="flex flex-col gap-10">
         <article id="how-many" className="flex flex-col gap-2">
           <h3 className="text-base font-semibold">{t('qHowMuch')}</h3>
-          <p className="text-sm text-muted-foreground">{t('aHowMuch')}</p>
-          <div className="overflow-x-auto rounded-md border border-border">
+          {/* One sentence per line: the answers have 
+ between sentences. */}
+          <p className="text-sm whitespace-pre-line text-muted-foreground">{t('aHowMuch')}</p>
+          <div className="fn-table overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-surface-2 text-left text-xs text-muted-foreground">
                 <tr>
-                  <th className="px-3 py-2 font-semibold">{t('source')}</th>
-                  <th className="px-3 py-2 text-right font-semibold">{t('amount')}</th>
-                  <th className="hidden px-3 py-2 font-semibold sm:table-cell">{t('how')}</th>
+                  <th className="px-4 py-2 font-semibold">{t('source')}</th>
+                  <th className="px-4 py-2 text-right font-semibold">{t('amount')}</th>
+                  <th className="hidden px-4 py-2 font-semibold sm:table-cell">{t('how')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border bg-card">
                 {ROWS.map((r) => (
                   <tr key={r.key}>
-                    <td className="px-3 py-2 align-top">
+                    <td className="px-4 py-2 align-top">
                       {r.href ? (
                         <Link
                           href={r.href}
@@ -83,13 +81,13 @@ export default async function FaqPage({ params }: PageProps<'/[locale]/faq'>) {
                         {t(`${r.key}How`)}
                       </p>
                     </td>
-                    <td className="px-3 py-2 text-right align-top whitespace-nowrap">
+                    <td className="px-4 py-2 text-right align-top whitespace-nowrap">
                       <span className="inline-flex items-center gap-1 font-display font-extrabold tabular-nums">
                         <VbucksIcon className="size-3.5" />
                         {/^\d+$/.test(r.amount) ? nf.format(+r.amount) : r.amount}
                       </span>
                     </td>
-                    <td className="hidden px-3 py-2 align-top text-xs text-muted-foreground sm:table-cell">
+                    <td className="hidden px-4 py-2 align-top text-xs text-muted-foreground sm:table-cell">
                       {t(`${r.key}How`)}
                     </td>
                   </tr>
@@ -104,7 +102,7 @@ export default async function FaqPage({ params }: PageProps<'/[locale]/faq'>) {
 
         <article id="founders" className="flex flex-col gap-2">
           <h3 className="text-base font-semibold">{t('qWho')}</h3>
-          <p className="text-sm text-muted-foreground">{t('aWho')}</p>
+          <p className="text-sm whitespace-pre-line text-muted-foreground">{t('aWho')}</p>
         </article>
       </section>
     </section>

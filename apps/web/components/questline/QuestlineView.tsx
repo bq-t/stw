@@ -113,7 +113,7 @@ function QuestNode({
   return (
     <li
       id={entry.key.replace('/', '-')}
-      className="relative grid scroll-mt-20 grid-cols-[2.75rem_minmax(0,1fr)] gap-x-3"
+      className="relative grid grid-cols-[2.75rem_minmax(0,1fr)] gap-x-3"
     >
       <div className="relative flex justify-center pt-2">
         <span
@@ -138,9 +138,11 @@ function QuestNode({
 
       <article
         className={cn(
-          'mb-2 flex flex-col gap-2 rounded-md border bg-card px-3 py-2.5',
-          vbucks > 0 ? 'border-vbucks/50' : 'border-border',
-          isNextVbucks && 'vbucks-card',
+          'fn-card mb-2 flex flex-col gap-2 border-l-[3px] bg-surface px-3.5 py-2.5',
+          vbucks > 0 ? 'border-vbucks' : 'border-border',
+          // Every V-Bucks stage glows; the next one on the player's way also pulses.
+          vbucks > 0 && 'vbucks-shape-glow',
+          isNextVbucks && 'vbucks-shape-glow-pulse',
           state === 'current' && 'border-accent-ui ring-1 ring-accent-ui',
           state === 'done' && 'opacity-60',
         )}
@@ -149,17 +151,17 @@ function QuestNode({
           <span className="pt-px text-xs text-muted-foreground tabular-nums">{n}.</span>
           <h3 className="min-w-0 flex-1 text-sm leading-tight font-semibold">{quest.name}</h3>
           {state === 'current' ? (
-            <span className="rounded-sm bg-accent-ui/15 px-1.5 py-0.5 text-xs font-semibold text-accent-ui">
-              {t('youAreHere')}
+            <span className="skew-tab bg-accent-ui/15 px-2 py-0.5 text-xs font-semibold text-accent-ui">
+              <span>{t('youAreHere')}</span>
             </span>
           ) : (
             <button
               type="button"
               onClick={onMark}
               title={t('iAmHereHint')}
-              className="rounded-sm px-1.5 py-0.5 text-xs text-muted-foreground ring-1 ring-border transition-colors hover:bg-surface-2 hover:text-foreground"
+              className="skew-tab bg-surface-2 px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-[#3c3c41] hover:text-foreground"
             >
-              {t('iAmHere')}
+              <span>{t('iAmHere')}</span>
             </button>
           )}
         </header>
@@ -197,13 +199,9 @@ function ZoneTimeline({
   const pls = entries.map((e) => e.quest.pl).filter((p): p is number => p != null);
 
   return (
-    <section
-      id={zone}
-      aria-labelledby={`zone-${zone}`}
-      className="flex scroll-mt-16 flex-col gap-3"
-    >
+    <section id={zone} aria-labelledby={`zone-${zone}`} className="flex flex-col gap-3">
       <header
-        className="zone-header flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border border-border px-3 py-3"
+        className="zone-header flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-3"
         style={{ '--zone-bg': `url(/images/zones/${zone}.webp)` } as React.CSSProperties}
       >
         <h2
@@ -264,15 +262,13 @@ function ProgressPanel({ progress }: { progress: ReturnType<typeof progressOf> }
   const t = useTranslations();
   if (!progress) {
     return (
-      <p className="rounded-md border border-dashed border-border px-3 py-2.5 text-sm text-muted-foreground">
-        {t('Questline.progressHint')}
-      </p>
+      <p className="fn-panel py-2.5 text-sm text-muted-foreground">{t('Questline.progressHint')}</p>
     );
   }
   const { current, next, questsToNext, vbucksLeft } = progress;
   const anchor = (e: Entry) => `#${e.key.replace('/', '-')}`;
   return (
-    <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-md border border-border bg-card px-3 py-2.5">
+    <div className="fn-panel flex flex-wrap items-center gap-x-6 gap-y-2 py-2.5">
       <div className="flex min-w-0 flex-col gap-0.5">
         <p className="text-xs text-muted-foreground">
           {t(`Zone.${current.zone}`)} ·{' '}
@@ -306,18 +302,18 @@ function ProgressPanel({ progress }: { progress: ReturnType<typeof progressOf> }
       <div className="ml-auto flex gap-1.5">
         <a
           href={anchor(current)}
-          className="inline-flex items-center gap-1 rounded-sm px-2 py-1 text-xs ring-1 ring-border hover:bg-surface-2"
+          className="skew-tab inline-flex items-center gap-1 bg-surface-2 px-2.5 py-1 text-xs transition-colors hover:bg-[#3c3c41]"
         >
           <LocateFixed aria-hidden className="size-3.5" />
-          {t('Questline.goTo')}
+          <span>{t('Questline.goTo')}</span>
         </a>
         <button
           type="button"
           onClick={() => writeMarker(null)}
-          className="inline-flex items-center gap-1 rounded-sm px-2 py-1 text-xs text-muted-foreground ring-1 ring-border hover:bg-surface-2 hover:text-foreground"
+          className="skew-tab inline-flex items-center gap-1 bg-surface-2 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-[#3c3c41] hover:text-foreground"
         >
           <RotateCcw aria-hidden className="size-3.5" />
-          {t('Questline.reset')}
+          <span>{t('Questline.reset')}</span>
         </button>
       </div>
     </div>
@@ -345,14 +341,10 @@ export function QuestlineView() {
     <div className="flex flex-col gap-4">
       <nav
         aria-label={t('Questline.zones')}
-        className="sticky top-0 z-20 -mx-4 flex flex-wrap gap-1.5 border-b border-border bg-background/95 px-4 py-2 backdrop-blur-sm"
+        className="flex flex-wrap items-center gap-x-3 gap-y-2.5"
       >
         {ZONES.map((z) => (
-          <a
-            key={z}
-            href={`#${z}`}
-            className="skew-tab bg-surface-2 px-3 py-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
-          >
+          <a key={z} href={`#${z}`} className="fn-chip fn-chip-nav">
             <span>{t(`Zone.${z}`)}</span>
           </a>
         ))}

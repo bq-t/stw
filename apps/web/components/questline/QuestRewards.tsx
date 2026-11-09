@@ -30,7 +30,7 @@ function Tile({ rarity, children }: { rarity?: Rarity; children: React.ReactNode
   return (
     <span
       data-rarity={rarity}
-      className="reward-tile inline-flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-[3px]"
+      className="reward-tile fn-tile inline-flex size-5 shrink-0 items-center justify-center overflow-hidden"
     >
       {children}
     </span>
@@ -49,10 +49,10 @@ function RewardChip({ reward }: { reward: Exclude<QReward, { t: 'choice' | 'unlo
           <span
             tabIndex={0}
             data-rarity="legendary"
-            className="reward-tile inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs font-extrabold text-white ring-1 ring-[var(--rarity-legendary-hi)] [text-shadow:0_1px_1px_rgb(0_0_0/0.6)]"
+            className="reward-tile fn-badge inline-flex h-6 items-center gap-1 px-2 text-xs font-extrabold text-white [text-shadow:0_1px_1px_rgb(0_0_0/0.6)]"
           >
             <VbucksIcon className="text-white" />
-            {reward.n}
+            <span>{reward.n}</span>
           </span>
         </TooltipTrigger>
         <TooltipContent className="max-w-64">
@@ -114,7 +114,7 @@ function RewardChip({ reward }: { reward: Exclude<QReward, { t: 'choice' | 'unlo
   const chip = (
     <span
       tabIndex={detail ? 0 : undefined}
-      className="inline-flex items-center gap-1.5 rounded-sm bg-surface-2 py-0.5 pr-2 pl-0.5 text-xs"
+      className="skew-tab inline-flex h-6 items-center gap-1.5 bg-surface-2 pr-2.5 pl-2 text-xs"
     >
       <Tile rarity={rarity}>{icon}</Tile>
       <span className="font-medium">{label}</span>
@@ -155,9 +155,9 @@ export function QuestRewards({ rewards, className }: { rewards: QReward[]; class
   return (
     <div className={cn('flex flex-col gap-1.5', className)}>
       {chips.length > 0 && (
-        <ul className="flex flex-wrap gap-1.5">
+        <ul className="flex flex-wrap items-center gap-1.5">
           {chips.map((r, i) => (
-            <li key={i}>
+            <li key={i} className="flex">
               <RewardChip reward={r} />
             </li>
           ))}
@@ -166,7 +166,7 @@ export function QuestRewards({ rewards, className }: { rewards: QReward[]; class
       {choices.map((c, i) => (
         <div
           key={i}
-          className="flex flex-wrap items-center gap-1.5 rounded-sm border border-dashed border-border px-1.5 py-1"
+          className="flex flex-wrap items-center gap-1.5 border border-dashed border-border px-2 py-1"
         >
           <span className="text-xs text-muted-foreground">{t('oneOf')}:</span>
           {c.of.map((opt, j) => (

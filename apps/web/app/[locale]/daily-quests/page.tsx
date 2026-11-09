@@ -36,18 +36,14 @@ export default async function DailyQuestsPage({ params }: PageProps<'/[locale]/d
           <h1 className="font-display text-2xl font-extrabold uppercase">{t('title')}</h1>
           <p className="text-xs text-muted-foreground">{t('checked', { date: checked })}</p>
         </div>
-        <p className="max-w-3xl text-sm text-muted-foreground">{t('intro')}</p>
-        <p className="max-w-3xl text-sm text-muted-foreground">{t('rewards')}</p>
+        {/* One sentence per line: the message has \n between them. */}
+        <p className="max-w-3xl text-sm whitespace-pre-line text-muted-foreground">{t('intro')}</p>
       </div>
 
-      <nav aria-label={t('categories')} className="flex flex-wrap gap-1.5">
+      <nav aria-label={t('categories')} className="flex flex-wrap gap-x-3 gap-y-2.5">
         {QUEST_CATEGORIES.map((c) => (
-          <a
-            key={c.id}
-            href={`#${c.id}`}
-            className="rounded-sm bg-surface-2 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {c.name[locale as Locale]}
+          <a key={c.id} href={`#${c.id}`} className="fn-chip fn-chip-nav">
+            <span>{c.name[locale as Locale]}</span>
           </a>
         ))}
       </nav>

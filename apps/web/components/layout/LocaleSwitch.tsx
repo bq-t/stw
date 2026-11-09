@@ -20,16 +20,14 @@ function Switch() {
   }
 
   return (
-    <div role="group" aria-label={t('language')} className="flex gap-1 text-xs font-semibold">
+    <div role="group" aria-label={t('language')} className="flex gap-1.5 text-sm">
       {routing.locales.map((l) => (
         <button
           key={l}
           type="button"
           onClick={() => change(l)}
           aria-pressed={l === locale}
-          className={`skew-tab rounded-none px-2 py-1 uppercase ${
-            l === locale ? 'bg-surface-2 text-text' : 'text-muted-foreground hover:text-text'
-          }`}
+          className="fn-tab px-2.5 py-1"
         >
           <span>{l}</span>
         </button>

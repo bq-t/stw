@@ -38,9 +38,11 @@ export default async function QuestlinePage({ params }: PageProps<'/[locale]/que
           <h1 className="font-display text-2xl font-extrabold uppercase">{t('title')}</h1>
           <p className="text-xs text-muted-foreground">{t('checked', { date: checked })}</p>
         </div>
-        <p className="max-w-3xl text-sm text-muted-foreground">
-          {t('intro', { amount: 100, total: TOTAL_VBUCKS })} {t('founders')}
-          {locale === 'ru' && ` ${t('namesNote')}`}
+        {/* One sentence per line: the intro has \n between sentences, the rest join with \n here. */}
+        <p className="max-w-3xl text-sm whitespace-pre-line text-muted-foreground">
+          {t('intro', { amount: 100, total: TOTAL_VBUCKS })}
+          {`\n${t('founders')}`}
+          {locale === 'ru' && `\n${t('namesNote')}`}
         </p>
       </div>
       <QuestlineView />

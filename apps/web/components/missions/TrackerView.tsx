@@ -14,30 +14,27 @@ import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { usePathname, useRouter } from '@/i18n/navigation';
 import { IS_DEMO, fetchHistory, fetchMissions, isStale, refetchDelay } from '@/lib/api';
 import { MissionFilters } from './MissionFilters';
 import { VbucksStats } from './VbucksStats';
 import { ZoneSection } from './ZoneSection';
 
 function Notice({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="rounded-md border border-border bg-surface-2 px-3 py-2 text-sm text-muted-foreground">
-      {children}
-    </p>
-  );
+  return <p className="fn-panel py-2 text-sm text-muted-foreground">{children}</p>;
 }
 
 function Tracker() {
   const t = useTranslations('Tracker');
   const search = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
 
   const filters = useMemo(() => filtersFromParams(new URLSearchParams(search)), [search]);
+  // Filters only change the query string: native replaceState updates useSearchParams without a
+  // navigation. router.replace() would ask the server for "/" again, and since EN "/" is served
+  // by a rewrite to /en, Next gets HTML instead of its page data and reloads the whole page.
   const setFilters = (next: Filters) => {
     const q = filtersToParams(next).toString();
-    router.replace(q ? `${pathname}?${q}` : pathname, { scroll: false });
+    const path = window.location.pathname;
+    window.history.replaceState(null, '', q ? `${path}?${q}` : path);
   };
 
   const missions = useQuery({
@@ -90,18 +87,25 @@ function Tracker() {
           ))}
         </div>
       ) : shown === 0 ? (
-        <div className="flex flex-col items-start gap-2">
-          <p className="text-muted-foreground">{t('empty')}</p>
-          <button
-            type="button"
-            className="text-sm text-accent-ui underline-offset-4 hover:underline"
-            onClick={() => setFilters(DEFAULT_FILTERS)}
-          >
-            {t('resetFilters')}
+        <div className="results-in flex flex-col items-center gap-5 py-10 text-center">
+          {/* Plain <img>: static export, local files. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/fishstick-404.webp"
+            alt=""
+            width={200}
+            height={200}
+            className="size-48"
+          />
+          <p className="fn-title text-3xl">{t('empty')}</p>
+          <button type="button" className="fn-button" onClick={() => setFilters(DEFAULT_FILTERS)}>
+            <span>{t('resetFilters')}</span>
           </button>
         </div>
       ) : (
-        <div className={`grid items-start gap-3 ${zoneCols}`}>
+        // Keyed by the filters, so every filter change replays a short fade-in: filtering is
+        // instant and local, this only shows that the list changed.
+        <div key={search.toString()} className={`results-in grid items-start gap-3 ${zoneCols}`}>
           {visible.map(({ zone, missions: list }) => (
             <ZoneSection key={zone} zone={zone} missions={list} wide={wide} />
           ))}

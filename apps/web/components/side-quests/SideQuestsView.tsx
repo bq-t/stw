@@ -29,12 +29,12 @@ function VbucksBadge({ children, className }: { children: React.ReactNode; class
     <span
       data-rarity="legendary"
       className={cn(
-        'reward-tile inline-flex shrink-0 items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs font-extrabold text-white ring-1 ring-[var(--rarity-legendary-hi)] [text-shadow:0_1px_1px_rgb(0_0_0/0.6)]',
+        'reward-tile fn-badge inline-flex h-6 shrink-0 items-center gap-1 px-2 text-xs font-extrabold text-white [text-shadow:0_1px_1px_rgb(0_0_0/0.6)]',
         className,
       )}
     >
       <VbucksIcon className="text-white" />
-      {children}
+      <span>{children}</span>
     </span>
   );
 }
@@ -42,22 +42,24 @@ function VbucksBadge({ children, className }: { children: React.ReactNode; class
 function SideQuestCard({ quest }: { quest: SideQuest }) {
   const vbucks = questVbucks(quest);
   return (
-    <li
-      id={quest.id}
-      className={cn(
-        'flex scroll-mt-20 flex-col gap-2 rounded-md border bg-card px-3 py-2.5',
-        vbucks > 0 ? 'border-vbucks/60 bg-[var(--vbucks-glow)]' : 'border-border',
-      )}
-    >
-      <h3 className="text-sm leading-tight font-semibold">{quest.name}</h3>
-      <ul className="flex flex-col gap-1 text-sm leading-snug text-muted-foreground">
-        {quest.objectives.map((o, i) => (
-          <li key={i}>
-            <ObjectiveLine o={o} />
-          </li>
-        ))}
-      </ul>
-      <QuestRewards rewards={quest.rewards} />
+    // The glow sits on the outer <li>: the card's clip-path would cut a glow on the card itself.
+    <li id={quest.id} className={cn(vbucks > 0 && 'vbucks-shape-glow')}>
+      <div
+        className={cn(
+          'fn-tall flex flex-col gap-2 bg-surface py-2.5',
+          vbucks > 0 && '[--stripe:var(--vbucks)]',
+        )}
+      >
+        <h3 className="text-sm leading-tight font-semibold">{quest.name}</h3>
+        <ul className="flex flex-col gap-1 text-sm leading-snug text-muted-foreground">
+          {quest.objectives.map((o, i) => (
+            <li key={i}>
+              <ObjectiveLine o={o} />
+            </li>
+          ))}
+        </ul>
+        <QuestRewards rewards={quest.rewards} />
+      </div>
     </li>
   );
 }
@@ -79,53 +81,55 @@ function ChallengeCard({ series }: { series: ChallengeSeries }) {
   };
 
   return (
-    <li
-      id={series.id}
-      className={cn(
-        'flex scroll-mt-20 flex-col gap-2 rounded-md border bg-card px-3 py-2.5',
-        total > 0 ? 'border-vbucks/60 bg-[var(--vbucks-glow)]' : 'border-border',
-      )}
-    >
-      <header className="flex flex-wrap items-start gap-x-2 gap-y-1">
-        <h3 className="min-w-0 flex-1 text-sm leading-tight font-semibold">{series.name}</h3>
-        {total > 0 && (
-          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <VbucksBadge>{per}</VbucksBadge>
-            {t('stagesTotal', { amount: total, count: series.stages.length })}
-          </span>
+    // The glow sits on the outer <li>: the card's clip-path would cut a glow on the card itself.
+    <li id={series.id} className={cn(total > 0 && 'vbucks-shape-glow')}>
+      <div
+        className={cn(
+          'fn-tall flex flex-col gap-2 bg-surface py-2.5',
+          total > 0 && '[--stripe:var(--vbucks)]',
         )}
-      </header>
-      {templated && series.stages.length > 1 && (
-        <p className="text-sm leading-snug text-muted-foreground">
-          {t('stage', { n: 1 })}: {t(`series.${series.id}`, { count: first.goal })} →{' '}
-          {t('stage', { n: series.stages.length })}:{' '}
-          {t(`series.${series.id}`, { count: last.goal })}
-        </p>
-      )}
-      {total === 0 && <QuestRewards rewards={first.rewards} />}
-      {tip && (
-        <p className="flex gap-1.5 text-xs text-muted-foreground">
-          <Lightbulb aria-hidden className="mt-px size-3.5 shrink-0" />
-          {tip[locale]}
-        </p>
-      )}
-      <details className="group">
-        <summary className="cursor-pointer text-xs text-accent-ui select-none hover:underline">
-          {t('allStages', { count: series.stages.length })}
-        </summary>
-        <ol className="mt-2 grid grid-cols-1 gap-1 sm:grid-cols-2">
-          {series.stages.map((s, i) => (
-            <li
-              key={i}
-              className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-sm bg-surface-2/60 px-2 py-1 text-xs"
-            >
-              <span className="w-5 shrink-0 text-muted-foreground tabular-nums">{i + 1}.</span>
-              <span className="min-w-0 flex-1">{stageText(i)}</span>
-              <QuestRewards rewards={s.rewards} />
-            </li>
-          ))}
-        </ol>
-      </details>
+      >
+        <header className="flex flex-wrap items-start gap-x-2 gap-y-1">
+          <h3 className="min-w-0 flex-1 text-sm leading-tight font-semibold">{series.name}</h3>
+          {total > 0 && (
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <VbucksBadge>{per}</VbucksBadge>
+              {t('stagesTotal', { amount: total, count: series.stages.length })}
+            </span>
+          )}
+        </header>
+        {templated && series.stages.length > 1 && (
+          <p className="text-sm leading-snug text-muted-foreground">
+            {t('stage', { n: 1 })}: {t(`series.${series.id}`, { count: first.goal })} →{' '}
+            {t('stage', { n: series.stages.length })}:{' '}
+            {t(`series.${series.id}`, { count: last.goal })}
+          </p>
+        )}
+        {total === 0 && <QuestRewards rewards={first.rewards} />}
+        {tip && (
+          <p className="flex gap-1.5 text-xs text-muted-foreground">
+            <Lightbulb aria-hidden className="mt-px size-3.5 shrink-0" />
+            {tip[locale]}
+          </p>
+        )}
+        <details className="fn-details group">
+          <summary className="cursor-pointer text-xs text-accent-ui select-none hover:underline">
+            {t('allStages', { count: series.stages.length })}
+          </summary>
+          <ol className="mt-2 grid grid-cols-1 gap-1 sm:grid-cols-2">
+            {series.stages.map((s, i) => (
+              <li
+                key={i}
+                className="fn-card flex flex-wrap items-center gap-x-2 gap-y-1 bg-surface-2 px-2.5 py-1.5 text-xs"
+              >
+                <span className="w-5 shrink-0 text-muted-foreground tabular-nums">{i + 1}.</span>
+                <span className="min-w-0 flex-1">{stageText(i)}</span>
+                <QuestRewards rewards={s.rewards} />
+              </li>
+            ))}
+          </ol>
+        </details>
+      </div>
     </li>
   );
 }
@@ -146,10 +150,7 @@ export function SideQuestsView() {
 
   return (
     <div className="flex flex-col gap-5">
-      <section
-        aria-labelledby="where-vbucks"
-        className="rounded-md border border-vbucks/50 bg-card px-3 py-3"
-      >
+      <section aria-labelledby="where-vbucks" className="fn-panel py-3">
         <h2 id="where-vbucks" className="mb-2 font-display text-sm font-extrabold uppercase">
           {t('SideQuests.whereVbucks')}
         </h2>
@@ -178,17 +179,13 @@ export function SideQuestsView() {
 
       <nav
         aria-label={t('SideQuests.sections')}
-        className="sticky top-0 z-20 -mx-4 flex flex-wrap items-center gap-1.5 border-b border-border bg-background/95 px-4 py-2 backdrop-blur-sm"
+        className="flex flex-wrap items-center gap-x-3 gap-y-2.5"
       >
         {[
           { id: 'challenges', label: t('SideQuests.challenges') },
           ...SIDE_GROUPS.map((g) => ({ id: `group-${g.id}`, label: groupTitle(g) })),
         ].map((s) => (
-          <a
-            key={s.id}
-            href={`#${s.id}`}
-            className="skew-tab bg-surface-2 px-3 py-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
-          >
+          <a key={s.id} href={`#${s.id}`} className="fn-chip fn-chip-nav">
             <span>{s.label}</span>
           </a>
         ))}
@@ -196,23 +193,14 @@ export function SideQuestsView() {
           type="button"
           aria-pressed={onlyVbucks}
           onClick={() => setOnlyVbucks((v) => !v)}
-          className={cn(
-            'ml-auto inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-xs font-semibold ring-1 transition-colors',
-            onlyVbucks
-              ? 'bg-[var(--vbucks-glow)] text-foreground ring-vbucks'
-              : 'text-muted-foreground ring-border hover:text-foreground',
-          )}
+          className="fn-chip fn-chip-nav ml-auto gap-1.5"
         >
-          <VbucksIcon className="size-3.5" />
-          {t('SideQuests.onlyVbucks')}
+          <VbucksIcon className="size-4" />
+          <span>{t('SideQuests.onlyVbucks')}</span>
         </button>
       </nav>
 
-      <section
-        id="challenges"
-        aria-labelledby="h-challenges"
-        className="flex scroll-mt-16 flex-col gap-2"
-      >
+      <section id="challenges" aria-labelledby="h-challenges" className="flex flex-col gap-2">
         <h2 id="h-challenges" className="font-display text-base font-extrabold uppercase">
           {t('SideQuests.challenges')}
         </h2>
@@ -234,11 +222,11 @@ export function SideQuestsView() {
             key={g.id}
             id={`group-${g.id}`}
             aria-labelledby={`h-${g.id}`}
-            className="flex scroll-mt-16 flex-col gap-2"
+            className="flex flex-col gap-2"
           >
             <header
               className={cn(
-                'flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border border-border px-3 py-3',
+                'flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-3',
                 g.title ? 'bg-surface-2' : 'zone-header',
               )}
               style={

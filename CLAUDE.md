@@ -50,6 +50,11 @@ pnpm discord:preview    # post today's Discord message (live Worker data) to DIS
 - `public/_redirects` serves EN without a prefix. Cloudflare applies these rules BEFORE static files, so every root asset (`/_next/*`, `/icons/*`, `/images/*`, `favicon.ico`, `sitemap.xml`, `robots.txt`) needs an explicit pass-through rule above the `/*` catch-all. Check after changes with `wrangler pages dev apps/web/out`.
 - shadcn/ui (radix-nova) lives in `components/ui`; its tokens (`--background`, `--muted`…) map to our palette in `globals.css`. `text-muted-foreground` is grey text; `bg-muted` is a surface.
 - Screenshots for visual checks: headless Chrome `--screenshot` against `pnpm dev:web` or `wrangler pages dev`.
+- Style building blocks live in `globals.css`: `.fn-panel` (slanted bar), `.fn-block` (square block), `.fn-card` (leaning card via skew: short cards, keeps box-shadow glows), `.fn-tall` (fixed 8px slant via clip-path: cards that grow, stripe colour via `[--stripe:…]`), `.fn-chip` / `.fn-chip-nav` (filter and anchor buttons), `.fn-tab` (header buttons), `.fn-badge` (V-Bucks amount), `.fn-tile` (reward preview), `.vbucks-shape-glow` (glow that follows any shape; put it on a wrapper of a clip-path card).
+- Background: triangle grid from `scripts/bg-plexus.mjs` (→ `public/images/bg-plexus*.svg`), drifting under `body::before` plus a shine band (`PlexusShine.tsx`). The header pins and slides in on scroll (`StickyHeader.tsx`, anchors offset by `scroll-padding-top`); `RouteProgress.tsx` is the page loading bar.
+- Tracker filters update the URL with `window.history.replaceState`, not `router.replace`: EN `/` is a rewrite to `/en`, so a router navigation to it reloads the whole page.
+- 404 is `app/global-not-found.tsx` (`experimental.globalNotFound`): the root layout sits under `[locale]`, so it renders its own document with the EN header/footer; the body text switches to RU on `/ru/...` in the browser.
+- Images from `icons-inbox/` (git-ignored) are turned into `public/` files with sharp: flat dark backgrounds are flood-filled to transparent from the corners. The fish pictures (logo, 404, no-V-Bucks, favicon) came from the owner.
 
 ## Rules
 
@@ -58,7 +63,7 @@ pnpm discord:preview    # post today's Discord message (live Worker data) to DIS
 - Never commit secrets: `.env`, `.dev.vars`, `fixtures/` are git-ignored. Worker secrets go to `wrangler secret put`.
 - Use the dedicated Epic account, never the owner's main account.
 - All UI text goes through next-intl (`apps/web/messages/en.json` and `ru.json`), both files updated together.
-- Design: dark navy, rarity colors only as borders/stripes, V-Bucks is the only bright accent. No purple-pink gradients, glassmorphism, emoji in UI.
+- Design ("Fishstick"): neutral dark grey page, orange brand `#F06C1E` (header, footer and brand fills use the `#db5814 → #fd8a3b` radial gradient, darker in the corners), Fortnite-style square corners and slanted sides, no outlines on blocks. Rarity colors only as borders/stripes and reward tiles; V-Bucks keep the legendary gold. No purple-pink gradients, glassmorphism, emoji in UI. All caps only through CSS (`uppercase`), never in the text itself.
 - TypeScript strict. pnpm 11 refuses packages younger than 1 day: pick a slightly older version rather than relaxing the policy.
 - Change parse.ts → extend packages/shared/test (synthetic world-info fixture there is committed; real ones in /fixtures are not).
 - Versions: TypeScript stays on 6.0.x (typescript-eslint does not support 7 yet); ESLint 9 (eslint-config-next does not support 10 yet).

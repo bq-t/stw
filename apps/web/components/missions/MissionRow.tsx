@@ -17,12 +17,12 @@ const HIDDEN_REWARDS = new Set(['AccountResource:campaign_event_currency']);
 
 /** Card tint by the best alert reward rarity, as in the game. */
 const RARITY_ROW: Record<Rarity, string> = {
-  common: 'border-common bg-common/8',
-  uncommon: 'border-uncommon bg-uncommon/8',
-  rare: 'border-rare bg-rare/8',
-  epic: 'border-epic bg-epic/10',
-  legendary: 'border-legendary bg-legendary/10',
-  mythic: 'border-mythic bg-mythic/12',
+  common: 'border-common bg-common/14',
+  uncommon: 'border-uncommon bg-uncommon/14',
+  rare: 'border-rare bg-rare/14',
+  epic: 'border-epic bg-epic/16',
+  legendary: 'border-legendary bg-legendary/16',
+  mythic: 'border-mythic bg-mythic/18',
 };
 
 /** Rewards left to right: mythic → common, items without rarity last (V-Bucks go first separately). */
@@ -82,7 +82,7 @@ export function MissionRow({ mission }: { mission: Mission }) {
       ? 'vbucks-card border-vbucks bg-[var(--vbucks-glow)]'
       : rarity
         ? RARITY_ROW[rarity]
-        : 'border-transparent bg-surface/40';
+        : 'border-transparent bg-surface-2';
   const pl = mission.powerLevel > 0 ? mission.powerLevel : '?';
   const place = mission.biome ? biome(mission.biome) : null;
   const alert = mission.alertKind !== 'none' ? t(`AlertKind.${mission.alertKind}`) : null;
@@ -90,7 +90,7 @@ export function MissionRow({ mission }: { mission: Mission }) {
   return (
     <li
       className={cn(
-        'grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-2 rounded-sm border-l-[3px] px-2 py-1.5',
+        'fn-card grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-2 border-l-[3px] px-2.5 py-1.5',
         tone,
       )}
     >

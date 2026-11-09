@@ -3,25 +3,32 @@
 @import 'shadcn/tailwind.css';
 
 /*
- * One dark theme only (tech plan, "Дизайн-направление"):
- * deep navy background, cards one step lighter, rarity colors only as borders/stripes,
- * V-Bucks is the single bright accent on the page.
+ * One dark theme only: neutral grey background, cards one step lighter,
+ * orange brand accent (header, footer, selected filters, links, focus),
+ * rarity colors only as borders/stripes.
  * shadcn/ui tokens (--background, --card, ...) point at the same palette.
  */
 :root {
-  --bg: #0b1324;
-  --surface: #121c33;
-  --surface-2: #1a2642;
-  --line: #26355a;
-  --text: #e8eefc;
-  --text-dim: #8d9bbd;
+  --bg: #202022;
+  --surface: #2a2a2d;
+  --surface-2: #343438;
+  --line: #45454a;
+  --text: #f2f2f3;
+  --text-dim: #a2a2a8;
 
-  /* V-Bucks are gold, as in the game. UI accent (selected filters, links, focus) stays blue. */
+  /* Brand accent and the text colour on top of it. Fills use the gradient, darker in the corners. */
+  --brand: #f06c1e;
+  --brand-lo: #db5814;
+  --brand-hi: #fd8a3b;
+  --on-brand: #1a1a1a;
+  /* Height of the slanted edge on the header and footer. */
+  --slant: 16px;
+
   /* V-Bucks use the legendary colour, as the V-Bucks reward does in the game. */
   --vbucks: #ffb15c;
   --vbucks-glow: rgb(238 138 44 / 0.14);
   --vbucks-shine: #ee8a2c;
-  --accent-ui: #3fa9ff;
+  --accent-ui: var(--brand);
 
   /* Fortnite rarity colours: grey, green, blue, purple, orange-gold (legendary), yellow (mythic). *-hi / *-lo = tile gradient. */
   --rarity-common: #a7adb8;
@@ -51,7 +58,7 @@
   --popover: var(--surface-2);
   --popover-foreground: var(--text);
   --primary: var(--accent-ui);
-  --primary-foreground: #04101f;
+  --primary-foreground: var(--on-brand);
   --secondary: var(--surface-2);
   --secondary-foreground: var(--text);
   --muted: var(--surface-2);
@@ -74,6 +81,8 @@
   --color-text: var(--text);
   --color-vbucks: var(--vbucks);
   --color-accent-ui: var(--accent-ui);
+  --color-brand: var(--brand);
+  --color-on-brand: var(--on-brand);
   --color-common: var(--rarity-common);
   --color-uncommon: var(--rarity-uncommon);
   --color-rare: var(--rarity-rare);
@@ -166,7 +175,506 @@ html {
   --edge: var(--rarity-mythic);
 }
 
-/* Fortnite-style call-to-action in the V-Bucks colour: slanted, sharp corners, heavy uppercase. */
+/*
+ * Page background as in the Fortnite menus: a grid of equal triangles (scripts/bg-plexus.mjs),
+ * tilted to the left, slowly drifting and softly fading in and out. One fixed layer behind
+ * everything, bigger than the screen so the tilt and the drift never show its edge; only
+ * transform and opacity animate, so it stays on the GPU. Panels are opaque and cover it.
+ * Depth: the grid leans back in perspective (bigger below, smaller towards the top), the page
+ * is lighter in the middle, and a vignette (body::after) darkens the edges.
+ */
+body {
+  /* Tile size from bg-plexus.mjs; one drift cycle moves by a whole number of tiles, so it loops seamlessly. */
+  --tile-w: 110px;
+  --tile-h: 190px;
+  --tilt: 10deg;
+  /* Slight lean of the pattern on top of the rotation. */
+  --lean: -8deg;
+  /* The grid leans back from the viewer by this much. */
+  --depth: perspective(1600px) rotateX(24deg);
+  isolation: isolate;
+  background: radial-gradient(ellipse 80% 70% at 50% 40%, #2b2b2f 0%, var(--bg) 60%, #19191b 100%)
+    fixed;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 75% 70% at 50% 45%, transparent 55%, rgb(0 0 0 / 0.45) 100%);
+}
+/* The grid layer; .plexus-shine-pattern is the same geometry, so the shine lies exactly on it. */
+body::before,
+.plexus-shine-pattern {
+  position: fixed;
+  top: -75vmax;
+  left: -75vmax;
+  width: calc(100vw + 150vmax);
+  height: calc(100vh + 150vmax);
+  pointer-events: none;
+  transform: var(--depth) rotate(var(--tilt)) skewX(var(--lean));
+  will-change: transform;
+}
+body::before {
+  content: '';
+  z-index: -1;
+  background: url('/images/bg-plexus.svg') 0 0 / var(--tile-w) var(--tile-h) repeat;
+  animation:
+    plexus-drift 60s linear infinite,
+    plexus-glow 9s ease-in-out infinite alternate;
+}
+/* Drifts to the right by two tiles per cycle. */
+@keyframes plexus-drift {
+  from {
+    transform: var(--depth) rotate(var(--tilt)) skewX(var(--lean)) translate3d(0, 0, 0);
+  }
+  to {
+    transform: var(--depth) rotate(var(--tilt)) skewX(var(--lean))
+      translate3d(calc(var(--tile-w) * 2), 0, 0);
+  }
+}
+
+/*
+ * Shine: a soft diagonal band of light that sweeps across the grid now and then.
+ * .plexus-shine is a full-screen frame with the band as its mask and slides across the screen;
+ * its child slides back by the same amount, so the bright copy of the grid inside stays exactly
+ * on top of the grid and only the band moves. All movement is transform, so it stays on the GPU.
+ */
+.plexus-shine {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.35;
+  mask-image: linear-gradient(105deg, transparent 38%, #000 50%, transparent 62%);
+  animation: plexus-shine 16s ease-in-out infinite;
+  will-change: transform;
+}
+.plexus-shine > div {
+  position: absolute;
+  inset: 0;
+  animation: plexus-shine-back 16s ease-in-out infinite;
+  will-change: transform;
+}
+.plexus-shine-pattern {
+  background: url('/images/bg-plexus-shine.svg') 0 0 / var(--tile-w) var(--tile-h) repeat;
+  animation: plexus-drift 60s linear infinite;
+}
+/* The band crosses the screen in the first 60% of the cycle, then waits off-screen. */
+@keyframes plexus-shine {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  60%,
+  100% {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+@keyframes plexus-shine-back {
+  0% {
+    transform: translate3d(100%, 0, 0);
+  }
+  60%,
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+@keyframes plexus-glow {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+    opacity: 0.7;
+  }
+  .plexus-shine {
+    display: none;
+  }
+}
+
+/* Brand fill: light in the middle, darker towards the corners. */
+.brand-fill {
+  background: radial-gradient(
+    ellipse farthest-corner at 50% 50%,
+    var(--brand-hi) 0%,
+    var(--brand-lo) 100%
+  );
+  color: var(--on-brand);
+}
+
+/* Header and footer are not straight blocks: the header's bottom edge and the footer's top edge slant. */
+.slant-bottom {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - var(--slant)));
+  padding-bottom: var(--slant);
+}
+.slant-top {
+  clip-path: polygon(0 var(--slant), 100% 0, 100% 100%, 0 100%);
+  padding-top: var(--slant);
+}
+
+/* Fortnite-style surfaces: no outline, slanted or cut shapes. */
+/* Bar (stats, filters, notices): left and right sides slant. */
+.fn-panel {
+  --cut: 10px;
+  background: var(--surface);
+  clip-path: polygon(var(--cut) 0, 100% 0, calc(100% - var(--cut)) 100%, 0 100%);
+  padding-inline: calc(var(--cut) + 0.75rem);
+}
+/* Tall block (zone column): plain square block, no outline. */
+.fn-block {
+  background: var(--surface);
+}
+/* Mission card: the whole card leans like a Fortnite tile, content stays upright. */
+.fn-card {
+  transform: skewX(-4deg);
+}
+.fn-card > * {
+  transform: skewX(4deg);
+}
+
+/* Table in the slanted panel shape (FAQ): sides slant by --cut, the outer cells keep clear of the cut. */
+.fn-table {
+  --cut: 10px;
+  background: var(--surface);
+  clip-path: polygon(var(--cut) 0, 100% 0, calc(100% - var(--cut)) 100%, 0 100%);
+}
+.fn-table tr > :first-child {
+  padding-left: calc(var(--cut) + 0.75rem);
+}
+.fn-table tr > :last-child {
+  padding-right: calc(var(--cut) + 0.75rem);
+}
+
+/*
+ * Tall or growing card (side quests, challenges with stages): the sides slant by a fixed 8px
+ * whatever the height (clip-path), unlike .fn-card whose skew grows with the height.
+ * The stripe on the left follows the slanted edge; set its colour with --stripe.
+ */
+.fn-tall {
+  --cut: 8px;
+  position: relative;
+  clip-path: polygon(var(--cut) 0, 100% 0, calc(100% - var(--cut)) 100%, 0 100%);
+  padding-left: calc(var(--cut) + 0.75rem);
+  padding-right: calc(var(--cut) + 0.75rem);
+}
+.fn-tall::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* No default on .fn-tall itself: it would beat the Tailwind [--stripe:…] utility. */
+  background: var(--stripe, transparent);
+  clip-path: polygon(var(--cut) 0, calc(var(--cut) + 3px) 0, 3px 100%, 0 100%);
+  pointer-events: none;
+}
+
+/* Filter chip: slanted like the header buttons, same font; the active one is filled with the brand. */
+.fn-chip {
+  transform: skewX(-8deg);
+  border-radius: 0;
+  font-family: var(--font-fn), system-ui, sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.fn-chip > * {
+  transform: skewX(8deg);
+}
+.fn-chip:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+.fn-chip[data-state='on'],
+.fn-chip[data-state='on']:hover {
+  background: radial-gradient(
+    ellipse farthest-corner at 50% 50%,
+    var(--brand-hi) 0%,
+    var(--brand-lo) 100%
+  );
+  color: #fff;
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
+}
+
+/* Popovers and tooltips: square corners, left and right sides slant (no arrow: the shape clips it). */
+[data-slot='popover-content'],
+[data-slot='tooltip-content'] {
+  --cut: 8px;
+  border-radius: 0;
+  clip-path: polygon(var(--cut) 0, 100% 0, calc(100% - var(--cut)) 100%, 0 100%);
+  padding-inline: calc(var(--cut) + 0.5rem);
+}
+
+/* Big white Fortnite-style caption (empty states, 404). */
+.fn-title {
+  font-family: var(--font-fn), system-ui, sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+}
+
+/* White header button: heavy condensed italic, as in Fortnite menus. */
+.fn-tab {
+  display: inline-flex;
+  align-items: center;
+  transform: skewX(-8deg);
+  background: #fff;
+  color: var(--on-brand);
+  font-family: var(--font-fn), system-ui, sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.12);
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    transform 0.15s;
+}
+.fn-tab > * {
+  transform: skewX(8deg);
+}
+.fn-tab:hover {
+  background: #fff3ea;
+  transform: skewX(-8deg) translateY(-1px);
+}
+.fn-tab[aria-pressed='true'],
+.fn-tab[aria-current='page'] {
+  background: var(--on-brand);
+  color: #fff;
+}
+
+/* Header menu buttons: a darker shade of the header itself, white text (EN/RU keep the white look). */
+.fn-tab.fn-tab-dim {
+  background: rgb(0 0 0 / 0.22);
+  color: #fff;
+  box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.15);
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
+}
+.fn-tab.fn-tab-dim:hover {
+  background: rgb(0 0 0 / 0.34);
+}
+
+/* Header pinned to the top once the page scrolls past it (StickyHeader.tsx): slides in from above. */
+.header-stuck {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  animation: header-slide-in 0.3s ease-out;
+}
+@keyframes header-slide-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .header-stuck {
+    animation: none;
+  }
+}
+/* Tracker results after a filter change: a quick fade and lift, so the change is visible. */
+.results-in {
+  animation: results-in 0.22s ease-out;
+}
+@keyframes results-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .results-in {
+    animation: none;
+  }
+}
+
+/* Page loading bar (RouteProgress.tsx): white with a glow, visible on the orange header. */
+.route-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  height: 3px;
+  background: #fff;
+  box-shadow:
+    0 0 8px rgb(255 255 255 / 0.8),
+    0 0 2px rgb(255 255 255 / 0.9);
+  transform-origin: left;
+  pointer-events: none;
+}
+/* Grows fast at first, then slows down and never quite reaches the end on its own. */
+.route-progress[data-phase='loading'] {
+  animation: route-progress-grow 8s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+.route-progress[data-phase='done'] {
+  transform: scaleX(1);
+  opacity: 0;
+  transition:
+    transform 0.2s ease-out,
+    opacity 0.3s ease-out 0.15s;
+}
+@keyframes route-progress-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(0.9);
+  }
+}
+
+/* Anchor links (#quest-id etc.) land below the pinned header. */
+html {
+  scroll-padding-top: 5.5rem;
+}
+
+/*
+ * Daily Quests category links: header-button look, white text, brand fill on hover.
+ * A gradient cannot be transitioned, so the fill is a layer underneath that fades in.
+ */
+.fn-chip.fn-chip-nav {
+  position: relative;
+  isolation: isolate;
+  height: 2.25rem;
+  padding-inline: 1rem;
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface);
+  color: #fff;
+  font-size: 1rem;
+  transition: text-shadow 0.18s ease-out;
+}
+.fn-chip.fn-chip-nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse farthest-corner at 50% 50%,
+    var(--brand-hi) 0%,
+    var(--brand-lo) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.18s ease-out;
+}
+.fn-chip.fn-chip-nav:hover {
+  background: var(--surface);
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
+}
+.fn-chip.fn-chip-nav:hover::before,
+.fn-chip.fn-chip-nav[aria-pressed='true']::before {
+  opacity: 1;
+}
+.fn-chip.fn-chip-nav[aria-pressed='true'] {
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
+}
+
+/* V-Bucks amount badge: keeps the legendary gradient, no outline, slanted square corners. */
+.reward-tile.fn-badge {
+  box-shadow: none;
+  border-radius: 0;
+  transform: skewX(-8deg);
+}
+.reward-tile.fn-badge > * {
+  transform: skewX(8deg);
+}
+
+/*
+ * Reward preview inside a slanted reward chip: rarity gradient kept, no outline, square.
+ * The chip (.skew-tab) already leans and un-leans its children; the tile stays leaning with
+ * the chip, only the icon inside stands upright.
+ */
+.reward-tile.fn-tile {
+  box-shadow: none;
+  border-radius: 0;
+  transform: none;
+}
+.reward-tile.fn-tile > * {
+  transform: skewX(8deg);
+}
+
+/*
+ * V-Bucks glow around a card of any shape: drop-shadow follows the card's outline, so it works
+ * for clip-path cards too (put it on a wrapper of the clipped element: clip-path cuts its own glow).
+ * -pulse makes it breathe like the V-Bucks mission cards on the tracker.
+ */
+.vbucks-shape-glow {
+  filter: drop-shadow(0 0 1px rgb(255 177 92 / 0.9)) drop-shadow(0 0 7px rgb(238 138 44 / 0.55));
+}
+.vbucks-shape-glow-pulse {
+  animation: vbucks-shape-pulse 2.8s ease-in-out infinite;
+}
+@keyframes vbucks-shape-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px rgb(255 177 92 / 0.9)) drop-shadow(0 0 7px rgb(238 138 44 / 0.55));
+  }
+  50% {
+    filter: drop-shadow(0 0 1.5px rgb(255 177 92 / 1)) drop-shadow(0 0 14px rgb(238 138 44 / 0.85));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vbucks-shape-glow-pulse {
+    animation: none;
+  }
+}
+
+/*
+ * Expandable blocks (Daily Quests cards, side quest challenge stages) open and close smoothly
+ * where the browser can animate to height: auto.
+ */
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  details[data-quest]::details-content,
+  details.fn-details::details-content {
+    height: 0;
+    overflow: clip;
+    transition:
+      height 0.25s ease-out,
+      content-visibility 0.25s allow-discrete;
+  }
+  details[data-quest][open]::details-content,
+  details.fn-details[open]::details-content {
+    height: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  details[data-quest]::details-content,
+  details.fn-details::details-content {
+    transition: none;
+  }
+}
+
+/* Discord button in the header: header button shape, Discord blurple, lighter in the middle. */
+.fn-tab.fn-discord {
+  background: radial-gradient(ellipse farthest-corner at 50% 50%, #7983f5 0%, #4752c4 100%);
+  color: #fff;
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.25);
+}
+.fn-tab.fn-discord:hover {
+  background: radial-gradient(ellipse farthest-corner at 50% 50%, #8a93f7 0%, #5865f2 100%);
+}
+
+/* Fortnite-style call-to-action in the brand colour: slanted, sharp corners, heavy uppercase. */
 .fn-button {
   display: inline-flex;
   align-items: center;
@@ -174,15 +682,14 @@ html {
   padding: 0 1rem;
   transform: skewX(-8deg);
   border-radius: 0;
-  background: linear-gradient(
-    180deg,
-    var(--rarity-legendary-hi) 0%,
-    var(--vbucks) 45%,
-    var(--rarity-legendary) 100%
+  background: radial-gradient(
+    ellipse farthest-corner at 50% 50%,
+    var(--brand-hi) 0%,
+    var(--brand-lo) 100%
   );
   box-shadow:
     inset 0 -3px 0 rgb(0 0 0 / 0.18),
-    0 0 0 1px var(--rarity-legendary-lo);
+    0 0 0 1px var(--brand-lo);
   color: #fff;
   font-family: var(--font-unbounded), system-ui, sans-serif;
   font-weight: 800;
@@ -265,9 +772,9 @@ html {
   z-index: -1;
   background: linear-gradient(
     90deg,
-    rgb(11 19 36 / 0.82) 0%,
-    rgb(11 19 36 / 0.45) 60%,
-    rgb(11 19 36 / 0.7) 100%
+    rgb(32 32 34 / 0.82) 0%,
+    rgb(32 32 34 / 0.45) 60%,
+    rgb(32 32 34 / 0.7) 100%
   );
 }
 

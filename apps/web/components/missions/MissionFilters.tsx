@@ -23,8 +23,8 @@ import { GameIcon } from './GameIcon';
 import { REWARD_CATEGORY_ICON_NAMES, REWARD_ICONS } from './icons';
 import { VbucksIcon } from './VbucksIcon';
 
-const itemClass =
-  'h-7 px-2.5 text-xs data-[state=on]:bg-surface-2 data-[state=on]:text-foreground data-[state=on]:ring-1 data-[state=on]:ring-accent-ui';
+/** Look lives in `.fn-chip` (globals.css): slant, header font, brand fill when active. */
+const itemClass = 'fn-chip h-7 px-3';
 
 const ALERT_OPTIONS: { value: AlertFilter; label: string }[] = [
   { value: 'miniboss', label: 'alertMiniboss' },
@@ -55,7 +55,7 @@ function PowerLevelSlider({
         </span>
       </span>
       <Slider
-        className="w-36"
+        className="w-28"
         min={PL_MIN}
         max={PL_MAX}
         step={1}
@@ -78,7 +78,7 @@ export function MissionFilters({
   const rewardCount = value.rewards.length;
 
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-border bg-card px-3 py-2">
+    <div className="fn-panel flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-2">
       <ToggleGroup
         type="single"
         value={value.alert}
@@ -94,7 +94,7 @@ export function MissionFilters({
             className={o.value === 'vbucks' ? `${itemClass} text-vbucks` : itemClass}
           >
             {o.value === 'vbucks' && <VbucksIcon className="size-3.5" />}
-            {t(`Filters.${o.label}`)}
+            <span>{t(`Filters.${o.label}`)}</span>
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
@@ -109,7 +109,7 @@ export function MissionFilters({
       >
         {ZONES.map((z) => (
           <ToggleGroupItem key={z} value={z} className={itemClass}>
-            {t(`Zone.${z}`)}
+            <span>{t(`Zone.${z}`)}</span>
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
@@ -119,14 +119,19 @@ export function MissionFilters({
           <Button
             variant="ghost"
             size="sm"
-            className={rewardCount ? 'h-7 ring-1 ring-accent-ui' : 'h-7'}
+            className={rewardCount ? 'fn-chip h-7 px-3 ring-1 ring-accent-ui' : 'fn-chip h-7 px-3'}
           >
-            {t('Filters.reward')}
+            <span>{t('Filters.reward')}</span>
             {rewardCount > 0 && <span className="tabular-nums">({rewardCount})</span>}
             <ChevronDown aria-hidden />
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="start" className="w-auto max-w-[min(32rem,90vw)] p-2">
+        {/* The popover's top-left corner is cut by the slant (8px), the button leans by ~2px: shift left so the visible corner sits under the button. */}
+        <PopoverContent
+          align="start"
+          alignOffset={-10}
+          className="w-auto max-w-[min(32rem,90vw)] p-2"
+        >
           <ToggleGroup
             type="multiple"
             value={value.rewards}
@@ -146,7 +151,7 @@ export function MissionFilters({
                     className="size-4 fill-current"
                   />
                 )}
-                {t(`RewardCategory.${c}`)}
+                <span>{t(`RewardCategory.${c}`)}</span>
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
@@ -162,14 +167,16 @@ export function MissionFilters({
       />
 
       {!isDefaultFilters(value) && (
+        // Icon only, so the filter row stays on one line; the label is for screen readers and hover.
         <Button
           variant="ghost"
           size="sm"
-          className="ml-auto h-7"
+          className="fn-chip h-7 px-2"
+          title={t('Tracker.resetFilters')}
           onClick={() => onChange(DEFAULT_FILTERS)}
         >
           <RotateCcw aria-hidden />
-          {t('Tracker.resetFilters')}
+          <span className="sr-only">{t('Tracker.resetFilters')}</span>
         </Button>
       )}
     </div>

@@ -1,6 +1,6 @@
 {
   "Meta": {
-    "siteName": "StW V-Bucks Guide",
+    "siteName": "Fishstick",
     "description": "Today's Fortnite Save the World missions, V-Bucks alerts, quests and every way to earn V-Bucks."
   },
   "Nav": {
@@ -90,7 +90,7 @@
     "vbucks": "V-Bucks",
     "xray": "X-Ray Tickets",
     "evo": "Evolution materials",
-    "perk": "PERK-UP",
+    "perk": "Perk-Up",
     "schematic": "Schematics",
     "hero": "Heroes",
     "survivor": "Survivors",
@@ -183,8 +183,7 @@
   "DailyQuests": {
     "title": "Daily Quests",
     "metaDescription": "Every Fortnite Save the World daily quest with its V-Bucks reward, screenshots of what to look for and tips on where to do it fastest.",
-    "intro": "After the tutorial you get a new daily quest every day and can hold up to 3 at a time. Once a day you can replace one of them with a random new quest. Every quest counts on any difficulty.",
-    "rewards": "Each quest pays 100 or 150 V-Bucks. Only Founders get V-Bucks; other players get the same amount of X-Ray Tickets.",
+    "intro": "After the tutorial you get a new daily quest every day and can hold up to 3 at a time.\nOnce a day you can replace one of them with a random new quest.\nEvery quest counts on any difficulty.",
     "checked": "Checked {date}",
     "categories": "Categories",
     "categoryNotes": "For every quest in this category",
@@ -203,7 +202,7 @@
   "Questline": {
     "title": "Questline",
     "metaDescription": "Every Save the World main quest in all four zones: what to do, every reward, and how many quests are left until the next V-Bucks.",
-    "intro": "Main quests of all four zones, in the order the game gives them. Each zone has 6 Storm Shield Defenses that pay {amount} V-Bucks each: {total} V-Bucks for the whole questline. Storm Shield Defenses 7–10 are side quests.",
+    "intro": "Main quests of all four zones, in the order the game gives them.\nEach zone has 6 Storm Shield Defenses that pay {amount} V-Bucks each: {total} V-Bucks for the whole questline.\nStorm Shield Defenses 7–10 are side quests.",
     "founders": "Only Founders get V-Bucks; other players get the same amount of X-Ray Tickets.",
     "checked": "Checked {date}",
     "namesNote": "Quest names are shown in English.",
@@ -233,7 +232,7 @@
   "SideQuests": {
     "title": "Side Quests",
     "metaDescription": "Every Save the World side quest and challenge with its rewards. The ones that pay V-Bucks are listed first: Storm Shield Defenses 7–10, Mission Accomplished!, Hold the Door!, Toxic Treasures.",
-    "intro": "All side quests and repeatable challenges with their rewards. The ones that pay V-Bucks are collected in the list below and marked in gold.",
+    "intro": "All side quests and repeatable challenges with their rewards.\nThe ones that pay V-Bucks are collected in the list below and marked in gold.",
     "checked": "Checked {date}",
     "whereVbucks": "Where side quests pay V-Bucks",
     "total": "Total",
@@ -259,7 +258,7 @@
     "metaDescription": "How many V-Bucks you can earn in Fortnite Save the World and where they come from: daily quests, mission alerts, the questline, side quests and challenges.",
     "vbucks": "V-Bucks",
     "qHowMuch": "How many V-Bucks can you earn in Save the World, and where?",
-    "aHowMuch": "Daily quests and mission alerts pay every day; everything else pays once. Where the amount changes, the table shows the smallest one with a plus.",
+    "aHowMuch": "Daily quests and mission alerts pay every day; everything else pays once.\nWhere the amount changes, the table shows the smallest one with a plus.",
     "source": "Source",
     "amount": "V-Bucks",
     "how": "How often",
@@ -279,6 +278,10 @@
     "eventsHow": "Event questlines have not paid V-Bucks since Road Trip in 2018",
     "once": "Once, in total: {amount} V-Bucks, plus daily quests and missions every day.",
     "qWho": "Who gets V-Bucks?",
-    "aWho": "Only Founders: players who bought a Founder’s Pack, which was sold until mid-2020. Everyone else gets the same amount of X-Ray Tickets instead of V-Bucks from all these sources."
+    "aWho": "Only Founders: players who bought a Founder’s Pack, which was sold until mid-2020.\nEveryone else gets the same amount of X-Ray Tickets instead of V-Bucks from all these sources."
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "home": "To today’s missions"
   }
 }

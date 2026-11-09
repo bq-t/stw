@@ -24,12 +24,9 @@ export function ZoneSection({
   const vbucks = missions.reduce((s, m) => s + vbucksOf(m), 0);
 
   return (
-    <section
-      aria-labelledby={`zone-${zone}`}
-      className="flex flex-col overflow-hidden rounded-md border border-border bg-card"
-    >
+    <section aria-labelledby={`zone-${zone}`} className="fn-block flex flex-col overflow-hidden">
       <header
-        className="zone-header flex items-center gap-3 border-b border-border px-3 py-2.5"
+        className="zone-header flex items-center gap-3 px-3 py-2.5 pr-5"
         style={{ '--zone-bg': `url(/images/zones/${zone}.webp)` } as React.CSSProperties}
       >
         <h2
@@ -52,7 +49,7 @@ export function ZoneSection({
       </header>
       <ul
         className={cn(
-          'gap-1.5 p-2',
+          'gap-1.5 px-3 py-2 pb-4',
           wide ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'flex flex-col',
         )}
       >

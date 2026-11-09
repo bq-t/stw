@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="110" height="190" viewBox="0 0 110 190">
+<path d="M-110 47.5L0 47.5M0 47.5L110 47.5M110 47.5L220 47.5M0 47.5L-55 142.5M110 47.5L55 142.5M0 47.5L55 142.5M110 47.5L165 142.5M-55 142.5L55 142.5M55 142.5L165 142.5M55 -47.5L0 47.5M55 142.5L0 237.5M165 -47.5L110 47.5M165 142.5L110 237.5M-55 -47.5L0 47.5M-55 142.5L0 237.5M55 -47.5L110 47.5M55 142.5L110 237.5" stroke="#fff" stroke-opacity="0.03" stroke-width="4" stroke-linecap="round" fill="none"/>
+<path d="M-110 47.5L0 47.5M0 47.5L110 47.5M110 47.5L220 47.5M0 47.5L-55 142.5M110 47.5L55 142.5M0 47.5L55 142.5M110 47.5L165 142.5M-55 142.5L55 142.5M55 142.5L165 142.5M55 -47.5L0 47.5M55 142.5L0 237.5M165 -47.5L110 47.5M165 142.5L110 237.5M-55 -47.5L0 47.5M-55 142.5L0 237.5M55 -47.5L110 47.5M55 142.5L110 237.5" stroke="#fff" stroke-opacity="0.09" stroke-width="1" fill="none"/>
+<g fill="#fff" fill-opacity="0.07"><circle cx="0" cy="47.5" r="5"/><circle cx="110" cy="47.5" r="5"/><circle cx="55" cy="142.5" r="5"/></g>
+<g fill="#fff" fill-opacity="0.35"><circle cx="0" cy="47.5" r="1.8"/><circle cx="110" cy="47.5" r="1.8"/><circle cx="55" cy="142.5" r="1.8"/></g>
+</svg>

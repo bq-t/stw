@@ -10,7 +10,8 @@ placeholder icon automatically after `pnpm dev:web` / `pnpm --filter web build` 
 fight-the-storm, retrieve-the-data, ride-the-lightning, repair-the-shelter,
 evacuate-the-shelter, evacuate-the-survivors, deliver-the-bomb, destroy-the-encampments,
 launch-the-rocket, launch-the-balloon, build-the-radar-grid, eliminate-and-collect,
-refuel-the-homebase, resupply, deploy-the-probe
+refuel-the-homebase, resupply, deploy-the-probe, storm-shield-defense (also the Storm Shield
+Defense nodes on the Questline timeline)
 
 Category 2/3/4 storms use `fight-the-category-2-storm` etc. if present, otherwise
 `fight-the-storm` with a number badge.

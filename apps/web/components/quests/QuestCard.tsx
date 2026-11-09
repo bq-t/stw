@@ -27,7 +27,7 @@ export function QuestCard({ quest, categoryIcon }: { quest: DailyQuest; category
 
   const head = (
     <>
-      <span className="flex size-9 items-center justify-center rounded-sm bg-surface-2">
+      <span className="flex size-9 items-center justify-center rounded-sm bg-black/20">
         <GameIcon
           group="quests"
           names={[icon, categoryIcon]}
@@ -51,10 +51,10 @@ export function QuestCard({ quest, categoryIcon }: { quest: DailyQuest; category
         <span
           data-rarity="legendary"
           aria-label={t('Mission.vbucksAmount', { count: quest.vbucks })}
-          className="reward-tile inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs font-extrabold text-white ring-1 ring-[var(--rarity-legendary-hi)] [text-shadow:0_1px_1px_rgb(0_0_0/0.6)]"
+          className="reward-tile fn-badge inline-flex items-center gap-1 px-2 py-0.5 text-xs font-extrabold text-white [text-shadow:0_1px_1px_rgb(0_0_0/0.6)]"
         >
           <VbucksIcon className="text-white" />
-          {quest.vbucks}
+          <span>{quest.vbucks}</span>
         </span>
         {hasDetails ? (
           <ChevronDown
@@ -68,32 +68,28 @@ export function QuestCard({ quest, categoryIcon }: { quest: DailyQuest; category
     </>
   );
 
-  const headClass = 'grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-x-2.5 px-2 py-2';
+  // Card head leans like a mission card (.fn-card); the opened part below stays upright.
+  const headClass =
+    'fn-card grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-x-2.5 border-l-[3px] border-border bg-surface-2 px-2.5 py-2';
 
   if (!hasDetails) {
     return (
-      <li
-        id={quest.id}
-        className="scroll-mt-4 rounded-sm border-l-[3px] border-border bg-surface/40"
-      >
+      <li id={quest.id}>
         <div className={headClass}>{head}</div>
       </li>
     );
   }
 
   return (
-    <li id={quest.id} className="scroll-mt-4">
-      <details
-        data-quest={quest.id}
-        className="group rounded-sm border-l-[3px] border-border bg-surface/40 open:border-accent-ui open:bg-surface"
-      >
+    <li id={quest.id}>
+      <details data-quest={quest.id} className="group">
         <summary
-          className={`${headClass} cursor-pointer list-none rounded-sm hover:bg-surface-2/50 [&::-webkit-details-marker]:hidden`}
+          className={`${headClass} cursor-pointer list-none transition-colors group-open:border-brand hover:bg-[#3c3c41] [&::-webkit-details-marker]:hidden`}
         >
           {head}
         </summary>
 
-        <div className="flex flex-col gap-3 px-2 pt-1 pb-3 sm:pl-[3.375rem]">
+        <div className="mt-1 flex flex-col gap-3 bg-surface-2/60 px-2.5 pt-2.5 pb-3 sm:pl-14">
           {shots.length > 0 && (
             <section aria-label={t('DailyQuests.screenshots')}>
               <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">

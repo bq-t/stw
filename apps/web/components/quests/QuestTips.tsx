@@ -37,11 +37,11 @@ export function QuestTips({ tips, className }: { tips: QuestTip[]; className?: s
                 <p>{text}</p>
               )}
               {tip.missions && (
-                <ul className="flex flex-wrap gap-1">
+                <ul className="flex flex-wrap gap-1.5">
                   {tip.missions.map((m) => (
                     <li
                       key={m}
-                      className="inline-flex items-center gap-1 rounded-sm bg-surface-2 px-1.5 py-0.5 text-xs"
+                      className="skew-tab inline-flex items-center gap-1 bg-surface-2 px-2 py-0.5 text-xs"
                     >
                       <GameIcon
                         group="missions"
@@ -49,7 +49,7 @@ export function QuestTips({ tips, className }: { tips: QuestTip[]; className?: s
                         fallback={MISSION_ICONS[m] ?? FallbackMissionIcon}
                         className="size-3.5 fill-current"
                       />
-                      {t.has(`MissionType.${m}`) ? t(`MissionType.${m}`) : m}
+                      <span>{t.has(`MissionType.${m}`) ? t(`MissionType.${m}`) : m}</span>
                     </li>
                   ))}
                 </ul>

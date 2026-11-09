@@ -21,6 +21,8 @@ const nextConfig: NextConfig = {
       }
     : { output: 'export' as const }),
   images: { unoptimized: true },
+  // The root layout is app/[locale]/layout.tsx, so the 404 page is app/global-not-found.tsx.
+  experimental: { globalNotFound: true },
   transpilePackages: ['@stw/shared'],
   turbopack: {
     rules: {

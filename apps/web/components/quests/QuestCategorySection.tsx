@@ -16,9 +16,9 @@ export function QuestCategorySection({ category }: { category: QuestCategory }) 
     <section
       id={category.id}
       aria-labelledby={`cat-${category.id}`}
-      className="flex scroll-mt-4 flex-col overflow-hidden rounded-md border border-border bg-card"
+      className="fn-block flex flex-col overflow-hidden"
     >
-      <header className="flex items-center gap-2.5 border-b border-border bg-surface-2 px-3 py-2.5">
+      <header className="flex items-center gap-2.5 bg-surface-2 px-3 py-2.5">
         <GameIcon
           group="quests"
           names={[category.icon]}
@@ -34,7 +34,7 @@ export function QuestCategorySection({ category }: { category: QuestCategory }) 
       </header>
 
       {category.notes.length > 0 && (
-        <div className="border-b border-border px-3 py-2.5">
+        <div className="px-3 pt-3 pb-1">
           <p className="mb-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
             {t('categoryNotes')}
           </p>
@@ -42,7 +42,7 @@ export function QuestCategorySection({ category }: { category: QuestCategory }) 
         </div>
       )}
 
-      <ul className="grid grid-cols-1 items-start gap-1.5 p-2 lg:grid-cols-2">
+      <ul className="grid grid-cols-1 items-start gap-1.5 px-3 py-2 pb-3 lg:grid-cols-2">
         {quests.map((q) => (
           <QuestCard key={q.id} quest={q} categoryIcon={category.icon} />
         ))}

@@ -1,7 +1,7 @@
 'use client';
 
 import type { VbucksHistory } from '@stw/shared';
-import { Frown, Info } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { VbucksIcon } from './VbucksIcon';
@@ -41,7 +41,7 @@ export function VbucksStats({
   return (
     <section
       aria-label={t('title')}
-      className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-md border border-border bg-card px-3 py-2"
+      className="fn-panel flex flex-wrap items-center gap-x-5 gap-y-2 py-2"
     >
       <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground uppercase">
         <VbucksIcon />
@@ -72,9 +72,17 @@ export function VbucksStats({
         </span>
       ))}
       {ready && todayTotal === 0 ? (
-        <span className="ml-auto inline-flex items-center gap-1.5 rounded-sm border border-border bg-surface-2 px-2.5 py-1 text-xs font-semibold text-muted-foreground">
-          <Frown aria-hidden className="size-4" />
-          {t('noVbucksToday')}
+        <span className="skew-tab ml-auto inline-flex items-center gap-1.5 bg-surface-2 px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+          {/* Plain <img>: static export, local files. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/no-vbucks.webp"
+            alt=""
+            width={18}
+            height={18}
+            className="-my-0.5 size-[18px]"
+          />
+          <span>{t('noVbucksToday')}</span>
         </span>
       ) : (
         <button type="button" onClick={onFarm} className="fn-button ml-auto">
