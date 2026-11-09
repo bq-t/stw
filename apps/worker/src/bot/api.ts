@@ -44,3 +44,11 @@ export const DISCORD_UNKNOWN_CHANNEL = 10003;
 export const DISCORD_UNKNOWN_MESSAGE = 10008;
 export const DISCORD_MISSING_ACCESS = 50001;
 export const DISCORD_MISSING_PERMISSIONS = 50013;
+
+/**
+ * Discord refuses a DM: 50007 (DMs closed or blocked), 50278 (no server in common with the
+ * bot). The user has to share a server with Fishstick and allow DMs from its members.
+ */
+export function isCannotDm(err: unknown): boolean {
+  return err instanceof DiscordApiError && (err.code === 50007 || err.code === 50278);
+}

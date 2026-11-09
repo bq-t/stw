@@ -11,15 +11,12 @@ import {
 import { itemInfo, readableItemId } from '@stw/shared/items';
 import type { Db, SubscriptionRow } from '../db';
 import { fmt, label, localeOf, messages, type Locale } from '../i18n';
-import { DiscordApiError, discordApi } from './api';
+import { discordApi, isCannotDm } from './api';
 import { missionListMessage } from './render';
 
 export const MAX_SUBSCRIPTIONS = 10;
 /** Rows checked per cron run: matching is cheap, only sends cost requests. */
 const CHECK_BATCH = 200;
-
-// Discord: "Cannot send messages to this user" (DMs closed / no shared server).
-const DISCORD_CANNOT_DM = 50007;
 
 /** "Pure Drop of Rain ≥ 30 · Twine Peaks · PL 100–140" in the given language. */
 export function describeFilter(f: SubscriptionFilter, locale: Locale): string {
@@ -107,12 +104,11 @@ export async function deliverSubscriptions(
       await discordApi(token, 'POST', `/channels/${channelId}/messages`, note.message);
       await db.markChecked(row.id, snapshot.date, { sentAt: now, error: null, dmChannelId });
     } catch (err) {
-      const msg =
-        err instanceof DiscordApiError && err.code === DISCORD_CANNOT_DM
-          ? 'cannot DM this user'
-          : err instanceof Error
-            ? err.message.slice(0, 300)
-            : String(err);
+      const msg = isCannotDm(err)
+        ? 'cannot DM this user'
+        : err instanceof Error
+          ? err.message.slice(0, 300)
+          : String(err);
       console.error('subscription', row.id, msg);
       await db.markChecked(row.id, snapshot.date, { error: msg });
     }

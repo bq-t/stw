@@ -64,8 +64,6 @@ export interface SubscriptionItem {
 export interface SubscriptionsResponse {
   subscriptions: SubscriptionItem[];
   max: number;
-  /** "Add to my apps" link, so the bot can DM the user. */
-  installUrl: string;
 }
 
 /** Error code from the Worker ("limit", "cannot dm", "too soon", …) or "http". */

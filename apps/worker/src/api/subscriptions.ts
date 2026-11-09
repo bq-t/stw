@@ -1,14 +1,14 @@
 // Personal subscriptions for the site's Notifications page (logged-in users, DMs only).
 // Server subscriptions stay in the bot (/setup alerts): the site does not know the user's servers.
 //
-//   GET    /api/subscriptions?locale=ru   → { subscriptions, max, installUrl }
+//   GET    /api/subscriptions?locale=ru   → { subscriptions, max }
 //   POST   /api/subscriptions             { filter, locale } → same as GET
 //   DELETE /api/subscriptions/:id         → same as GET
 //   POST   /api/subscriptions/test        { filter, locale } → { ok, found } | { error }
 
 import { parseSubscriptionFilter, rotationDay } from '@stw/shared';
 import { currentUser } from '../auth';
-import { DiscordApiError, discordApi } from '../bot/api';
+import { discordApi, isCannotDm } from '../bot/api';
 import {
   describeFilter,
   MAX_SUBSCRIPTIONS,
@@ -21,7 +21,6 @@ import { localeOf, type Locale } from '../i18n';
 import { Store } from '../store';
 
 const TEST_INTERVAL_MS = 60 * 1000;
-const DISCORD_CANNOT_DM = 50007;
 
 export interface ApiResult {
   status: number;
@@ -30,12 +29,7 @@ export interface ApiResult {
 
 const err = (status: number, error: string): ApiResult => ({ status, body: { error } });
 
-/** "Add to my apps" (user install): lets Fishstick DM the user without a shared server. */
-function installUrl(env: Env): string {
-  return `https://discord.com/oauth2/authorize?client_id=${env.DISCORD_CLIENT_ID ?? ''}&integration_type=1&scope=applications.commands`;
-}
-
-async function list(db: Db, env: Env, userId: string, locale: Locale): Promise<ApiResult> {
+async function list(db: Db, userId: string, locale: Locale): Promise<ApiResult> {
   const rows = await db.listSubscriptions('user', userId);
   return {
     status: 200,
@@ -51,7 +45,6 @@ async function list(db: Db, env: Env, userId: string, locale: Locale): Promise<A
         };
       }),
       max: MAX_SUBSCRIPTIONS,
-      installUrl: installUrl(env),
     },
   };
 }
@@ -78,7 +71,7 @@ export async function handleSubscriptionsApi(
   const path = url.pathname.replace(/\/$/, '');
 
   if (request.method === 'GET' && path === '/api/subscriptions')
-    return list(db, env, user.id, localeOf(url.searchParams.get('locale')));
+    return list(db, user.id, localeOf(url.searchParams.get('locale')));
 
   if (request.method === 'POST' && path === '/api/subscriptions') {
     const body = await readBody(request);
@@ -98,7 +91,7 @@ export async function handleSubscriptionsApi(
       rotationDay(new Date(now)),
       now,
     );
-    return list(db, env, user.id, body.locale);
+    return list(db, user.id, body.locale);
   }
 
   const del = path.match(/^\/api\/subscriptions\/(\d+)$/);
@@ -106,7 +99,7 @@ export async function handleSubscriptionsApi(
     const row = await db.getSubscription(Number(del[1]));
     if (!row || row.owner_type !== 'user' || row.owner_id !== user.id) return err(404, 'not found');
     await db.deleteSubscription(row.id);
-    return list(db, env, user.id, localeOf(url.searchParams.get('locale')));
+    return list(db, user.id, localeOf(url.searchParams.get('locale')));
   }
 
   if (request.method === 'POST' && path === '/api/subscriptions/test') {
@@ -129,8 +122,7 @@ export async function handleSubscriptionsApi(
       );
       await discordApi(env.DISCORD_BOT_TOKEN, 'POST', `/channels/${dm.id}/messages`, note.message);
     } catch (e) {
-      if (e instanceof DiscordApiError && e.code === DISCORD_CANNOT_DM)
-        return err(422, 'cannot dm');
+      if (isCannotDm(e)) return err(422, 'cannot dm');
       throw e;
     }
     return { status: 200, body: { ok: true, found: note.found } };

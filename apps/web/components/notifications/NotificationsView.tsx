@@ -202,20 +202,12 @@ function NewSubscription({ full }: { full: boolean }) {
   );
 }
 
-function DmHelp({ installUrl }: { installUrl: string }) {
+function DmHelp() {
   const t = useTranslations('Notifications');
   return (
     <Section title={t('dmTitle')}>
       <p className="text-muted-foreground">{t('dmText')}</p>
       <div className="flex flex-wrap gap-2">
-        <a
-          href={installUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="fn-tab px-4 py-1.5"
-        >
-          <span>{t('addApp')}</span>
-        </a>
         <a
           href={DISCORD_URL}
           target="_blank"
@@ -243,7 +235,7 @@ function Subscriptions() {
     <>
       <SubscriptionList data={data} />
       <NewSubscription full={data.subscriptions.length < data.max} />
-      <DmHelp installUrl={data.installUrl} />
+      <DmHelp />
     </>
   );
 }
