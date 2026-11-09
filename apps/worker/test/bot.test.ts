@@ -167,3 +167,29 @@ describe('command definitions', () => {
     for (const c of COMMANDS) walk(c);
   });
 });
+
+describe('emoji sets', () => {
+  it('the channel post keeps server emoji, the bot uses application emoji', async () => {
+    const app = (await import('../src/bot/app-emojis.json')).default;
+    const snapshot: DaySnapshot = {
+      date: '2026-11-09',
+      fetchedAt: '2026-11-09T00:01:00Z',
+      expiresAt: '2026-11-10T00:00:00Z',
+      missions: [
+        mission(1, {
+          alertRewards: [
+            { itemId: 'AccountResource:currency_mtxswap', quantity: 50, isVbucks: true },
+          ],
+        }),
+      ],
+      vbucksTotal: 50,
+    };
+    const site = { siteUrl: 'https://stw.bq-t.pro' };
+    const channel = JSON.stringify(buildDiscordMessage(snapshot, null, site));
+    const bot = JSON.stringify(buildDiscordMessage(snapshot, null, { ...site, emojis: app }));
+    expect(channel).toContain('<:powerlevel:1569264880299802724>');
+    expect(bot).toContain(app.power);
+    expect(bot).toContain(app.vbucks);
+    expect(bot).not.toContain('1569264880299802724');
+  });
+});

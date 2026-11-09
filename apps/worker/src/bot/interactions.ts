@@ -20,6 +20,7 @@ import { Db } from '../db';
 import type { Env } from '../env';
 import { fmt, label, localeOf, messages, plural, sitePath, type Locale } from '../i18n';
 import { buildDiscordMessage } from '../notify/discord';
+import APP_EMOJIS from './app-emojis.json';
 import { Store } from '../store';
 import {
   DiscordApiError,
@@ -168,7 +169,7 @@ async function command(i: Interaction, env: Env, now: number) {
       if (!snapshot) return ephemeral(t.error.noData);
       const message = buildDiscordMessage(snapshot, await store.getHistory(), {
         siteUrl: env.SITE_URL,
-        vbucksEmoji: env.DISCORD_VBUCKS_EMOJI,
+        emojis: APP_EMOJIS,
         locale,
       });
       return reply({ ...message });

@@ -39,23 +39,40 @@ const HIDDEN_REWARDS = new Set(['AccountResource:campaign_event_currency']);
 
 const ICONS = iconsManifest as Record<string, Record<string, string>>;
 
-/** Server emoji: V-Bucks totals ("650 V-Bucks today", "last V-Bucks alerts"). */
-const EMOJI_VBUCKS_STACK = '<:vbucksstack:1569255073886900224>';
-/** Server emoji in the mission details line. */
-const EMOJI_POWER = '<:powerlevel:1569264880299802724>';
-const EMOJI_ZONE = '<:stormshield:1569271087978512494>';
-const EMOJI_ALERT: Partial<Record<Mission['alertKind'], string>> = {
-  'mini-boss': '<:miniboss:1569265406542348439>',
-  'mega-alert': '<:megaalert:1569266298582597632>',
+/** Custom emoji in the card. `vbucks` is optional (amounts get no icon without it). */
+export interface EmojiSet {
+  vbucks?: string;
+  /** V-Bucks totals ("650 V-Bucks today", "last V-Bucks alerts"). */
+  vbucksStack: string;
+  /** Mission details line. */
+  power: string;
+  zone: string;
+  miniBoss: string;
+  megaAlert: string;
+}
+
+/**
+ * Emoji of our Discord server: they render in the channel webhook post. The bot uses the
+ * application's copies instead (bot/app-emojis.json, `pnpm bot:emojis`), which work anywhere.
+ */
+export const SERVER_EMOJIS: EmojiSet = {
+  vbucksStack: '<:vbucksstack:1569255073886900224>',
+  power: '<:powerlevel:1569264880299802724>',
+  zone: '<:stormshield:1569271087978512494>',
+  miniBoss: '<:miniboss:1569265406542348439>',
+  megaAlert: '<:megaalert:1569266298582597632>',
 };
+
 /** Server emoji drawn as the thumbnail of the "No V-Bucks today" block (Discord CDN URL). */
 const NO_VBUCKS_IMAGE = 'https://cdn.discordapp.com/emojis/1569256643819077642.webp?size=160';
 
 export interface DiscordOptions {
   /** Site origin for links, e.g. "https://stw.bq-t.pro". */
   siteUrl: string;
-  /** Custom server emoji for V-Bucks, e.g. "<:vbucks:123456789>". Optional. */
+  /** Custom server emoji for V-Bucks, e.g. "<:vbucks:123456789>". Overrides `emojis.vbucks`. */
   vbucksEmoji?: string;
+  /** Default: SERVER_EMOJIS. */
+  emojis?: EmojiSet;
   /** Language of the texts and site links. Default "en" (the channel notification). */
   locale?: Locale;
 }
@@ -64,8 +81,13 @@ export interface DiscordOptions {
 interface Ctx {
   siteUrl: string;
   vbucksEmoji?: string;
+  emojis: EmojiSet;
   locale: Locale;
   t: Messages;
+}
+
+function alertEmoji(kind: Mission['alertKind'], e: EmojiSet): string | undefined {
+  return kind === 'mini-boss' ? e.miniBoss : kind === 'mega-alert' ? e.megaAlert : undefined;
 }
 
 export interface DiscordMessage {
@@ -140,11 +162,11 @@ function missionBlock(m: Mission, opts: Ctx) {
   const emoji = opts.vbucksEmoji ? `${opts.vbucksEmoji} ` : '';
   const alertLabel =
     m.alertKind !== 'none' && m.alertKind !== 'other' ? label(t.AlertKind, m.alertKind) : '';
-  const alertEmoji = EMOJI_ALERT[m.alertKind];
+  const alertIcon = alertEmoji(m.alertKind, opts.emojis);
   const details = [
-    `${EMOJI_POWER} ${m.powerLevel > 0 ? m.powerLevel : '?'}`,
-    `${EMOJI_ZONE} ${zoneName(m.zone, t)}`,
-    alertLabel ? (alertEmoji ? `${alertEmoji} ${alertLabel}` : alertLabel) : '',
+    `${opts.emojis.power} ${m.powerLevel > 0 ? m.powerLevel : '?'}`,
+    `${opts.emojis.zone} ${zoneName(m.zone, t)}`,
+    alertLabel ? (alertIcon ? `${alertIcon} ${alertLabel}` : alertLabel) : '',
     // A mega alert is always a group mission: the icon says enough.
     m.isGroup && m.alertKind !== 'mega-alert' ? t.Bot.card.group : '',
   ].filter(Boolean);
@@ -182,7 +204,9 @@ export function buildDiscordMessage(
   const locale = opts.locale ?? 'en';
   const t = messages(locale);
   const c = t.Bot.card;
-  const o: Ctx = { siteUrl: site, vbucksEmoji: opts.vbucksEmoji, locale, t };
+  const emojis = opts.emojis ?? SERVER_EMOJIS;
+  const vbucksEmoji = opts.vbucksEmoji ?? emojis.vbucks;
+  const o: Ctx = { siteUrl: site, vbucksEmoji, emojis, locale, t };
   // Grouped by zone in unlock order (Stonewood → Twine Peaks), lowest power first inside a zone.
   const missions = snapshot.missions
     .filter((m) => vbucksOf(m) > 0)
@@ -195,7 +219,7 @@ export function buildDiscordMessage(
   const total = snapshot.vbucksTotal;
   const has = missions.length > 0;
   const today = snapshot.date;
-  const emoji = opts.vbucksEmoji ? `${opts.vbucksEmoji} ` : '';
+  const emoji = vbucksEmoji ? `${vbucksEmoji} ` : '';
 
   const yesterday = sumDays(history, today, 1, 1);
   const week = total + sumDays(history, today, 1, 6);
@@ -226,7 +250,7 @@ export function buildDiscordMessage(
       text(
         [
           `-# ${dayLabel(today, locale).toUpperCase()}  ·  ${c.nextRotation} ${nextRotationTag}`,
-          `## ${EMOJI_VBUCKS_STACK} ${fmt(c.vbucksToday, { total })}`,
+          `## ${emojis.vbucksStack} ${fmt(c.vbucksToday, { total })}`,
           [plural(c.missions, missions.length, locale), ...zones].join('  ·  '),
           stats,
         ].join('\n'),
@@ -253,7 +277,7 @@ export function buildDiscordMessage(
         text(`## ${c.noVbucks}`),
         text(
           lastDay
-            ? `${c.lastAlerts} ${EMOJI_VBUCKS_STACK} **${lastDay.total}** <t:${lastTs}:R>`
+            ? `${c.lastAlerts} ${emojis.vbucksStack} **${lastDay.total}** <t:${lastTs}:R>`
             : c.noHistory,
         ),
         text(stats),

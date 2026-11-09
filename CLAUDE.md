@@ -31,6 +31,7 @@ pnpm auth:setup         # create device auth for the dedicated Epic account → 
 pnpm fetch:world [file] # fetch world/info (or parse a saved fixture) and print what parse.ts sees
 pnpm --filter web build # static export to apps/web/out
 pnpm --filter worker db:migrate:local   # D1 schema into the local DB (db:migrate = remote)
+pnpm bot:emojis         # copy our server emoji into the app emoji (bot/app-emojis.json), so the bot shows them anywhere
 pnpm bot:register       # Fishstick slash commands + install settings (--endpoint sets the Interactions URL to the site)
 pnpm seed:local         # demo snapshot + history into the Worker LOCAL KV (then dev:worker + dev:web with NEXT_PUBLIC_API_URL)
 pnpm discord:preview    # post today's Discord message (live Worker data) to DISCORD_WEBHOOK_URL from .env; --none = no-V-Bucks variant, --vbucks = fake V-Bucks alerts in SW/PL/CV on a quiet day, --print = JSON only
