@@ -1,4 +1,9 @@
-import { rotationDay, type DaySnapshot, type VbucksHistory } from '@stw/shared';
+import {
+  rotationDay,
+  type DaySnapshot,
+  type SubscriptionFilter,
+  type VbucksHistory,
+} from '@stw/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
@@ -43,6 +48,66 @@ export function loginUrl(returnTo: string): string {
 
 export async function logout(): Promise<void> {
   await fetch(`${API_URL}/api/auth/logout`, { method: 'POST', credentials: 'include' });
+}
+
+// ---------- personal subscriptions (Notifications page) ----------
+
+export interface SubscriptionItem {
+  id: number;
+  filter: SubscriptionFilter | null;
+  /** Filter described by the Worker in the requested language. */
+  summary: string;
+  lastSentAt: number | null;
+  lastError: string | null;
+}
+
+export interface SubscriptionsResponse {
+  subscriptions: SubscriptionItem[];
+  max: number;
+  /** "Add to my apps" link, so the bot can DM the user. */
+  installUrl: string;
+}
+
+/** Error code from the Worker ("limit", "cannot dm", "too soon", …) or "http". */
+export class ApiError extends Error {
+  constructor(readonly code: string) {
+    super(code);
+  }
+}
+
+async function send<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const res = await fetch(`${API_URL}${path}`, {
+    method,
+    credentials: 'include',
+    headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const data = (await res.json().catch(() => ({}))) as T & { error?: string };
+  if (!res.ok) throw new ApiError(data.error ?? 'http');
+  return data;
+}
+
+export function fetchSubscriptions(locale: string): Promise<SubscriptionsResponse> {
+  return send('GET', `/api/subscriptions?locale=${locale}`);
+}
+
+export function createSubscription(
+  filter: SubscriptionFilter,
+  locale: string,
+): Promise<SubscriptionsResponse> {
+  return send('POST', '/api/subscriptions', { filter, locale });
+}
+
+export function deleteSubscription(id: number, locale: string): Promise<SubscriptionsResponse> {
+  return send('DELETE', `/api/subscriptions/${id}?locale=${locale}`);
+}
+
+/** Bot DMs the user a sample notification for the filter right now (once a minute). */
+export function testSubscription(
+  filter: SubscriptionFilter,
+  locale: string,
+): Promise<{ ok: true; found: number }> {
+  return send('POST', '/api/subscriptions/test', { filter, locale });
 }
 
 /** The Worker has not saved today's snapshot yet: the page shows yesterday's with a note. */

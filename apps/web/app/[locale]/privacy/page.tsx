@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '@/i18n/routing';
 import { alternatesFor } from '@/lib/site';
 
-const UPDATED = '2026-11-09';
+const UPDATED = '2026-11-10';
 
 export async function generateMetadata({
   params,

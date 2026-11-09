@@ -250,6 +250,21 @@ export class Db {
       .run();
   }
 
+  /**
+   * Claims the test-DM slot of a user: true if the last test was `intervalMs` ago or
+   * never (and records `now`), false while it is too soon. One atomic UPDATE.
+   */
+  async claimTestDm(userId: string, now: number, intervalMs: number): Promise<boolean> {
+    const res = await this.d1
+      .prepare(
+        `UPDATE users SET last_test_dm_at = ?2
+         WHERE id = ?1 AND (last_test_dm_at IS NULL OR last_test_dm_at <= ?3)`,
+      )
+      .bind(userId, now, now - intervalMs)
+      .run();
+    return res.meta.changes > 0;
+  }
+
   async deleteExpiredSessions(now: number): Promise<void> {
     await this.d1.prepare('DELETE FROM sessions WHERE expires_at <= ?1').bind(now).run();
   }

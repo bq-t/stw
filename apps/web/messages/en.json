@@ -163,7 +163,7 @@
     "links": "Links to Discord and other sites follow those sites' own privacy policies.",
     "contactTitle": "Contact",
     "contact": "Questions about privacy: write to us on Discord.",
-    "account": "If you log in with Discord, we store your Discord user id, name, avatar and language, plus a login cookie (stw_session) for 30 days. Logging out ends the session. To delete your data, write to us on Discord."
+    "account": "If you log in with Discord, we store your Discord user id, name, avatar and language, plus a login cookie (stw_session) for 30 days, and the notification filters you create. Logging out ends the session. To delete your data, write to us on Discord."
   },
   "Rarity": {
     "common": "Common",
@@ -289,7 +289,8 @@
     "login": "Log in",
     "loginWith": "Log in with Discord",
     "logout": "Log out",
-    "menu": "Account"
+    "menu": "Account",
+    "notifications": "Notifications"
   },
   "Bot": {
     "card": {
@@ -389,5 +390,37 @@
       "anyMission": "Any alert",
       "pl": "PL {min}–{max}"
     }
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "metaDescription": "Get a Discord DM from Fishstick when today's Save the World missions match your filters.",
+    "intro": "After each rotation (00:00 UTC) Fishstick checks the missions and sends you a Discord DM when they match a subscription. One message per subscription per day.",
+    "demo": "Notifications need the live data API, so they are off in demo mode.",
+    "loginTitle": "Log in to get notifications",
+    "loginText": "Subscriptions belong to your Discord account: Fishstick sends them as DMs.",
+    "login": "Log in with Discord",
+    "listTitle": "Your subscriptions",
+    "count": "{count} of {max}",
+    "empty": "No subscriptions yet: create one below.",
+    "lastSent": "Last sent {date}",
+    "neverSent": "Nothing sent yet",
+    "delete": "Delete",
+    "newTitle": "New subscription",
+    "item": "Reward item",
+    "anyItem": "Any item",
+    "min": "At least",
+    "filtersHint": "Filters work like in the tracker. Without an item or filters you get every alert of the day.",
+    "save": "Subscribe",
+    "test": "Send a test DM",
+    "testSent": "Sent. Missions matching today: {count}.",
+    "cannotDm": "Discord does not let Fishstick DM you. Join a server with Fishstick or add it to your apps, then try again.",
+    "tooSoon": "One test a minute: try again shortly.",
+    "limit": "You have the maximum number of subscriptions. Delete one first.",
+    "error": "Something went wrong. Try again later.",
+    "dmTitle": "Make sure the DMs reach you",
+    "dmText": "Discord delivers bot DMs only if you share a server with Fishstick or added it to your apps.",
+    "addApp": "Add Fishstick to my apps",
+    "joinServer": "Join our Discord",
+    "serverNote": "Alerts in a server channel: run /setup alerts in Discord (needs Manage Server)."
   }
 }

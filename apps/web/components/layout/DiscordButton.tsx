@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 
 /** Our server. NEXT_PUBLIC_DISCORD_URL overrides it (e.g. for a test server). */
-const DISCORD_URL = process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/jcThHNZEHK';
+export const DISCORD_URL = process.env.NEXT_PUBLIC_DISCORD_URL || 'https://discord.gg/jcThHNZEHK';
 
 /** Discord logo (Simple Icons). */
 function DiscordIcon({ className }: { className?: string }) {

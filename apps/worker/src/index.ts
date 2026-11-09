@@ -14,6 +14,7 @@ import {
   logout,
   publicUser,
 } from './auth';
+import { handleSubscriptionsApi } from './api/subscriptions';
 import { refreshStatus, updateBoards } from './bot/board';
 import { deliverSubscriptions } from './bot/subscriptions';
 import { handleInteraction } from './bot/interactions';
@@ -135,10 +136,24 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
               Vary: 'Origin',
             }
           : {}),
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Max-Age': '86400',
       },
     });
+  }
+
+  if (url.pathname === '/api/subscriptions' || url.pathname.startsWith('/api/subscriptions/')) {
+    // CSRF: changes only from the site (the session cookie is SameSite=Lax as well).
+    if (request.method !== 'GET' && !origin)
+      return json({ error: 'forbidden' }, { status: 403, origin });
+    try {
+      const r = await handleSubscriptionsApi(request, env, url, now.getTime());
+      return json(r.body, { status: r.status, origin });
+    } catch (err) {
+      console.error('subscriptions api', err);
+      return json({ error: 'error' }, { status: 500, origin });
+    }
   }
 
   if (request.method === 'POST') {

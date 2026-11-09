@@ -13,6 +13,7 @@ import {
   type MissionFilters,
   type RewardCategory,
 } from './missions';
+import { ITEMS } from './items';
 import { ZONES, type Mission, type Zone } from './types';
 
 export interface SubscriptionFilter extends MissionFilters {
@@ -74,3 +75,8 @@ export function parseSubscriptionFilter(raw: unknown): SubscriptionFilter | null
   if (min && min > 1) f.minQty = min;
   return f;
 }
+
+/** Reward items a subscription can name (bot choices and the site's list): resources without event currency. */
+export const SUBSCRIBABLE_ITEMS: readonly string[] = Object.keys(ITEMS).filter(
+  (id) => !IGNORED_REWARDS.has(id),
+);

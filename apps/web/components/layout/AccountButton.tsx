@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Link } from '@/i18n/navigation';
 import { fetchMe, loginUrl, logout } from '@/lib/api';
 
 /**
@@ -60,6 +61,9 @@ export function AccountButton() {
       </PopoverTrigger>
       <PopoverContent align="end" className="w-56 rounded-none">
         <p className="truncate font-semibold">{user.name}</p>
+        <Link href="/notifications" className="fn-tab w-full justify-center px-3 py-1">
+          <span>{t('notifications')}</span>
+        </Link>
         <button
           type="button"
           onClick={() => out.mutate()}

@@ -1,7 +1,13 @@
 // Slash command definitions. Registered with `pnpm bot:register` (scripts/bot-register.ts);
 // the Worker reads the same option names in interactions.ts.
 
-import { MIN_QTY_MAX, REWARD_CATEGORIES, ZONES, type AlertFilter } from '@stw/shared';
+import {
+  MIN_QTY_MAX,
+  REWARD_CATEGORIES,
+  SUBSCRIBABLE_ITEMS,
+  ZONES,
+  type AlertFilter,
+} from '@stw/shared';
 import { ITEMS } from '@stw/shared/items';
 import { messages } from '../i18n';
 
@@ -76,13 +82,11 @@ const missionOptions = [
 ];
 
 /** Reward items a subscription can name: the resource catalog without event currency. */
-export const ITEM_CHOICES = Object.entries(ITEMS)
-  .filter(([id]) => !id.includes('event_currency') && !id.includes('eventcurrency'))
-  .map(([id, info]) => ({
-    name: info.name.en,
-    name_localizations: { ru: info.name.ru },
-    value: id,
-  }));
+export const ITEM_CHOICES = SUBSCRIBABLE_ITEMS.map((id) => ({
+  name: ITEMS[id]!.name.en,
+  name_localizations: { ru: ITEMS[id]!.name.ru },
+  value: id,
+}));
 
 /** Subscription filters: the item and the amount first (that is what people subscribe to). */
 const subscriptionOptions = [

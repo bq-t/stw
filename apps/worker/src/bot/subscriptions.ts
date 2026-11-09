@@ -104,7 +104,6 @@ export async function deliverSubscriptions(
         });
         channelId = dmChannelId = dm.id;
       }
-      if (row.target === 'webhook') throw new Error('webhook delivery is not implemented yet');
       await discordApi(token, 'POST', `/channels/${channelId}/messages`, note.message);
       await db.markChecked(row.id, snapshot.date, { sentAt: now, error: null, dmChannelId });
     } catch (err) {
