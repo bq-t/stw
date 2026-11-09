@@ -4,6 +4,7 @@ import en from '@/messages/en.json';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
+import { QueryProvider } from '@/components/QueryProvider';
 import { DiscordButton } from '@/components/layout/DiscordButton';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
@@ -52,10 +53,12 @@ export default function GlobalNotFound() {
         <PlexusShine />
         <RouteProgress />
         <NextIntlClientProvider locale={routing.defaultLocale} messages={en}>
-          <Header />
-          <NotFoundView />
-          <Footer />
-          <DiscordButton />
+          <QueryProvider>
+            <Header />
+            <NotFoundView />
+            <Footer />
+            <DiscordButton />
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>
