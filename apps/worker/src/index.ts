@@ -6,6 +6,15 @@ import {
   type DaySnapshot,
 } from '@stw/shared';
 import { epicClient, fetchWorldInfo, loginWithDeviceAuth } from '@stw/shared/epic';
+import {
+  currentUser,
+  handleCallback,
+  handleLogin,
+  isAuthConfigured,
+  logout,
+  publicUser,
+} from './auth';
+import { Db } from './db';
 import type { Env } from './env';
 import { buildDiscordMessage, postDiscord } from './notify/discord';
 import { Store } from './store';
@@ -38,6 +47,16 @@ async function runDaily(env: Env, now: Date = new Date()): Promise<RunResult> {
 
   const history = addToHistory(await store.getHistory(), snapshot);
   await store.saveDay(snapshot, history);
+  if (env.DB) {
+    // D1 copy of the day (stage 1: KV is still what the API reads).
+    try {
+      const db = new Db(env.DB);
+      await db.saveSnapshot(snapshot);
+      await db.deleteExpiredSessions(now.getTime());
+    } catch (err) {
+      console.error('d1', err);
+    }
+  }
   await store.updateHealth({
     lastSuccessAt: now.toISOString(),
     lastSnapshotDate: snapshot.date,
@@ -61,24 +80,31 @@ async function runDaily(env: Env, now: Date = new Date()): Promise<RunResult> {
 
 // ---------- fetch: JSON API for the site ----------
 
+function isAllowedOrigin(origin: string, env: Env): boolean {
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
+  return env.ALLOWED_ORIGINS.split(',')
+    .map((o) => o.trim())
+    .includes(origin);
+}
+
 function corsOrigin(request: Request, env: Env): string | null {
   const origin = request.headers.get('Origin');
-  if (!origin) return null;
-  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
-  const allowed = env.ALLOWED_ORIGINS.split(',').map((o) => o.trim());
-  return allowed.includes(origin) ? origin : null;
+  return origin && isAllowedOrigin(origin, env) ? origin : null;
 }
 
 function json(
   body: unknown,
-  init: { status?: number; maxAge?: number; origin: string | null },
+  init: { status?: number; maxAge?: number; origin: string | null; setCookie?: string },
 ): Response {
   const headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
   headers.set('Cache-Control', init.maxAge ? `public, max-age=${init.maxAge}` : 'no-store');
   if (init.origin) {
     headers.set('Access-Control-Allow-Origin', init.origin);
+    // The site sends the session cookie (localhost:3000 → :8787 in dev).
+    headers.set('Access-Control-Allow-Credentials', 'true');
     headers.set('Vary', 'Origin');
   }
+  if (init.setCookie) headers.append('Set-Cookie', init.setCookie);
   return new Response(JSON.stringify(body), { status: init.status ?? 200, headers });
 }
 
@@ -99,16 +125,51 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
     return new Response(null, {
       status: 204,
       headers: {
-        ...(origin ? { 'Access-Control-Allow-Origin': origin, Vary: 'Origin' } : {}),
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        ...(origin
+          ? {
+              'Access-Control-Allow-Origin': origin,
+              'Access-Control-Allow-Credentials': 'true',
+              Vary: 'Origin',
+            }
+          : {}),
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Max-Age': '86400',
       },
     });
   }
+
+  if (request.method === 'POST') {
+    if (url.pathname === '/api/auth/logout') {
+      // CSRF: only from the site (SameSite=Lax already keeps the cookie off cross-site POSTs).
+      if (!origin && request.headers.get('Origin') !== url.origin)
+        return json({ error: 'forbidden' }, { status: 403, origin });
+      return json({ ok: true }, { origin, setCookie: await logout(request, env) });
+    }
+    return json({ error: 'method not allowed' }, { status: 405, origin });
+  }
   if (request.method !== 'GET')
     return json({ error: 'method not allowed' }, { status: 405, origin });
 
+  const authCtx = {
+    env,
+    isAllowedOrigin: (o: string) => isAllowedOrigin(o, env),
+    now: now.getTime(),
+  };
+
   switch (url.pathname) {
+    case '/api/auth/discord/login':
+      if (!isAuthConfigured(env))
+        return json({ error: 'auth not configured' }, { status: 503, origin });
+      return handleLogin(request, authCtx);
+    case '/api/auth/discord/callback':
+      return handleCallback(request, authCtx);
+    case '/api/me': {
+      const user = await currentUser(request, env, now.getTime());
+      return json(
+        { user: user ? publicUser(user) : null, loginEnabled: isAuthConfigured(env) },
+        { origin },
+      );
+    }
     case '/api/missions': {
       const snapshot = await store.getCurrent();
       if (!snapshot) return json({ error: 'no data yet' }, { status: 503, origin });

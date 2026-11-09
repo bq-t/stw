@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '@/i18n/routing';
 import { alternatesFor } from '@/lib/site';
 
-const UPDATED = '2026-11-04';
+const UPDATED = '2026-11-09';
 
 export async function generateMetadata({
   params,
@@ -22,7 +22,10 @@ export default async function PrivacyPage({ params }: PageProps<'/[locale]/priva
   );
 
   const sections = [
-    { title: t('collectTitle'), items: [t('analytics'), t('hosting'), t('settings')] },
+    {
+      title: t('collectTitle'),
+      items: [t('analytics'), t('hosting'), t('account'), t('settings')],
+    },
     { title: t('notTitle'), items: [t('not')] },
     { title: t('linksTitle'), items: [t('links')] },
     { title: t('contactTitle'), items: [t('contact')] },

@@ -10,4 +10,11 @@ export interface Env {
   DISCORD_WEBHOOK_URL?: string;
   /** Custom server emoji shown next to V-Bucks amounts, e.g. "<:vbucks:123456789>". */
   DISCORD_VBUCKS_EMOJI?: string;
+  /** D1 "stw" (migrations/). Optional until the database is created. */
+  DB?: D1Database;
+  /** Discord application "Fishstick": Application ID (var) and Client Secret (secret). */
+  DISCORD_CLIENT_ID?: string;
+  DISCORD_CLIENT_SECRET?: string;
+  /** Origin of the OAuth callback; only for local dev (wrangler dev rewrites the host). */
+  AUTH_ORIGIN?: string;
 }

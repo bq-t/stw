@@ -152,17 +152,18 @@
   "Privacy": {
     "title": "Privacy",
     "updated": "Last updated: {date}",
-    "intro": "This site is a free fan-made tracker. It has no accounts, no sign-up and no cookies.",
+    "intro": "This site is a free fan-made tracker. You can use it without an account: logging in with Discord is optional.",
     "collectTitle": "What is collected",
     "analytics": "Cloudflare Web Analytics counts page views without cookies and without identifying you: it sees the page, the country and the browser type in aggregate.",
     "hosting": "The site and its data API run on Cloudflare. Like any web host, Cloudflare processes your IP address to deliver the page and protect it from attacks.",
     "settings": "Your language and filters live in the page address, not on our side.",
     "notTitle": "What is not collected",
-    "not": "No names, emails, Epic accounts or payment data. We do not sell or share data, and there is no advertising tracking.",
+    "not": "No emails, passwords, Epic accounts or payment data. We do not sell or share data, and there is no advertising tracking.",
     "linksTitle": "External links",
     "links": "Links to Discord and other sites follow those sites' own privacy policies.",
     "contactTitle": "Contact",
-    "contact": "Questions about privacy: write to us on Discord."
+    "contact": "Questions about privacy: write to us on Discord.",
+    "account": "If you log in with Discord, we store your Discord user id, name, avatar and language, plus a login cookie (stw_session) for 30 days. Logging out ends the session. To delete your data, write to us on Discord."
   },
   "Rarity": {
     "common": "Common",
@@ -283,5 +284,11 @@
   "NotFound": {
     "title": "Page not found",
     "home": "To today’s missions"
+  },
+  "Account": {
+    "login": "Log in",
+    "loginWith": "Log in with Discord",
+    "logout": "Log out",
+    "menu": "Account"
   }
 }

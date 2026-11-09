@@ -7,7 +7,9 @@
     "dev": "wrangler dev --test-scheduled",
     "deploy": "wrangler deploy",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:migrate": "wrangler d1 migrations apply stw --remote",
+    "db:migrate:local": "wrangler d1 migrations apply stw --local"
   },
   "dependencies": {
     "@stw/shared": "workspace:*"

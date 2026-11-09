@@ -6,3 +6,7 @@ EPIC_DEVICE_ID=
 EPIC_DEVICE_SECRET=
 # Optional: Discord channel webhook for V-Bucks notifications
 DISCORD_WEBHOOK_URL=
+# Discord application "Fishstick": OAuth2 → Client Secret (Application ID goes to wrangler.toml)
+DISCORD_CLIENT_SECRET=
+# Local dev only: OAuth callback origin (wrangler dev reports the route host otherwise)
+AUTH_ORIGIN=http://localhost:8787

@@ -3,6 +3,11 @@ main = "src/index.ts"
 compatibility_date = "2026-11-01"
 compatibility_flags = ["nodejs_compat"]
 
+# The site's own domain serves the API too, so the login cookie is first-party.
+# workers.dev keeps working for the old NEXT_PUBLIC_API_URL.
+routes = [{ pattern = "stw.bq-t.pro/api/*", zone_name = "bq-t.pro" }]
+workers_dev = true
+
 # Every 15 minutes. A run exits right away once today's snapshot is saved,
 # so this costs one KV read per run and survives late rotations on Epic's side.
 [triggers]
@@ -13,6 +18,13 @@ crons = ["*/15 * * * *"]
 binding = "MISSIONS"
 id = "528b8f2463174fb78f3ed6e68163f45d"
 
+# Created with: pnpm wrangler d1 create stw. Schema: migrations/ (pnpm db:migrate / db:migrate:local).
+[[d1_databases]]
+binding = "DB"
+database_name = "stw"
+database_id = "9f237570-1658-406b-8800-d28033d2f6c6"
+migrations_dir = "migrations"
+
 [vars]
 # Comma-separated origins allowed by CORS. localhost is always allowed.
 ALLOWED_ORIGINS = "https://stw.bq-t.pro,https://stw-vbucks.pages.dev"
@@ -20,9 +32,11 @@ ALLOWED_ORIGINS = "https://stw.bq-t.pro,https://stw-vbucks.pages.dev"
 SITE_URL = "https://stw.bq-t.pro"
 # Optional custom server emoji next to V-Bucks amounts in Discord, e.g. "<:vbucks:123456789012345678>".
 DISCORD_VBUCKS_EMOJI = "<:vbucks:1568138713823838388>"
+# Discord application "Fishstick" (login on the site, later the bot). Empty → login is off.
+DISCORD_CLIENT_ID = "1569345926382755981"
 
 [observability]
 enabled = true
 
 # Secrets (wrangler secret put <NAME>), see .dev.vars.example:
-# EPIC_CLIENT, EPIC_ACCOUNT_ID, EPIC_DEVICE_ID, EPIC_DEVICE_SECRET, DISCORD_WEBHOOK_URL (optional)
+# EPIC_CLIENT, EPIC_ACCOUNT_ID, EPIC_DEVICE_ID, EPIC_DEVICE_SECRET, DISCORD_CLIENT_SECRET, DISCORD_WEBHOOK_URL (optional)

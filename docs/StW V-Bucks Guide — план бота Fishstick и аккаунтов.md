@@ -1,0 +1,150 @@
+# StW V-Bucks Guide — план бота Fishstick и аккаунтов
+
+Nov 9, 2026 · дополнение к тех.плану
+
+Цель: Discord-бот Fishstick, вход на сайте, подписки на алерты, статусы серверов, магазин, ивенты и привязка аккаунта Epic. Всё только на Cloudflare, без VPS, на бесплатных тарифах.
+
+## Журнал решений
+
+| # | Вопрос | Ответ | Следствие для кода |
+| --- | --- | --- | --- |
+| 1 | Платформа | Только Cloudflare | Worker + D1 + KV + Queues + Cron. Бот без gateway: команды, кнопки и правка сообщений идут через HTTP interactions и REST |
+| 2 | Тариф | Бесплатный, Workers Paid ($5) только при упоре в лимиты | Правила из раздела «Лимиты» обязательны |
+| 3 | Хранилище | D1 — основная база, KV — кеш | Снимки, пользователи, подписки и серверы в D1. В KV остаётся `snapshot:current` и `history:vbucks` для быстрых ответов |
+| 4 | Домен API | `stw.bq-t.pro/api/*` (роут Worker) | Cookie сессии first-party. `workers.dev` остаётся рабочим |
+| 5 | Вход на сайте | Discord OAuth2 (`identify`) | Сессия в D1, в cookie только случайный токен, в базе его SHA-256 |
+| 6 | Имя бота | Fishstick | Одно Discord-приложение для входа на сайте и бота |
+| 7 | Язык бота | По языку клиента Discord (`ru` → RU, иначе EN); на сервере язык задаёт админ | Строки бота берутся из `apps/web/messages/*.json` (раздел `bot`) |
+| 8 | Аккаунт Epic игрока | Вариант C: привязка один раз, device auth хранится зашифрованным | Device code flow → device auth, AES-GCM, ключ в secret, «Отвязать» удаляет и у Epic. Правила хранения — в разделе «Привязка Epic» |
+
+## Архитектура
+
+- **Worker `stw-vbucks-worker`**:
+  - `/api/missions`, `/api/history`, `/api/health` (как сейчас);
+  - `/api/auth/*`, `/api/me`;
+  - `/api/discord/interactions`;
+  - позже `/api/subscriptions`, `/api/webhooks`, `/api/epic/*`.
+- **Cron** (одно расписание, `*/5 * * * *`), внутри диспетчер:
+  - снимок дня — пока он не сохранён (как сейчас);
+  - статус серверов — каждые 5 минут, правка сообщений только при изменении;
+  - магазин и ивенты — после их сброса (00:00 UTC) и раз в час.
+- **Queues**: рассылка уведомлений пачками. Producer — cron, consumer — тот же Worker.
+- **D1 `stw`**: миграции в `apps/worker/migrations/`.
+
+## Схема D1 (по этапам)
+
+| Таблица | Этап | Поля |
+| --- | --- | --- |
+| `users` | 1 | `id` (Discord id), `username`, `global_name`, `avatar`, `locale`, `created_at`, `updated_at` |
+| `sessions` | 1 | `token_hash`, `user_id`, `created_at`, `expires_at` |
+| `snapshots` | 1 | `date`, `fetched_at`, `vbucks_total`, `json` |
+| `guilds` | 2 | `id`, `locale`, `alerts_channel_id`, `status_channel_id`, `status_message_id` |
+| `service_status` | 2 | `id`, `json`, `checked_at`, `changed_at` |
+| `subscriptions` | 3 | `id`, `user_id`, `target` (`dm`, `channel`, `webhook`), `target_id`, `filter` (JSON), `locale`, `created_at` |
+| `webhooks` | 3 | `id`, `user_id`, `url_enc`, `name`, `last_ok_at`, `last_error` |
+| `deliveries` | 3 | `subscription_id`, `date`, `status` (защита от повторной отправки) |
+| `epic_links` | 5 | `user_id`, `account_id`, `display_name`, `device_auth_enc` (только для варианта C), `synced_at` |
+| `quest_progress` | 5 | `user_id`, `quest_id`, `state`, `updated_at` |
+
+## Этапы
+
+### 1. D1 и вход через Discord
+
+- D1 `stw`, миграция `0001_init.sql`: `users`, `sessions`, `snapshots`.
+- Cron пишет снимок дня и в KV, и в D1. Чтение пока остаётся из KV.
+- `GET /api/auth/discord/login?return=…` → Discord → `GET /api/auth/discord/callback` → cookie `stw_session` (HttpOnly, Secure, SameSite=Lax, 30 дней).
+- `GET /api/me`, `POST /api/auth/logout` (с проверкой Origin).
+- CORS с `credentials` для разрешённых origin (локально сайт на :3000, Worker на :8787).
+- Роут `stw.bq-t.pro/api/*` → Worker, `NEXT_PUBLIC_API_URL=https://stw.bq-t.pro`.
+- Сайт: кнопка «Войти через Discord» в шапке, аватар и меню с выходом.
+
+### 2. Бот: статус серверов и миссии
+
+- `/api/discord/interactions`: проверка подписи ed25519 (WebCrypto), PING, команды, кнопки.
+- Регистрация команд скриптом `pnpm bot:register`.
+- `/status`: статус с `status.epicgames.com/api/v2/summary.json` (официальный, без авторизации) и lightswitch под нашим аккаунтом.
+- `/setup status channel:#…`: бот публикует embed статуса, его id сохраняется в `guilds`. Cron правит сообщение при изменении, плюс кнопка «Обновить».
+- `/vbucks`, `/missions zone: reward: pl:`: из текущего снимка, фильтры из `missions.ts`.
+- Публичная ссылка-приглашение (scopes `bot applications.commands`) и user install, чтобы команды работали в личке и в любом чате.
+
+### 3. Подписки
+
+- Фильтр по количеству награды: `reward=pure-drop-of-rain&min=30`. Расширение `missions.ts` и тесты.
+- Подписка из бота (`/subscribe`) и с сайта: страница «Уведомления».
+- Куда доставлять: личка, канал сервера (`/setup alerts channel:#…`, только с правом Manage Server) или вебхук пользователя. URL вебхука хранится зашифрованным, есть кнопка «Тест».
+- После сохранения снимка совпадения уходят в Queue, consumer отправляет пачками. Таблица `deliveries` не даёт отправить одно уведомление дважды.
+
+### 4. Ивенты, турниры и магазин
+
+- `/events`: timeline STW и турниры BR (events service Epic по регионам, под нашим аккаунтом). Подписка «напомнить за час» на базе этапа 3.
+- `/shop stw`: ламы и магазин событий из каталога Epic.
+- `/shop br`: fortnite-api.com. Ответ урезается до нужных полей и кешируется в KV после сброса, бот отдаёт готовое.
+- Только embed-сообщения, картинки-коллажи не делаем (не влезают в 10 мс CPU).
+
+### 5. Привязка Epic (после решения по варианту)
+
+- Связка через device code flow (см. ниже).
+- Сайт: синхронизация квестлайна и сайдквестов. Нужна таблица соответствия шаблонов квестов Epic (`Quest:…`) нашим 244 квестам и сайдквестам; её собираем из реального профиля.
+- Бот: `/daily` — посмотреть дейлики, выдать новый (`ClientQuestLogin`), заменить (`FortRerollDailyQuest`).
+
+## Привязка Epic: как это делают боты
+
+Так работают боты вроде STW Daily:
+
+1. **Authorization code (старый способ).** Бот даёт ссылку `epicgames.com/id/api/redirect?clientId=…&responseType=code`. Игрок входит в Epic, видит JSON, копирует из него `authorizationCode` и вставляет в `/login`. Бот меняет код на токен и создаёт **device auth** (`POST account/api/public/account/{id}/deviceAuth`). Это постоянный логин без пароля, бот его хранит и входит за игрока когда угодно. Неудобно: нужно копировать код из JSON.
+2. **Device code flow (удобнее).** Бот получает у Epic пару `user_code` + ссылку `epicgames.com/activate?userCode=…`. Игрок открывает ссылку (если уже вошёл в Epic в браузере, это один клик «Подтвердить»). Бот в это время опрашивает Epic, пока не получит токен. Дальше так же: разово читаем профиль или создаём device auth.
+
+Для нас удобнее второй. На сайте: «Привязать Epic» → вкладка Epic → «Подтвердить» → сайт сам опрашивает `/api/epic/link/status` раз в 5 секунд → готово. В Discord: `/link` → эфемерное сообщение с кнопкой-ссылкой и кнопкой «Готово». Опрос делает браузер или кнопка, поэтому Durable Objects и постоянные процессы не нужны.
+
+Варианты хранения:
+
+- **B — разово.** Токен используется один раз для чтения профиля и выбрасывается. Синхронизация — по кнопке, каждый раз подтверждение в Epic (обычно один клик). Чужие ключи не храним.
+- **C — постоянно.** Храним device auth, зашифрованный AES-GCM ключом из secret. Плюсы: автосинхронизация, `/daily` без подтверждений. Минусы: это полный доступ к аккаунту игрока; серая зона правил Epic. Обязательна кнопка «Отвязать», которая удаляет device auth и у Epic (`DELETE …/deviceAuth/{deviceId}`).
+- **B с опцией C.** По умолчанию B, а флажок «Запомнить» с предупреждением включает C.
+
+Проверить до начала этапа:
+- какой клиент Epic сейчас отдаёт device code;
+- работает ли вход Epic с IP Cloudflare;
+- какие MCP-операции отвечают на профиль `campaign`.
+
+Решение: **C**. Правила хранения:
+
+- `device_auth_enc` = AES-GCM с ключом из secret `EPIC_LINK_KEY`, случайный IV на каждую запись, `user_id` как associated data (зашифрованную запись нельзя подставить другому пользователю). Ключ живёт только в Worker secrets: не в D1 и не в репозитории.
+- Расшифровка — только в момент запроса к Epic. Токены и device auth не попадают в логи, ответы API и сообщения бота.
+- Белый список операций задан в коде клиента Epic, всё остальное он не отправляет:
+  - чтение: квесты (квестлайн, сайдквесты, дейлики), ресурсы и инвентарь, PL, исследования, ламы (X-ray, без открытия);
+  - действия: выдать дейлик (`ClientQuestLogin`), заменить дейлик (`FortRerollDailyQuest`), забрать очки исследований.
+  - Никогда: покупки, подарки, возвраты, открытие лам, переработка и улучшение предметов, данные аккаунта (email и т.п.).
+
+  Функции на этой основе: синхронизация квестлайна и сайдквестов, `/daily`, `/research`, `/llamas`, «мои ресурсы», подписки «только если мне нужно», фильтр трекера по PL игрока. Перед этапом каждую операцию проверяем на нашем отдельном аккаунте.
+- «Отвязать» на сайте и `/unlink` в боте: удаляет device auth у Epic и строку в D1. Выход из Discord-аккаунта на сайте привязку не трогает.
+- Если Epic отвечает, что device auth недействителен (игрок сменил пароль или удалил его), строка удаляется и игрок получает просьбу привязать заново.
+- Перед привязкой — экран с объяснением: что получаем, зачем и как отвязать.
+- Ротация ключа: `key_version` в строке, старый ключ держим до перешифровки.
+
+Правило в `CLAUDE.md` «только отдельный аккаунт» остаётся для сервисных запросов. Аккаунты игроков используются только по их привязке и только для их собственных данных.
+
+## Лимиты бесплатного тарифа и правила
+
+| Ресурс | Лимит | Правило |
+| --- | --- | --- |
+| Workers CPU | 10 мс на вызов (ожидание сети не считается) | Большие JSON (магазин, ивенты) разбираем в cron один раз и кладём урезанными. Без генерации картинок |
+| Внешние запросы | 50 на вызов | Рассылка только через Queues пачками ≤ 40 |
+| Workers запросы | 100k в день | С запасом |
+| KV записи | 1000 в день | Частые записи (статус, сессии, подписки) только в D1 |
+| D1 | 5 млн чтений и 100k записей строк в день, 5 ГБ | С запасом. Индексы на `sessions.user_id`, `subscriptions.target` |
+| Cron | 5 расписаний на аккаунт | Одно расписание с диспетчером |
+| Discord interactions | Ответ за 3 с | Медленное (Epic) — через deferred response и `ctx.waitUntil` |
+
+Workers Paid нужен, если в логах появится «exceeded CPU», пользователей станут тысячи или выберем вариант C с автосинхронизацией по расписанию.
+
+## Что нужно от владельца
+
+1. Discord Developer Portal → New Application «Fishstick»:
+   - General Information: Application ID и Public Key → `wrangler.toml` (`DISCORD_CLIENT_ID`, `DISCORD_PUBLIC_KEY`);
+   - OAuth2: Client Secret → `wrangler secret put DISCORD_CLIENT_SECRET`. Redirects: `https://stw.bq-t.pro/api/auth/discord/callback` и `http://localhost:8787/api/auth/discord/callback`;
+   - Bot: Reset Token → `wrangler secret put DISCORD_BOT_TOKEN` (нужен с этапа 2). Privileged intents не нужны;
+   - Installation: Guild Install + User Install (этап 2);
+   - Interactions Endpoint URL: `https://stw.bq-t.pro/api/discord/interactions` (этап 2, после деплоя).
+2. `pnpm wrangler d1 create stw` → `database_id` в `wrangler.toml`.
+3. Pages: `NEXT_PUBLIC_API_URL=https://stw.bq-t.pro` после включения роута.

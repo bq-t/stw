@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import { AccountButton } from './AccountButton';
 import { LocaleSwitch } from './LocaleSwitch';
 import { StickyHeader } from './StickyHeader';
 
@@ -42,6 +43,7 @@ export function Header() {
           </nav>
           <div className="flex items-center gap-3 md:justify-self-end">
             <LocaleSwitch />
+            <AccountButton />
           </div>
         </div>
       </header>
