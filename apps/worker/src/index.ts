@@ -14,7 +14,8 @@ import {
   logout,
   publicUser,
 } from './auth';
-import { refreshStatus } from './bot/board';
+import { refreshStatus, updateBoards } from './bot/board';
+import { deliverSubscriptions } from './bot/subscriptions';
 import { handleInteraction } from './bot/interactions';
 import { Db } from './db';
 import type { Env } from './env';
@@ -193,31 +194,58 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
   }
 }
 
+// ---------- scheduled: every 5 minutes ----------
+
+/**
+ * Discord requests one cron run may make. The free plan allows 50 outgoing requests per
+ * invocation; Epic login + world/info + the channel webhook + Statuspage take up to 4.
+ */
+const DISCORD_BUDGET = 40;
+/** Board edits per run when the status changed (the rest go out on the next runs). */
+const MAX_BOARD_EDITS = 15;
+
+async function runCron(env: Env): Promise<void> {
+  // 1. The day's snapshot: exits after one KV read once it is saved.
+  try {
+    console.log('daily', await runDaily(env));
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('daily failed', message);
+    await new Store(env.MISSIONS).updateHealth({
+      lastErrorAt: new Date().toISOString(),
+      lastError: message.slice(0, 1000),
+    });
+  }
+  if (!env.DB) return;
+  const db = new Db(env.DB);
+  const token = env.DISCORD_BOT_TOKEN;
+  const now = Date.now();
+  let budget = DISCORD_BUDGET;
+
+  // 2. Epic status, and the boards that do not show it yet.
+  try {
+    const known = await refreshStatus(db, now);
+    if (token) budget -= await updateBoards(token, db, known, now, MAX_BOARD_EDITS);
+  } catch (err) {
+    console.error('status failed', err);
+  }
+
+  // 3. Subscriptions for today's rotation, in batches.
+  try {
+    const snapshot = await new Store(env.MISSIONS).getCurrent();
+    if (token && snapshot && snapshot.date === rotationDay(new Date(now))) {
+      const sent = await deliverSubscriptions(token, db, snapshot, env.SITE_URL, now, budget);
+      if (sent) console.log('subscriptions: requests', sent);
+    }
+  } catch (err) {
+    console.error('subscriptions failed', err);
+  }
+}
+
 export default {
   fetch: handleFetch,
 
   async scheduled(_controller, env, ctx) {
-    // Every 5 minutes: the Epic status (boards are edited only on a change)...
-    if (env.DB) {
-      ctx.waitUntil(
-        refreshStatus(env, new Db(env.DB), Date.now()).catch((err: unknown) =>
-          console.error('status failed', err),
-        ),
-      );
-    }
-    // ...and the day's snapshot, which exits after one KV read once it is saved.
-    ctx.waitUntil(
-      runDaily(env).then(
-        (result) => console.log('daily', result),
-        async (err: unknown) => {
-          const message = err instanceof Error ? err.message : String(err);
-          console.error('daily failed', message);
-          await new Store(env.MISSIONS).updateHealth({
-            lastErrorAt: new Date().toISOString(),
-            lastError: message.slice(0, 1000),
-          });
-        },
-      ),
-    );
+    ctx.waitUntil(runCron(env));
   },
 } satisfies ExportedHandler<Env>;

@@ -364,7 +364,30 @@
       "plMin": "Minimum power level",
       "plMax": "Maximum power level",
       "channel": "Channel for the board",
-      "language": "Board language"
+      "language": "Board language",
+      "subscribe": "Get a DM when today's missions match your filters",
+      "subscriptions": "Your subscriptions",
+      "setupAlerts": "Post matching missions in a channel after each rotation",
+      "setupList": "Subscriptions of this server",
+      "item": "Exact reward item",
+      "min": "Minimum amount of the reward"
+    },
+    "subs": {
+      "saved": "Subscription saved: {summary}. After each rotation (00:00 UTC) Fishstick sends matching missions to your DMs.",
+      "dmNote": "Discord lets the bot DM you only while you share a server with Fishstick or have it in your apps.",
+      "channelSaved": "Done: after each rotation Fishstick posts {summary} in {channel}.",
+      "channelIntro": "Fishstick will post missions here after each rotation: {summary}",
+      "limit": "You already have {max} subscriptions. Remove one with /subscriptions.",
+      "guildLimit": "This server already has {max} subscriptions. Remove one with /setup list.",
+      "title": "Your subscriptions",
+      "guildTitle": "Server subscriptions",
+      "empty": "No subscriptions yet. Create one with /subscribe.",
+      "guildEmpty": "No server subscriptions yet. Create one with /setup alerts.",
+      "delete": "Delete {n}",
+      "notOwner": "You cannot change this subscription.",
+      "notifTitle": "Missions for your subscription",
+      "anyMission": "Any alert",
+      "pl": "PL {min}–{max}"
     }
   }
 }

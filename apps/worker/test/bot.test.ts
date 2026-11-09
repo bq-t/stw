@@ -193,3 +193,78 @@ describe('emoji sets', () => {
     expect(bot).not.toContain('1569264880299802724');
   });
 });
+
+describe('subscriptions', () => {
+  const DROP = 'AccountResource:reagent_c_t01';
+
+  it('maps /subscribe options and describes the filter in both languages', async () => {
+    const { subscriptionFilter } = await import('../src/bot/interactions');
+    const { describeFilter } = await import('../src/bot/subscriptions');
+    const f = subscriptionFilter([
+      { name: 'item', type: 3, value: DROP },
+      { name: 'min', type: 4, value: 30 },
+      { name: 'zone', type: 3, value: 'twine-peaks' },
+      { name: 'pl_min', type: 4, value: 100 },
+    ]);
+    expect(f).toMatchObject({ item: DROP, minQty: 30, zones: ['twine-peaks'], plMin: 100 });
+    expect(describeFilter(f, 'en')).toBe('Pure Drop of Rain ≥ 30 · Twine Peaks · PL 100–160');
+    expect(describeFilter(f, 'ru')).toContain('Чистая капля дождя ≥ 30');
+    expect(subscriptionFilter([{ name: 'item', type: 3, value: 'Hack:x' }])).not.toHaveProperty(
+      'item',
+    );
+    expect(describeFilter(subscriptionFilter(undefined), 'en')).toBe('Any alert');
+  });
+
+  it('builds the notification only from matching missions', async () => {
+    const { notificationMessage } = await import('../src/bot/subscriptions');
+    const { parseSubscriptionFilter } = await import('@stw/shared');
+    const snapshot: DaySnapshot = {
+      date: '2026-11-09',
+      fetchedAt: '2026-11-09T00:01:00Z',
+      expiresAt: '2026-11-10T00:00:00Z',
+      missions: [
+        mission(1, { alertRewards: [{ itemId: DROP, quantity: 35, isVbucks: false }] }),
+        mission(2, { alertRewards: [{ itemId: DROP, quantity: 10, isVbucks: false }] }),
+      ],
+      vbucksTotal: 0,
+    };
+    const f = parseSubscriptionFilter({ item: DROP, minQty: 30 })!;
+    const { found, message } = notificationMessage(f, snapshot, 'en', 'https://stw.bq-t.pro');
+    expect(found).toBe(1);
+    const json = JSON.stringify(message);
+    expect(json).toContain('Pure Drop of Rain ×35');
+    expect(json).not.toContain('×10');
+  });
+
+  it('lists subscriptions with delete buttons, five per row', async () => {
+    const { subscriptionList } = await import('../src/bot/interactions');
+    const rows = Array.from({ length: 7 }, (_, n) => ({
+      id: 100 + n,
+      owner_type: 'user' as const,
+      owner_id: 'u',
+      target: 'dm' as const,
+      target_id: 'u',
+      dm_channel_id: null,
+      filter: JSON.stringify({ item: DROP, minQty: 30 }),
+      locale: 'en',
+      created_at: 0,
+      checked_date: null,
+      last_sent_at: null,
+      last_error: n === 0 ? 'cannot DM this user' : null,
+    }));
+    const list = subscriptionList(rows, 'user', 'en');
+    expect(list.components).toHaveLength(2);
+    expect(JSON.stringify(list.components)).toContain('sub:del:106');
+    expect(list.content).toContain('cannot DM this user');
+    expect(subscriptionList([], 'guild', 'ru').content).toContain('/setup alerts');
+  });
+
+  it('every command fits 25 options', () => {
+    const count = (o: object): void => {
+      const opts = (o as { options?: object[] }).options ?? [];
+      expect(opts.length).toBeLessThanOrEqual(25);
+      for (const c of opts) count(c);
+    };
+    for (const c of COMMANDS) count(c);
+  });
+});

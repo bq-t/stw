@@ -1,7 +1,8 @@
 // Slash command definitions. Registered with `pnpm bot:register` (scripts/bot-register.ts);
 // the Worker reads the same option names in interactions.ts.
 
-import { REWARD_CATEGORIES, ZONES, type AlertFilter } from '@stw/shared';
+import { MIN_QTY_MAX, REWARD_CATEGORIES, ZONES, type AlertFilter } from '@stw/shared';
+import { ITEMS } from '@stw/shared/items';
 import { messages } from '../i18n';
 
 const en = messages('en');
@@ -51,36 +52,69 @@ const everywhere = {
   contexts: [CTX_GUILD, CTX_BOT_DM, CTX_PRIVATE],
 };
 
+const missionOptions = [
+  {
+    type: STRING,
+    name: 'zone',
+    ...desc('zone'),
+    choices: choices(ZONES, (m, k) => m.Zone[k]),
+  },
+  {
+    type: STRING,
+    name: 'alert',
+    ...desc('alert'),
+    choices: choices(ALERTS, (m, k) => m.Filters[ALERT_LABEL[k]]),
+  },
+  {
+    type: STRING,
+    name: 'reward',
+    ...desc('reward'),
+    choices: choices(REWARD_CATEGORIES, (m, k) => m.RewardCategory[k]),
+  },
+  { type: INTEGER, name: 'pl_min', ...desc('plMin'), min_value: 1, max_value: 160 },
+  { type: INTEGER, name: 'pl_max', ...desc('plMax'), min_value: 1, max_value: 160 },
+];
+
+/** Reward items a subscription can name: the resource catalog without event currency. */
+export const ITEM_CHOICES = Object.entries(ITEMS)
+  .filter(([id]) => !id.includes('event_currency') && !id.includes('eventcurrency'))
+  .map(([id, info]) => ({
+    name: info.name.en,
+    name_localizations: { ru: info.name.ru },
+    value: id,
+  }));
+
+/** Subscription filters: the item and the amount first (that is what people subscribe to). */
+const subscriptionOptions = [
+  { type: STRING, name: 'item', ...desc('item'), choices: ITEM_CHOICES },
+  { type: INTEGER, name: 'min', ...desc('min'), min_value: 1, max_value: MIN_QTY_MAX },
+  ...missionOptions,
+];
+
+const channelOption = {
+  type: CHANNEL,
+  name: 'channel',
+  ...desc('channel'),
+  required: true,
+  channel_types: [GUILD_TEXT, GUILD_ANNOUNCEMENT],
+};
+
+const languageOption = {
+  type: STRING,
+  name: 'language',
+  ...desc('language'),
+  choices: [
+    { name: 'English', value: 'en' },
+    { name: 'Русский', value: 'ru' },
+  ],
+};
+
 export const COMMANDS = [
   { name: 'vbucks', ...desc('vbucks'), ...everywhere },
-  {
-    name: 'missions',
-    ...desc('missions'),
-    ...everywhere,
-    options: [
-      {
-        type: STRING,
-        name: 'zone',
-        ...desc('zone'),
-        choices: choices(ZONES, (m, k) => m.Zone[k]),
-      },
-      {
-        type: STRING,
-        name: 'alert',
-        ...desc('alert'),
-        choices: choices(ALERTS, (m, k) => m.Filters[ALERT_LABEL[k]]),
-      },
-      {
-        type: STRING,
-        name: 'reward',
-        ...desc('reward'),
-        choices: choices(REWARD_CATEGORIES, (m, k) => m.RewardCategory[k]),
-      },
-      { type: INTEGER, name: 'pl_min', ...desc('plMin'), min_value: 1, max_value: 160 },
-      { type: INTEGER, name: 'pl_max', ...desc('plMax'), min_value: 1, max_value: 160 },
-    ],
-  },
+  { name: 'missions', ...desc('missions'), ...everywhere, options: missionOptions },
   { name: 'status', ...desc('status'), ...everywhere },
+  { name: 'subscribe', ...desc('subscribe'), ...everywhere, options: subscriptionOptions },
+  { name: 'subscriptions', ...desc('subscriptions'), ...everywhere },
   {
     name: 'setup',
     ...desc('setup'),
@@ -92,25 +126,15 @@ export const COMMANDS = [
         type: SUB_COMMAND,
         name: 'status',
         ...desc('setupStatus'),
-        options: [
-          {
-            type: CHANNEL,
-            name: 'channel',
-            ...desc('channel'),
-            required: true,
-            channel_types: [GUILD_TEXT, GUILD_ANNOUNCEMENT],
-          },
-          {
-            type: STRING,
-            name: 'language',
-            ...desc('language'),
-            choices: [
-              { name: 'English', value: 'en' },
-              { name: 'Русский', value: 'ru' },
-            ],
-          },
-        ],
+        options: [channelOption, languageOption],
       },
+      {
+        type: SUB_COMMAND,
+        name: 'alerts',
+        ...desc('setupAlerts'),
+        options: [channelOption, ...subscriptionOptions, languageOption],
+      },
+      { type: SUB_COMMAND, name: 'list', ...desc('setupList') },
     ],
   },
 ];

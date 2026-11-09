@@ -24,6 +24,24 @@ export interface GuildRow {
   status_channel_id: string | null;
   status_message_id: string | null;
   updated_at: number;
+  board_fingerprint: string | null;
+}
+
+export type OwnerType = 'user' | 'guild';
+
+export interface SubscriptionRow {
+  id: number;
+  owner_type: OwnerType;
+  owner_id: string;
+  target: 'dm' | 'channel' | 'webhook';
+  target_id: string;
+  dm_channel_id: string | null;
+  filter: string;
+  locale: string;
+  created_at: number;
+  checked_date: string | null;
+  last_sent_at: number | null;
+  last_error: string | null;
 }
 
 export interface ServiceStatusRow {
@@ -97,23 +115,121 @@ export class Db {
     channelId: string | null,
     messageId: string | null,
     now: number,
+    fingerprint: string | null = null,
   ): Promise<void> {
     await this.d1
       .prepare(
-        `INSERT INTO guilds (id, locale, status_channel_id, status_message_id, updated_at)
-         VALUES (?1, ?2, ?3, ?4, ?5)
+        `INSERT INTO guilds (id, locale, status_channel_id, status_message_id, updated_at, board_fingerprint)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6)
          ON CONFLICT(id) DO UPDATE SET
-           locale = ?2, status_channel_id = ?3, status_message_id = ?4, updated_at = ?5`,
+           locale = ?2, status_channel_id = ?3, status_message_id = ?4, updated_at = ?5,
+           board_fingerprint = ?6`,
       )
-      .bind(guildId, locale, channelId, messageId, now)
+      .bind(guildId, locale, channelId, messageId, now, fingerprint)
       .run();
   }
 
-  async statusBoards(): Promise<GuildRow[]> {
+  /** Boards that do not show `fingerprint` yet, oldest first. */
+  async staleBoards(fingerprint: string, limit: number): Promise<GuildRow[]> {
     const { results } = await this.d1
-      .prepare('SELECT * FROM guilds WHERE status_message_id IS NOT NULL')
+      .prepare(
+        `SELECT * FROM guilds
+         WHERE status_message_id IS NOT NULL
+           AND (board_fingerprint IS NULL OR board_fingerprint != ?1)
+         ORDER BY updated_at LIMIT ?2`,
+      )
+      .bind(fingerprint, limit)
       .all<GuildRow>();
     return results;
+  }
+
+  async setBoardFingerprint(guildId: string, fingerprint: string, now: number): Promise<void> {
+    await this.d1
+      .prepare('UPDATE guilds SET board_fingerprint = ?2, updated_at = ?3 WHERE id = ?1')
+      .bind(guildId, fingerprint, now)
+      .run();
+  }
+
+  // ---------- subscriptions ----------
+
+  async countSubscriptions(ownerType: OwnerType, ownerId: string): Promise<number> {
+    const row = await this.d1
+      .prepare('SELECT COUNT(*) AS n FROM subscriptions WHERE owner_type = ?1 AND owner_id = ?2')
+      .bind(ownerType, ownerId)
+      .first<{ n: number }>();
+    return row?.n ?? 0;
+  }
+
+  async listSubscriptions(ownerType: OwnerType, ownerId: string): Promise<SubscriptionRow[]> {
+    const { results } = await this.d1
+      .prepare('SELECT * FROM subscriptions WHERE owner_type = ?1 AND owner_id = ?2 ORDER BY id')
+      .bind(ownerType, ownerId)
+      .all<SubscriptionRow>();
+    return results;
+  }
+
+  getSubscription(id: number): Promise<SubscriptionRow | null> {
+    return this.d1
+      .prepare('SELECT * FROM subscriptions WHERE id = ?1')
+      .bind(id)
+      .first<SubscriptionRow>();
+  }
+
+  async addSubscription(
+    s: Pick<
+      SubscriptionRow,
+      'owner_type' | 'owner_id' | 'target' | 'target_id' | 'filter' | 'locale'
+    >,
+    today: string,
+    now: number,
+  ): Promise<void> {
+    // checked_date = today: a new subscription starts with the next rotation.
+    await this.d1
+      .prepare(
+        `INSERT INTO subscriptions (owner_type, owner_id, target, target_id, filter, locale, created_at, checked_date)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)`,
+      )
+      .bind(s.owner_type, s.owner_id, s.target, s.target_id, s.filter, s.locale, now, today)
+      .run();
+  }
+
+  async deleteSubscription(id: number): Promise<void> {
+    await this.d1.prepare('DELETE FROM subscriptions WHERE id = ?1').bind(id).run();
+  }
+
+  async dueSubscriptions(today: string, limit: number): Promise<SubscriptionRow[]> {
+    const { results } = await this.d1
+      .prepare(
+        `SELECT * FROM subscriptions WHERE checked_date IS NULL OR checked_date < ?1
+         ORDER BY id LIMIT ?2`,
+      )
+      .bind(today, limit)
+      .all<SubscriptionRow>();
+    return results;
+  }
+
+  async markChecked(
+    id: number,
+    today: string,
+    result: { sentAt?: number; error?: string | null; dmChannelId?: string },
+  ): Promise<void> {
+    await this.d1
+      .prepare(
+        `UPDATE subscriptions SET checked_date = ?2,
+           last_sent_at = COALESCE(?3, last_sent_at),
+           last_error = CASE WHEN ?4 = 1 THEN ?5 ELSE last_error END,
+           dm_channel_id = COALESCE(?6, dm_channel_id)
+         WHERE id = ?1`,
+      )
+      .bind(
+        id,
+        today,
+        result.sentAt ?? null,
+        result.error !== undefined ? 1 : 0,
+        result.error ?? null,
+        result.dmChannelId ?? null,
+      )
+      .run();
   }
 
   getServiceStatus(id: string): Promise<ServiceStatusRow | null> {
