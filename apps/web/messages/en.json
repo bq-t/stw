@@ -290,5 +290,81 @@
     "loginWith": "Log in with Discord",
     "logout": "Log out",
     "menu": "Account"
+  },
+  "Bot": {
+    "card": {
+      "vbucksToday": "{total} V-Bucks today",
+      "missions": {
+        "one": "# mission",
+        "other": "# missions"
+      },
+      "yesterday": "Yesterday",
+      "days7": "7 days",
+      "days30": "30 days",
+      "nextRotation": "Next rotation",
+      "more": "+ {count} more on the site",
+      "noVbucks": "No V-Bucks today",
+      "lastAlerts": "Last V-Bucks alerts:",
+      "noHistory": "No V-Bucks alerts in the history yet",
+      "group": "Group",
+      "openTracker": "Open tracker",
+      "howToFarm": "How to farm V-Bucks"
+    },
+    "missions": {
+      "title": "Missions",
+      "found": {
+        "one": "# mission",
+        "other": "# missions"
+      },
+      "none": "No missions match these filters today.",
+      "more": "+ {count} more in the tracker"
+    },
+    "status": {
+      "title": "Fortnite servers",
+      "indicator": {
+        "none": "All systems operational",
+        "minor": "Minor problems",
+        "major": "Major outage",
+        "critical": "Critical outage",
+        "maintenance": "Maintenance"
+      },
+      "component": {
+        "operational": "Operational",
+        "degraded_performance": "Degraded performance",
+        "partial_outage": "Partial outage",
+        "major_outage": "Major outage",
+        "under_maintenance": "Maintenance"
+      },
+      "incidents": "Incidents",
+      "maintenance": "Scheduled maintenance",
+      "changed": "Status changed {time}",
+      "source": "Data from status.epicgames.com, checked every 5 minutes",
+      "refresh": "Refresh",
+      "statusPage": "Status page"
+    },
+    "setup": {
+      "statusDone": "Status board posted in {channel}. It updates by itself when the status changes.",
+      "noAccess": "I cannot post in {channel}. Give Fishstick View Channel, Send Messages and Embed Links there.",
+      "notInServer": "Add Fishstick to this server first, then run the command again: {url}"
+    },
+    "error": {
+      "noData": "No mission data yet. Try again in a few minutes.",
+      "generic": "Something went wrong. Try again later.",
+      "unknown": "Unknown command."
+    },
+    "commands": {
+      "vbucks": "Today's V-Bucks missions",
+      "missions": "Today's missions with filters",
+      "status": "Fortnite server status",
+      "setup": "Fishstick settings for this server",
+      "setupStatus": "Post a server status board that updates by itself",
+      "zone": "Zone",
+      "alert": "Which missions to show",
+      "reward": "Reward type",
+      "plMin": "Minimum power level",
+      "plMax": "Maximum power level",
+      "channel": "Channel for the board",
+      "language": "Board language"
+    }
   }
 }

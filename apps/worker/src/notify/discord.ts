@@ -12,7 +12,7 @@ import {
   type VbucksHistory,
 } from '@stw/shared';
 import { itemInfo, readableItemId } from '@stw/shared/items';
-import en from '../../../web/messages/en.json';
+import { fmt, label, messages, plural, sitePath, type Locale, type Messages } from '../i18n';
 import iconsManifest from '../../../web/lib/icons-manifest.json';
 
 /** --vbucks-shine and --accent-ui from apps/web/app/globals.css. */
@@ -56,6 +56,16 @@ export interface DiscordOptions {
   siteUrl: string;
   /** Custom server emoji for V-Bucks, e.g. "<:vbucks:123456789>". Optional. */
   vbucksEmoji?: string;
+  /** Language of the texts and site links. Default "en" (the channel notification). */
+  locale?: Locale;
+}
+
+/** Options with the defaults filled in and the locale's messages at hand. */
+interface Ctx {
+  siteUrl: string;
+  vbucksEmoji?: string;
+  locale: Locale;
+  t: Messages;
 }
 
 export interface DiscordMessage {
@@ -70,19 +80,12 @@ const text = (content: string) => ({ type: TEXT, content });
 const ZWSP = '​';
 const separator = (divider = true, spacing: 1 | 2 = 1) => ({ type: SEPARATOR, divider, spacing });
 
-function missionName(type: string): string {
-  const names = en.MissionType as Record<string, string>;
-  return (
-    names[type] ??
-    type
-      .split('-')
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(' ')
-  );
+function missionName(type: string, t: Messages): string {
+  return label(t.MissionType, type);
 }
 
-function zoneName(zone: Mission['zone']): string {
-  return (en.Zone as Record<string, string>)[zone] ?? zone;
+function zoneName(zone: Mission['zone'], t: Messages): string {
+  return label(t.Zone, zone);
 }
 
 /**
@@ -105,8 +108,8 @@ function missionIconUrl(m: Mission, siteUrl: string): string | null {
   return name ? `${siteUrl}/images/discord/missions/${name}.webp` : null;
 }
 
-function rewardLabel(itemId: string, quantity: number): string {
-  const name = itemInfo(itemId)?.name.en ?? readableItemId(itemId);
+function rewardLabel(itemId: string, quantity: number, locale: Locale): string {
+  const name = itemInfo(itemId)?.name[locale] ?? readableItemId(itemId);
   return quantity > 1 ? `${name} ×${quantity}` : name;
 }
 
@@ -122,8 +125,8 @@ function sumDays(history: VbucksHistory | null, today: string, from: number, to:
 }
 
 /** "Thu, 6 Nov" in UTC (the rotation day). */
-function dayLabel(date: string): string {
-  return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-GB', {
+function dayLabel(date: string, locale: Locale): string {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-GB', {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
@@ -131,28 +134,27 @@ function dayLabel(date: string): string {
   });
 }
 
-function missionBlock(m: Mission, opts: DiscordOptions) {
+function missionBlock(m: Mission, opts: Ctx) {
+  const { t } = opts;
   const vb = vbucksOf(m);
   const emoji = opts.vbucksEmoji ? `${opts.vbucksEmoji} ` : '';
   const alertLabel =
-    m.alertKind !== 'none' && m.alertKind !== 'other'
-      ? (en.AlertKind as Record<string, string>)[m.alertKind]
-      : '';
+    m.alertKind !== 'none' && m.alertKind !== 'other' ? label(t.AlertKind, m.alertKind) : '';
   const alertEmoji = EMOJI_ALERT[m.alertKind];
   const details = [
     `${EMOJI_POWER} ${m.powerLevel > 0 ? m.powerLevel : '?'}`,
-    `${EMOJI_ZONE} ${zoneName(m.zone)}`,
+    `${EMOJI_ZONE} ${zoneName(m.zone, t)}`,
     alertLabel ? (alertEmoji ? `${alertEmoji} ${alertLabel}` : alertLabel) : '',
     // A mega alert is always a group mission: the icon says enough.
-    m.isGroup && m.alertKind !== 'mega-alert' ? 'Group' : '',
+    m.isGroup && m.alertKind !== 'mega-alert' ? t.Bot.card.group : '',
   ].filter(Boolean);
   const extras = m.alertRewards
     .filter((r) => !r.isVbucks && !HIDDEN_REWARDS.has(r.itemId))
-    .map((r) => rewardLabel(r.itemId, r.quantity));
+    .map((r) => rewardLabel(r.itemId, r.quantity, opts.locale));
 
   // Title as the smallest heading, details in normal text, rewards in subtext.
   const lines = [
-    `### ${emoji}${vb} V-Bucks  ·  ${missionName(m.missionType)}`,
+    `### ${emoji}${vb} V-Bucks  ·  ${missionName(m.missionType, t)}`,
     `${details.join('  ·  ')}${extras.length ? `\n-# + ${extras.join(', ')}` : ''}`,
   ];
   const icon = missionIconUrl(m, opts.siteUrl);
@@ -161,7 +163,11 @@ function missionBlock(m: Mission, opts: DiscordOptions) {
     {
       type: SECTION,
       components: [text(lines[0]!), text(lines[1]!)],
-      accessory: { type: THUMBNAIL, media: { url: icon }, description: missionName(m.missionType) },
+      accessory: {
+        type: THUMBNAIL,
+        media: { url: icon },
+        description: missionName(m.missionType, t),
+      },
     },
   ];
 }
@@ -173,7 +179,10 @@ export function buildDiscordMessage(
   opts: DiscordOptions,
 ): DiscordMessage {
   const site = opts.siteUrl.replace(/\/$/, '');
-  const o = { ...opts, siteUrl: site };
+  const locale = opts.locale ?? 'en';
+  const t = messages(locale);
+  const c = t.Bot.card;
+  const o: Ctx = { siteUrl: site, vbucksEmoji: opts.vbucksEmoji, locale, t };
   // Grouped by zone in unlock order (Stonewood → Twine Peaks), lowest power first inside a zone.
   const missions = snapshot.missions
     .filter((m) => vbucksOf(m) > 0)
@@ -191,7 +200,7 @@ export function buildDiscordMessage(
   const yesterday = sumDays(history, today, 1, 1);
   const week = total + sumDays(history, today, 1, 6);
   const month = total + sumDays(history, today, 1, 29);
-  const stats = `-# Yesterday ${emoji}**${yesterday}**  ·  7 days ${emoji}**${week}**  ·  30 days ${emoji}**${month}**`;
+  const stats = `-# ${c.yesterday} ${emoji}**${yesterday}**  ·  ${c.days7} ${emoji}**${week}**  ·  ${c.days30} ${emoji}**${month}**`;
   const nextRotationTag = `<t:${Math.floor(nextRotation(new Date(snapshot.fetchedAt)).getTime() / 1000)}:R>`;
 
   const body: unknown[] = [];
@@ -206,19 +215,19 @@ export function buildDiscordMessage(
       items: [
         {
           media: { url: `${site}/images/discord/zones/${easiest.zone}.webp` },
-          description: zoneName(easiest.zone),
+          description: zoneName(easiest.zone, t),
         },
       ],
     });
-    const zones = ZONES.filter((z) => missions.some((m) => m.zone === z)).map(zoneName);
+    const zones = ZONES.filter((z) => missions.some((m) => m.zone === z)).map((z) =>
+      zoneName(z, t),
+    );
     body.push(
       text(
         [
-          `-# ${dayLabel(today).toUpperCase()}  ·  Next rotation ${nextRotationTag}`,
-          `## ${EMOJI_VBUCKS_STACK} ${total} V-Bucks today`,
-          [`${missions.length} ${missions.length === 1 ? 'mission' : 'missions'}`, ...zones].join(
-            '  ·  ',
-          ),
+          `-# ${dayLabel(today, locale).toUpperCase()}  ·  ${c.nextRotation} ${nextRotationTag}`,
+          `## ${EMOJI_VBUCKS_STACK} ${fmt(c.vbucksToday, { total })}`,
+          [plural(c.missions, missions.length, locale), ...zones].join('  ·  '),
           stats,
         ].join('\n'),
       ),
@@ -226,24 +235,26 @@ export function buildDiscordMessage(
     body.push(separator(false, 2));
     for (const m of missions.slice(0, MAX_MISSIONS)) body.push(...missionBlock(m, o));
     if (missions.length > MAX_MISSIONS) {
-      body.push(text(`-# + ${missions.length - MAX_MISSIONS} more on the site`));
+      body.push(text(`-# ${fmt(c.more, { count: missions.length - MAX_MISSIONS })}`));
     }
   } else {
     const lastDay = history?.days.find((d) => d.date !== today && d.total > 0);
     // Trailing zero-width space line: a little extra room above the main block.
     body.push(
-      text(`-# ${dayLabel(today).toUpperCase()}  ·  Next rotation ${nextRotationTag}\n${ZWSP}`),
+      text(
+        `-# ${dayLabel(today, locale).toUpperCase()}  ·  ${c.nextRotation} ${nextRotationTag}\n${ZWSP}`,
+      ),
     );
     // Same shape as a mission block: two lines with the picture on the right.
     const lastTs = lastDay ? Math.floor(Date.parse(`${lastDay.date}T00:00:00Z`) / 1000) : 0;
     body.push({
       type: SECTION,
       components: [
-        text('## No V-Bucks today'),
+        text(`## ${c.noVbucks}`),
         text(
           lastDay
-            ? `Last V-Bucks alerts: ${EMOJI_VBUCKS_STACK} **${lastDay.total}** <t:${lastTs}:R>`
-            : 'No V-Bucks alerts in the history yet',
+            ? `${c.lastAlerts} ${EMOJI_VBUCKS_STACK} **${lastDay.total}** <t:${lastTs}:R>`
+            : c.noHistory,
         ),
         text(stats),
       ],
@@ -261,10 +272,10 @@ export function buildDiscordMessage(
       {
         type: BUTTON,
         style: BUTTON_LINK,
-        label: 'Open tracker',
-        url: has ? `${site}/?alert=vbucks` : `${site}/`,
+        label: c.openTracker,
+        url: sitePath(site, locale, has ? '/?alert=vbucks' : '/'),
       },
-      { type: BUTTON, style: BUTTON_LINK, label: 'How to farm V-Bucks', url: `${site}/faq` },
+      { type: BUTTON, style: BUTTON_LINK, label: c.howToFarm, url: sitePath(site, locale, '/faq') },
     ],
   });
 

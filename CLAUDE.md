@@ -11,7 +11,7 @@ Plans (source of truth for scope and decisions):
 ## Layout
 
 - `apps/web` — Next.js 16, App Router, `output: 'export'` (static HTML on Cloudflare Pages). See `apps/web/AGENTS.md`: read `node_modules/next/dist/docs/` before using Next APIs.
-- `apps/worker` — Cloudflare Worker: cron fetches Epic `world/info` → KV; serves `/api/missions`, `/api/history`, `/api/health`, Discord login (`src/auth.ts`: `/api/auth/discord/*`, `/api/me`, `/api/auth/logout`, session in D1); D1 `stw` (`src/db.ts`, `migrations/`) next to KV; Discord webhook (`src/notify/discord.ts`: Components V2 card, one per rotation with or without V-Bucks; names from `apps/web/messages/en.json`, icons from `apps/web/lib/icons-manifest.json`, images loaded from `SITE_URL`; preview with `pnpm discord:preview`).
+- `apps/worker` — Cloudflare Worker: cron fetches Epic `world/info` → KV; serves `/api/missions`, `/api/history`, `/api/health`, Discord login (`src/auth.ts`: `/api/auth/discord/*`, `/api/me`, `/api/auth/logout`, session in D1); D1 `stw` (`src/db.ts`, `migrations/`) next to KV; Discord bot Fishstick (`src/bot/`: HTTP interactions on `/api/discord/interactions`, `/vbucks` `/missions` `/status` `/setup status`, Epic status board from status.epicgames.com edited by the 5-minute cron; bot texts in the `Bot` section of `messages/*.json` via `src/i18n.ts`); Discord webhook (`src/notify/discord.ts`: Components V2 card, one per rotation with or without V-Bucks; names from `apps/web/messages/en.json`, icons from `apps/web/lib/icons-manifest.json`, images loaded from `SITE_URL`; preview with `pnpm discord:preview`).
 - `packages/shared` — types, `parse.ts` (raw Epic → `DaySnapshot`), zod schema, Epic client (`src/epic`), item catalog (`src/items`). Imported as `@stw/shared`, `@stw/shared/epic`, `@stw/shared/items`.
 - `scripts/` — `setup-device-auth.ts` (one-time), `fetch-world-info.ts` (stage-2 check, saves to `fixtures/`).
 
@@ -31,6 +31,7 @@ pnpm auth:setup         # create device auth for the dedicated Epic account → 
 pnpm fetch:world [file] # fetch world/info (or parse a saved fixture) and print what parse.ts sees
 pnpm --filter web build # static export to apps/web/out
 pnpm --filter worker db:migrate:local   # D1 schema into the local DB (db:migrate = remote)
+pnpm bot:register       # Fishstick slash commands + install settings (--endpoint sets the Interactions URL to the site)
 pnpm seed:local         # demo snapshot + history into the Worker LOCAL KV (then dev:worker + dev:web with NEXT_PUBLIC_API_URL)
 pnpm discord:preview    # post today's Discord message (live Worker data) to DISCORD_WEBHOOK_URL from .env; --none = no-V-Bucks variant, --vbucks = fake V-Bucks alerts in SW/PL/CV on a quiet day, --print = JSON only
 ```
@@ -55,7 +56,7 @@ pnpm discord:preview    # post today's Discord message (live Worker data) to DIS
 - Style building blocks live in `globals.css`: `.fn-panel` (slanted bar), `.fn-block` (square block), `.fn-card` (leaning card via skew: short cards, keeps box-shadow glows), `.fn-tall` (fixed 8px slant via clip-path: cards that grow, stripe colour via `[--stripe:…]`), `.fn-chip` / `.fn-chip-nav` (filter and anchor buttons), `.fn-tab` (header buttons), `.fn-badge` (V-Bucks amount), `.fn-tile` (reward preview), `.vbucks-shape-glow` (glow that follows any shape; put it on a wrapper of a clip-path card).
 - Background: triangle grid from `scripts/bg-plexus.mjs` (→ `public/images/bg-plexus*.svg`), drifting under `body::before` plus a shine band (`PlexusShine.tsx`). The header pins and slides in on scroll (`StickyHeader.tsx`, anchors offset by `scroll-padding-top`); `RouteProgress.tsx` is the page loading bar.
 - Tracker filters update the URL with `window.history.replaceState`, not `router.replace`: EN `/` is a rewrite to `/en`, so a router navigation to it reloads the whole page.
-- 404 is `app/global-not-found.tsx` (`experimental.globalNotFound`): the root layout sits under `[locale]`, so it renders its own document with the EN header/footer; the body text switches to RU on `/ru/...` in the browser.
+- 404 is `app/global-not-found.tsx` (`experimental.globalNotFound`): the root layout sits under `[locale]`, so it renders its own document with the EN header/footer; the body text switches to RU on `/ru/...` in the browser. It has its own provider tree: a provider added to `[locale]/layout.tsx` goes there too (check with `pnpm --filter web build`, typecheck does not catch it).
 - Images from `icons-inbox/` (git-ignored) are turned into `public/` files with sharp: flat dark backgrounds are flood-filled to transparent from the corners. The fish pictures (logo, 404, no-V-Bucks, favicon) came from the owner.
 
 ## Rules

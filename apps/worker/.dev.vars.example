@@ -10,3 +10,5 @@ DISCORD_WEBHOOK_URL=
 DISCORD_CLIENT_SECRET=
 # Local dev only: OAuth callback origin (wrangler dev reports the route host otherwise)
 AUTH_ORIGIN=http://localhost:8787
+# Discord bot "Fishstick": Bot → Reset Token
+DISCORD_BOT_TOKEN=

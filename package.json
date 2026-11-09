@@ -18,7 +18,8 @@
     "fetch:world": "tsx --env-file-if-exists=.env scripts/fetch-world-info.ts",
     "test": "pnpm -r --if-present test",
     "seed:local": "tsx scripts/seed-local-kv.ts",
-    "discord:preview": "tsx --env-file-if-exists=.env scripts/discord-preview.ts"
+    "discord:preview": "tsx --env-file-if-exists=.env scripts/discord-preview.ts",
+    "bot:register": "tsx --env-file-if-exists=.env scripts/bot-register.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

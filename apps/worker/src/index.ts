@@ -14,6 +14,8 @@ import {
   logout,
   publicUser,
 } from './auth';
+import { refreshStatus } from './bot/board';
+import { handleInteraction } from './bot/interactions';
 import { Db } from './db';
 import type { Env } from './env';
 import { buildDiscordMessage, postDiscord } from './notify/discord';
@@ -139,6 +141,7 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
   }
 
   if (request.method === 'POST') {
+    if (url.pathname === '/api/discord/interactions') return handleInteraction(request, env);
     if (url.pathname === '/api/auth/logout') {
       // CSRF: only from the site (SameSite=Lax already keeps the cookie off cross-site POSTs).
       if (!origin && request.headers.get('Origin') !== url.origin)
@@ -194,6 +197,15 @@ export default {
   fetch: handleFetch,
 
   async scheduled(_controller, env, ctx) {
+    // Every 5 minutes: the Epic status (boards are edited only on a change)...
+    if (env.DB) {
+      ctx.waitUntil(
+        refreshStatus(env, new Db(env.DB), Date.now()).catch((err: unknown) =>
+          console.error('status failed', err),
+        ),
+      );
+    }
+    // ...and the day's snapshot, which exits after one KV read once it is saved.
     ctx.waitUntil(
       runDaily(env).then(
         (result) => console.log('daily', result),

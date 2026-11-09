@@ -18,6 +18,23 @@ export interface UserRow {
   locale: string | null;
 }
 
+export interface GuildRow {
+  id: string;
+  locale: string;
+  status_channel_id: string | null;
+  status_message_id: string | null;
+  updated_at: number;
+}
+
+export interface ServiceStatusRow {
+  id: string;
+  fingerprint: string;
+  /** EpicStatus as JSON. */
+  json: string;
+  checked_at: number;
+  changed_at: number;
+}
+
 export class Db {
   constructor(private readonly d1: D1Database) {}
 
@@ -66,6 +83,55 @@ export class Db {
 
   async deleteSession(tokenHash: string): Promise<void> {
     await this.d1.prepare('DELETE FROM sessions WHERE token_hash = ?1').bind(tokenHash).run();
+  }
+
+  // ---------- bot: guilds and the status board ----------
+
+  getGuild(id: string): Promise<GuildRow | null> {
+    return this.d1.prepare('SELECT * FROM guilds WHERE id = ?1').bind(id).first<GuildRow>();
+  }
+
+  async setStatusBoard(
+    guildId: string,
+    locale: string,
+    channelId: string | null,
+    messageId: string | null,
+    now: number,
+  ): Promise<void> {
+    await this.d1
+      .prepare(
+        `INSERT INTO guilds (id, locale, status_channel_id, status_message_id, updated_at)
+         VALUES (?1, ?2, ?3, ?4, ?5)
+         ON CONFLICT(id) DO UPDATE SET
+           locale = ?2, status_channel_id = ?3, status_message_id = ?4, updated_at = ?5`,
+      )
+      .bind(guildId, locale, channelId, messageId, now)
+      .run();
+  }
+
+  async statusBoards(): Promise<GuildRow[]> {
+    const { results } = await this.d1
+      .prepare('SELECT * FROM guilds WHERE status_message_id IS NOT NULL')
+      .all<GuildRow>();
+    return results;
+  }
+
+  getServiceStatus(id: string): Promise<ServiceStatusRow | null> {
+    return this.d1
+      .prepare('SELECT * FROM service_status WHERE id = ?1')
+      .bind(id)
+      .first<ServiceStatusRow>();
+  }
+
+  async saveServiceStatus(row: ServiceStatusRow): Promise<void> {
+    await this.d1
+      .prepare(
+        `INSERT INTO service_status (id, fingerprint, json, checked_at, changed_at)
+         VALUES (?1, ?2, ?3, ?4, ?5)
+         ON CONFLICT(id) DO UPDATE SET fingerprint = ?2, json = ?3, checked_at = ?4, changed_at = ?5`,
+      )
+      .bind(row.id, row.fingerprint, row.json, row.checked_at, row.changed_at)
+      .run();
   }
 
   async deleteExpiredSessions(now: number): Promise<void> {

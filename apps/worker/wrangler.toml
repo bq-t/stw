@@ -8,10 +8,10 @@ compatibility_flags = ["nodejs_compat"]
 routes = [{ pattern = "stw.bq-t.pro/api/*", zone_name = "bq-t.pro" }]
 workers_dev = true
 
-# Every 15 minutes. A run exits right away once today's snapshot is saved,
-# so this costs one KV read per run and survives late rotations on Epic's side.
+# Every 5 minutes: the Epic status for the bot's boards (one D1 write per run), and the
+# day's snapshot, which exits after one KV read once saved (survives late rotations).
 [triggers]
-crons = ["*/15 * * * *"]
+crons = ["*/5 * * * *"]
 
 # Created with: pnpm wrangler kv namespace create MISSIONS
 [[kv_namespaces]]
@@ -34,9 +34,11 @@ SITE_URL = "https://stw.bq-t.pro"
 DISCORD_VBUCKS_EMOJI = "<:vbucks:1568138713823838388>"
 # Discord application "Fishstick" (login on the site, later the bot). Empty → login is off.
 DISCORD_CLIENT_ID = "1569345926382755981"
+# Bot: checks the signature of /api/discord/interactions. Empty → the bot endpoint is off.
+DISCORD_PUBLIC_KEY = "6b9b9005bb63e547ebf0f9229717881576a83f9e62db928fc5b86def271aaefb"
 
 [observability]
 enabled = true
 
 # Secrets (wrangler secret put <NAME>), see .dev.vars.example:
-# EPIC_CLIENT, EPIC_ACCOUNT_ID, EPIC_DEVICE_ID, EPIC_DEVICE_SECRET, DISCORD_CLIENT_SECRET, DISCORD_WEBHOOK_URL (optional)
+# EPIC_CLIENT, EPIC_ACCOUNT_ID, EPIC_DEVICE_ID, EPIC_DEVICE_SECRET, DISCORD_CLIENT_SECRET, DISCORD_BOT_TOKEN, DISCORD_WEBHOOK_URL (optional)

@@ -15,6 +15,9 @@ export interface Env {
   /** Discord application "Fishstick": Application ID (var) and Client Secret (secret). */
   DISCORD_CLIENT_ID?: string;
   DISCORD_CLIENT_SECRET?: string;
+  /** Bot: Public Key (var, checks interaction signatures) and Bot Token (secret, REST calls). */
+  DISCORD_PUBLIC_KEY?: string;
+  DISCORD_BOT_TOKEN?: string;
   /** Origin of the OAuth callback; only for local dev (wrangler dev rewrites the host). */
   AUTH_ORIGIN?: string;
 }
