@@ -90,7 +90,25 @@ describe('buildDiscordMessage', () => {
     expect(card.accent_color).toBe(0x3fa9ff);
     const t = texts(msg.components);
     expect(t).toContain('No V-Bucks today');
-    expect(t).toContain('**80** yesterday');
+    // Last V-Bucks day as a Discord timestamp: 2026-11-05 00:00 UTC.
+    expect(t).toContain(`**80** <t:${Date.UTC(2026, 10, 5) / 1000}:R>`);
+  });
+
+  it('groups missions by zone in unlock order and takes the banner from the lowest power', () => {
+    const snapshot = day(0);
+    const m = (id: number, zone: Mission['zone'], pl: number) => ({
+      ...mission(id, 50),
+      zone,
+      powerLevel: pl,
+    });
+    snapshot.missions = [m(1, 'twine-peaks', 100), m(2, 'plankerton', 30), m(3, 'plankerton', 20)];
+    snapshot.vbucksTotal = 150;
+    const msg = buildDiscordMessage(snapshot, history, opts);
+    const t = texts(msg.components);
+    expect(t).toContain('3 missions  ·  Plankerton  ·  Twine Peaks');
+    expect(t.indexOf(' 20  ·')).toBeLessThan(t.indexOf(' 30  ·'));
+    expect(t.indexOf(' 30  ·')).toBeLessThan(t.indexOf(' 100  ·'));
+    expect(JSON.stringify(msg)).toContain('/images/discord/zones/plankerton.webp');
   });
 
   it('stays within Discord limits on a day with many V-Bucks missions', () => {

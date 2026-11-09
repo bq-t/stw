@@ -1,8 +1,8 @@
 // Images for the daily Discord message (apps/worker/src/notify/discord.ts), made from the site's own:
 //   public/images/discord/zones/<zone>.webp     zone banners cropped to a low strip (Discord shows
 //                                               a media gallery at the image's own aspect ratio)
-//   public/images/discord/missions/<name>.webp  mission icons on a larger transparent canvas, because
-//                                               Discord draws section thumbnails at a fixed size
+//   public/images/discord/missions/<name>.webp  mission icons at the top of a larger transparent canvas,
+//                                               because Discord draws section thumbnails at a fixed size
 //   public/images/discord/vbucks-emoji.png      V-Bucks icon to upload as a server emoji
 //
 //   node apps/web/scripts/discord-assets.mjs    (re-run after adding zone or mission images)
@@ -39,11 +39,13 @@ for (const file of readdirSync(resolve(PUBLIC, 'icons', 'missions'))) {
   const icon = await sharp(resolve(PUBLIC, 'icons', 'missions', file))
     .resize(ICON, ICON, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .toBuffer();
+  // Icon at the top of the canvas: Discord gives no alignment option for the thumbnail, so the
+  // free space goes below and the icon lines up with the mission name instead of sitting lower.
   const pad = (CANVAS - ICON) / 2;
   await sharp(icon)
     .extend({
-      top: pad,
-      bottom: pad,
+      top: 0,
+      bottom: pad * 2,
       left: pad,
       right: pad,
       background: { r: 0, g: 0, b: 0, alpha: 0 },

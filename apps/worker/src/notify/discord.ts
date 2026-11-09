@@ -6,6 +6,7 @@
 import {
   nextRotation,
   vbucksOf,
+  ZONES,
   type DaySnapshot,
   type Mission,
   type VbucksHistory,
@@ -38,6 +39,18 @@ const HIDDEN_REWARDS = new Set(['AccountResource:campaign_event_currency']);
 
 const ICONS = iconsManifest as Record<string, Record<string, string>>;
 
+/** Server emoji: V-Bucks totals ("650 V-Bucks today", "last V-Bucks alerts"). */
+const EMOJI_VBUCKS_STACK = '<:vbucksstack:1569255073886900224>';
+/** Server emoji in the mission details line. */
+const EMOJI_POWER = '<:powerlevel:1569264880299802724>';
+const EMOJI_ZONE = '<:stormshield:1569271087978512494>';
+const EMOJI_ALERT: Partial<Record<Mission['alertKind'], string>> = {
+  'mini-boss': '<:miniboss:1569265406542348439>',
+  'mega-alert': '<:megaalert:1569266298582597632>',
+};
+/** Server emoji drawn as the thumbnail of the "No V-Bucks today" block (Discord CDN URL). */
+const NO_VBUCKS_IMAGE = 'https://cdn.discordapp.com/emojis/1569256643819077642.webp?size=160';
+
 export interface DiscordOptions {
   /** Site origin for links, e.g. "https://stw.bq-t.pro". */
   siteUrl: string;
@@ -53,7 +66,9 @@ export interface DiscordMessage {
 }
 
 const text = (content: string) => ({ type: TEXT, content });
-const separator = (divider = true) => ({ type: SEPARATOR, divider, spacing: 1 });
+/** Zero-width space: makes an "empty" line, since Discord rejects blank text. */
+const ZWSP = '​';
+const separator = (divider = true, spacing: 1 | 2 = 1) => ({ type: SEPARATOR, divider, spacing });
 
 function missionName(type: string): string {
   const names = en.MissionType as Record<string, string>;
@@ -119,21 +134,26 @@ function dayLabel(date: string): string {
 function missionBlock(m: Mission, opts: DiscordOptions) {
   const vb = vbucksOf(m);
   const emoji = opts.vbucksEmoji ? `${opts.vbucksEmoji} ` : '';
-  const details = [
-    m.powerLevel > 0 ? `PL ${m.powerLevel}` : 'PL ?',
-    zoneName(m.zone),
+  const alertLabel =
     m.alertKind !== 'none' && m.alertKind !== 'other'
       ? (en.AlertKind as Record<string, string>)[m.alertKind]
-      : '',
-    m.isGroup ? 'Group' : '',
+      : '';
+  const alertEmoji = EMOJI_ALERT[m.alertKind];
+  const details = [
+    `${EMOJI_POWER} ${m.powerLevel > 0 ? m.powerLevel : '?'}`,
+    `${EMOJI_ZONE} ${zoneName(m.zone)}`,
+    alertLabel ? (alertEmoji ? `${alertEmoji} ${alertLabel}` : alertLabel) : '',
+    // A mega alert is always a group mission: the icon says enough.
+    m.isGroup && m.alertKind !== 'mega-alert' ? 'Group' : '',
   ].filter(Boolean);
   const extras = m.alertRewards
     .filter((r) => !r.isVbucks && !HIDDEN_REWARDS.has(r.itemId))
     .map((r) => rewardLabel(r.itemId, r.quantity));
 
+  // Title as the smallest heading, details in normal text, rewards in subtext.
   const lines = [
-    `${emoji}**${vb} V-Bucks**  ·  ${missionName(m.missionType)}`,
-    `-# ${details.join('  ·  ')}${extras.length ? `\n-# + ${extras.join(', ')}` : ''}`,
+    `### ${emoji}${vb} V-Bucks  ·  ${missionName(m.missionType)}`,
+    `${details.join('  ·  ')}${extras.length ? `\n-# + ${extras.join(', ')}` : ''}`,
   ];
   const icon = missionIconUrl(m, opts.siteUrl);
   if (!icon) return [text(lines.join('\n'))];
@@ -154,9 +174,15 @@ export function buildDiscordMessage(
 ): DiscordMessage {
   const site = opts.siteUrl.replace(/\/$/, '');
   const o = { ...opts, siteUrl: site };
+  // Grouped by zone in unlock order (Stonewood → Twine Peaks), lowest power first inside a zone.
   const missions = snapshot.missions
     .filter((m) => vbucksOf(m) > 0)
-    .sort((a, b) => vbucksOf(b) - vbucksOf(a) || b.powerLevel - a.powerLevel);
+    .sort(
+      (a, b) =>
+        ZONES.indexOf(a.zone) - ZONES.indexOf(b.zone) ||
+        a.powerLevel - b.powerLevel ||
+        vbucksOf(b) - vbucksOf(a),
+    );
   const total = snapshot.vbucksTotal;
   const has = missions.length > 0;
   const today = snapshot.date;
@@ -165,78 +191,77 @@ export function buildDiscordMessage(
   const yesterday = sumDays(history, today, 1, 1);
   const week = total + sumDays(history, today, 1, 6);
   const month = total + sumDays(history, today, 1, 29);
-  const stats = `-# Yesterday **${yesterday}**  ·  7 days **${week}**  ·  30 days **${month}**`;
+  const stats = `-# Yesterday ${emoji}**${yesterday}**  ·  7 days ${emoji}**${week}**  ·  30 days ${emoji}**${month}**`;
+  const nextRotationTag = `<t:${Math.floor(nextRotation(new Date(snapshot.fetchedAt)).getTime() / 1000)}:R>`;
 
   const body: unknown[] = [];
 
   if (has) {
-    // Banner of the zone with the most V-Bucks today: a low 900×200 strip cut for Discord.
-    const byZone = new Map<string, number>();
-    for (const m of missions) byZone.set(m.zone, (byZone.get(m.zone) ?? 0) + vbucksOf(m));
-    const topZone = [...byZone.entries()].sort((a, b) => b[1] - a[1])[0]![0];
+    // Banner of the zone of the easiest V-Bucks alert (lowest power level): a 900×200 strip.
+    const easiest = missions.reduce((a, b) =>
+      (b.powerLevel || Infinity) < (a.powerLevel || Infinity) ? b : a,
+    );
     body.push({
       type: MEDIA_GALLERY,
       items: [
         {
-          media: { url: `${site}/images/discord/zones/${topZone}.webp` },
-          description: zoneName(topZone as Mission['zone']),
+          media: { url: `${site}/images/discord/zones/${easiest.zone}.webp` },
+          description: zoneName(easiest.zone),
         },
       ],
     });
-    const zones = [...byZone.keys()].map((z) => zoneName(z as Mission['zone']));
+    const zones = ZONES.filter((z) => missions.some((m) => m.zone === z)).map(zoneName);
     body.push(
       text(
         [
-          `-# STW V-BUCKS  ·  ${dayLabel(today).toUpperCase()}`,
-          `## ${emoji}${total} V-Bucks today`,
-          `${missions.length} ${missions.length === 1 ? 'mission' : 'missions'} in ${zones.join(', ')}`,
+          `-# ${dayLabel(today).toUpperCase()}  ·  Next rotation ${nextRotationTag}`,
+          `## ${EMOJI_VBUCKS_STACK} ${total} V-Bucks today`,
+          [`${missions.length} ${missions.length === 1 ? 'mission' : 'missions'}`, ...zones].join(
+            '  ·  ',
+          ),
+          stats,
         ].join('\n'),
       ),
     );
-    body.push(separator());
+    body.push(separator(false, 2));
     for (const m of missions.slice(0, MAX_MISSIONS)) body.push(...missionBlock(m, o));
     if (missions.length > MAX_MISSIONS) {
       body.push(text(`-# + ${missions.length - MAX_MISSIONS} more on the site`));
     }
   } else {
     const lastDay = history?.days.find((d) => d.date !== today && d.total > 0);
-    const daysAgo = lastDay
-      ? Math.round(
-          (Date.parse(`${today}T00:00:00Z`) - Date.parse(`${lastDay.date}T00:00:00Z`)) / 86_400_000,
-        )
-      : 0;
+    // Trailing zero-width space line: a little extra room above the main block.
     body.push(
-      text(
-        [
-          `-# STW V-BUCKS  ·  ${dayLabel(today).toUpperCase()}`,
-          '## No V-Bucks today',
-          lastDay
-            ? `Last V-Bucks alerts: ${emoji}**${lastDay.total}** ${daysAgo === 1 ? 'yesterday' : `${daysAgo} days ago`}.`
-            : '',
-        ]
-          .filter(Boolean)
-          .join('\n'),
-      ),
+      text(`-# ${dayLabel(today).toUpperCase()}  ·  Next rotation ${nextRotationTag}\n${ZWSP}`),
     );
+    // Same shape as a mission block: two lines with the picture on the right.
+    const lastTs = lastDay ? Math.floor(Date.parse(`${lastDay.date}T00:00:00Z`) / 1000) : 0;
+    body.push({
+      type: SECTION,
+      components: [
+        text('## No V-Bucks today'),
+        text(
+          lastDay
+            ? `Last V-Bucks alerts: ${EMOJI_VBUCKS_STACK} **${lastDay.total}** <t:${lastTs}:R>`
+            : 'No V-Bucks alerts in the history yet',
+        ),
+        text(stats),
+      ],
+      accessory: { type: THUMBNAIL, media: { url: NO_VBUCKS_IMAGE }, description: 'No V-Bucks' },
+    });
   }
 
-  const alerts = snapshot.missions.filter((m) => m.alertRewards.length > 0).length;
-  body.push(separator());
-  body.push(
-    text(
-      [
-        stats,
-        `-# ${snapshot.missions.length} missions, ${alerts} alerts  ·  Next rotation <t:${Math.floor(nextRotation(new Date(snapshot.fetchedAt)).getTime() / 1000)}:R>`,
-      ].join('\n'),
-    ),
-  );
+  if (!has) {
+    // Stats sit in the main block above; an empty gap (no line) before the buttons.
+    body.push(separator(false, 2));
+  }
   body.push({
     type: ACTION_ROW,
     components: [
       {
         type: BUTTON,
         style: BUTTON_LINK,
-        label: has ? 'V-Bucks missions' : 'Open tracker',
+        label: 'Open tracker',
         url: has ? `${site}/?alert=vbucks` : `${site}/`,
       },
       { type: BUTTON, style: BUTTON_LINK, label: 'How to farm V-Bucks', url: `${site}/faq` },

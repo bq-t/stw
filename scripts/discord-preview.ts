@@ -3,7 +3,8 @@
 //
 //   pnpm discord:preview              # post today's message to DISCORD_WEBHOOK_URL from .env
 //   pnpm discord:preview --none       # same day with the V-Bucks removed (the "no V-Bucks" variant)
-//   pnpm discord:preview --print      # print the JSON instead of posting
+//   pnpm discord:preview --vbucks     # on a day without V-Bucks: fake a few V-Bucks alerts
+//   pnpm discord:preview --print     # print the JSON instead of posting
 //
 // Env (.env): DISCORD_WEBHOOK_URL; optional API_URL (default: production Worker),
 // SITE_URL and DISCORD_VBUCKS_EMOJI (default: the [vars] in apps/worker/wrangler.toml).
@@ -32,6 +33,53 @@ async function get<T>(path: string): Promise<T> {
 
 let snapshot = await get<DaySnapshot>('/api/missions');
 let history = await get<VbucksHistory>('/api/history');
+
+if (args.has('--vbucks') && snapshot.vbucksTotal === 0) {
+  // A quiet day: put V-Bucks on real alerts in Stonewood, Plankerton and Canny Valley
+  // (1–3 per zone, each on its own power level and with other rewards than the rest),
+  // so the V-Bucks variant can be checked any day.
+  const plan: Record<string, number[]> = {
+    stonewood: [50, 100],
+    plankerton: [150, 50, 100],
+    'canny-valley': [200],
+  };
+  const amountOf = new Map<string, number>();
+  const usedRewards = new Set<string>();
+  for (const [zone, amounts] of Object.entries(plan)) {
+    const usedPl = new Set<number>();
+    const candidates = snapshot.missions
+      .filter((m) => m.zone === zone && m.alertRewards.length > 0)
+      .sort((a, b) => a.powerLevel - b.powerLevel);
+    for (const m of candidates) {
+      const zoneCount = snapshot.missions.filter(
+        (x) => x.zone === zone && amountOf.has(x.id),
+      ).length;
+      if (zoneCount >= amounts.length) break;
+      const rewardKey = m.alertRewards.map((r) => r.itemId).join('|');
+      if (usedPl.has(m.powerLevel) || usedRewards.has(rewardKey)) continue;
+      usedPl.add(m.powerLevel);
+      usedRewards.add(rewardKey);
+      amountOf.set(m.id, amounts[zoneCount]!);
+    }
+  }
+  let total = 0;
+  snapshot = {
+    ...snapshot,
+    missions: snapshot.missions.map((m) => {
+      const quantity = amountOf.get(m.id);
+      if (quantity === undefined) return m;
+      total += quantity;
+      return {
+        ...m,
+        alertRewards: [
+          { itemId: 'AccountResource:currency_mtxswap', quantity, isVbucks: true },
+          ...m.alertRewards,
+        ],
+      };
+    }),
+  };
+  snapshot = { ...snapshot, vbucksTotal: total };
+}
 
 if (args.has('--none')) {
   snapshot = {
