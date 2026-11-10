@@ -80,7 +80,18 @@ Nov 9, 2026 · дополнение к тех.плану
 - Куда доставлять: личка, канал сервера (`/setup alerts channel:#…`, только с правом Manage Server) или вебхук пользователя. URL вебхука хранится зашифрованным, есть кнопка «Тест».
 - После сохранения снимка совпадения уходят в Queue, consumer отправляет пачками. Таблица `deliveries` не даёт отправить одно уведомление дважды.
 
-### 4. Ивенты, турниры и магазин
+### 4. Привязка Epic, магазины, ивенты
+
+Порядок изменён: привязка Epic раньше магазинов, потому что X-ray ламы персональные.
+
+Проверено 2026-11-10 (`pnpm epic:explore`):
+- Device code flow: Switch-клиент (`fortniteNewSwitchGameClient`) → `deviceAuthorization` → ссылка `epicgames.com/activate?userCode=…` → опрос `grant_type=device_code` → `oauth/exchange` → токен Android-клиента → `QueryProfile campaign` работает.
+- Каталог STW (сервисный аккаунт, `storefront/v2/catalog`): `STWRotationalEventStorefront` (недельный за золото), `STWSpecialEventStorefront` (ивентовый), `CardPackStorePreroll` (X-ray ламы, содержимое персональное), `CardPackStoreGameplay` (ваучеры). Сброс в 00:00 UTC.
+- BR: fortnite-api.com `/v2/shop` (без ключа, с картинками); в каталоге Epic `BRWeeklyStorefront` без картинок.
+
+**Табло (общий механизм).** Статус, магазин BR, магазин STW и ивенты — «табло»: команда показывает один раз, `/setup <вид>` ставит в канал, cron правит сообщение(я) только при изменении отпечатка. Табло может состоять из нескольких сообщений (магазин BR не влезает в одно). Таблица `boards` (guild, kind, channel, message_ids, locale, fingerprint) заменит колонки статуса в `guilds`. Личные напоминания об ивентах — подписки.
+
+### 4 (старый текст). Ивенты, турниры и магазин
 
 - `/events`: timeline STW и турниры BR (events service Epic по регионам, под нашим аккаунтом). Подписка «напомнить за час» на базе этапа 3.
 - `/shop stw`: ламы и магазин событий из каталога Epic.

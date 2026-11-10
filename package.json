@@ -20,7 +20,8 @@
     "seed:local": "tsx scripts/seed-local-kv.ts",
     "discord:preview": "tsx --env-file-if-exists=.env scripts/discord-preview.ts",
     "bot:register": "tsx --env-file-if-exists=.env scripts/bot-register.ts",
-    "bot:emojis": "tsx --env-file-if-exists=.env scripts/bot-emojis.ts"
+    "bot:emojis": "tsx --env-file-if-exists=.env scripts/bot-emojis.ts",
+    "epic:explore": "tsx --env-file-if-exists=.env scripts/epic-explore.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
