@@ -10,7 +10,8 @@
     "sideQuests": "Side Quests",
     "faq": "FAQ",
     "language": "Language",
-    "shop": "Shop"
+    "shop": "Shop",
+    "events": "Events"
   },
   "Tracker": {
     "title": "Today's missions",
@@ -349,12 +350,15 @@
       "statusDone": "Status board posted in {channel}. It updates by itself when the status changes.",
       "noAccess": "I cannot post in {channel}. Give Fishstick View Channel, Send Messages and Embed Links there.",
       "notInServer": "Add Fishstick to this server first, then run the command again: {url}",
-      "shopDone": "Shop board posted in {channel}. It updates by itself after each shop reset."
+      "shopDone": "Shop board posted in {channel}. It updates by itself after each shop reset.",
+      "tournamentsDone": "Tournament board posted in {channel}. It updates by itself.",
+      "eventsDone": "Events board posted in {channel}. It updates by itself."
     },
     "error": {
       "noData": "No mission data yet. Try again in a few minutes.",
       "generic": "Something went wrong. Try again later.",
-      "unknown": "Unknown command."
+      "unknown": "Unknown command.",
+      "notLoaded": "Data is not loaded yet. Try again in a few minutes."
     },
     "commands": {
       "vbucks": "Today's V-Bucks missions",
@@ -380,7 +384,13 @@
       "shop": "Today's item shop",
       "shopKind": "Which shop",
       "llamas": "Contents of your X-ray llamas (needs /link)",
-      "setupShop": "Post a shop board that updates every day"
+      "setupShop": "Post a shop board that updates every day",
+      "tournaments": "Upcoming Battle Royale tournaments",
+      "region": "Competitive region",
+      "events": "Events running in Fortnite now",
+      "reminders": "Your tournament reminders",
+      "setupTournaments": "Post a board of upcoming tournaments that updates by itself",
+      "setupEvents": "Post a board of current events that updates by itself"
     },
     "subs": {
       "saved": "Subscription saved: {summary}. After each rotation (00:00 UTC) Fishstick sends matching missions to your DMs.",
@@ -440,6 +450,57 @@
       "choice": "one of:",
       "gone": "Epic no longer accepts the link (password changed or access removed). Link again with /link.",
       "refreshes": "Rolls change after each purchase and at {time}."
+    },
+    "tournaments": {
+      "title": "Tournaments · {region}",
+      "none": "No tournaments announced for the next week.",
+      "mobile": "mobile",
+      "remind": "Remind me",
+      "site": "All tournaments",
+      "pick": "Which tournament should I remind you about?",
+      "pickPlaceholder": "Pick a session",
+      "when": "**{name}** starts <t:{begin}:F>. When should I remind you?",
+      "allOff": "Only this session",
+      "allOn": "All sessions of this cup",
+      "saved": "Done: I will DM you {before} before **{name}** ({count} sessions).",
+      "savedOne": "Done: I will DM you {before} before **{name}**.",
+      "already": "You already have that reminder.",
+      "limit": "You have {max} reminders, the most allowed. Delete some with /reminders.",
+      "gone": "This session is no longer listed.",
+      "dm": "**{name}** ({region}) starts <t:{begin}:R>, at <t:{begin}:t>.",
+      "source": "Times are shown in your time zone."
+    },
+    "before": {
+      "5": "5 minutes",
+      "15": "15 minutes",
+      "30": "30 minutes",
+      "60": "1 hour",
+      "1440": "1 day"
+    },
+    "events": {
+      "title": "Events",
+      "br": "Battle Royale",
+      "stw": "Save the World",
+      "ends": "ends <t:{end}:R>",
+      "season": "season ends <t:{end}:R>",
+      "weekly": "resets <t:{end}:R>",
+      "none": "No events running right now.",
+      "site": "Open on the site"
+    },
+    "reminders": {
+      "title": "Your tournament reminders",
+      "empty": "You have no reminders. Set one from /tournaments.",
+      "line": "**{name}** ({region}) <t:{begin}:f> · {before} before",
+      "delete": "Delete {n}"
+    },
+    "regions": {
+      "EU": "Europe",
+      "NAC": "NA Central",
+      "NAW": "NA West",
+      "BR": "Brazil",
+      "ASIA": "Asia",
+      "ME": "Middle East",
+      "OCE": "Oceania"
     }
   },
   "Notifications": {
@@ -523,5 +584,49 @@
     "gold": "gold",
     "xray": "X-ray tickets",
     "other": "voucher"
+  },
+  "Events": {
+    "title": "Events and tournaments",
+    "metaDescription": "Upcoming Fortnite Battle Royale tournaments by region with reminders in Discord, and the events running in Battle Royale and Save the World.",
+    "intro": "Upcoming Battle Royale tournaments with Discord reminders, and what is running in both modes right now.",
+    "tabTournaments": "Tournaments",
+    "tabEvents": "Events",
+    "demo": "This page needs the live API: it is not shown on demo data.",
+    "error": "Could not load the data. Try again later.",
+    "noData": "Not loaded yet. Try again in a few minutes.",
+    "region": "Region",
+    "none": "No tournaments announced for this region.",
+    "live": "Live now",
+    "mobile": "Mobile",
+    "minLevel": "Account level {level}+",
+    "localTime": "Times are in your time zone.",
+    "remind": "Remind me",
+    "remindBefore": "Remind before",
+    "allSessions": "All sessions of this cup",
+    "reminderSet": "Reminder set",
+    "loginToRemind": "Log in with Discord to get reminders in your DMs.",
+    "loginButton": "Log in with Discord",
+    "myReminders": "Your reminders",
+    "noReminders": "No reminders yet.",
+    "deleteReminder": "Delete",
+    "limit": "You have reached the limit of {max} reminders.",
+    "gone": "This session is no longer listed.",
+    "dmNote": "Fishstick reminds you in Discord DMs. If they do not arrive, add Fishstick to your account:",
+    "addApp": "Add Fishstick",
+    "before": {
+      "5": "5 min",
+      "15": "15 min",
+      "30": "30 min",
+      "60": "1 hour",
+      "1440": "1 day"
+    },
+    "br": "Battle Royale",
+    "stw": "Save the World",
+    "ends": "Ends {time}",
+    "seasonEnds": "Season ends {time}",
+    "resets": "Resets {time}",
+    "started": "Started {date}",
+    "noEvents": "No events running right now.",
+    "eventsNote": "Events and their dates come from the game calendar."
   }
 }

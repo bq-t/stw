@@ -5,6 +5,7 @@
 //   pnpm epic:explore catalog   # STW storefronts with the dedicated account + BR shop source
 //   pnpm epic:explore preroll   # X-ray llama contents of the dedicated account (populates them
 //                               # like opening the store in game does)
+//   pnpm epic:explore events    # tournaments (events service), their names, calendar, news
 //   pnpm epic:explore link      # device code flow: prints a link, waits for "Confirm",
 //                               # then reads the profile summary. Creates nothing permanent.
 //
@@ -188,6 +189,56 @@ async function link() {
   console.log('Sessions closed.');
 }
 
+async function events() {
+  const token = await loginWithDeviceAuth(epicClient(process.env.EPIC_CLIENT), {
+    accountId: process.env.EPIC_ACCOUNT_ID!,
+    deviceId: process.env.EPIC_DEVICE_ID!,
+    secret: process.env.EPIC_DEVICE_SECRET!,
+  });
+  const auth = { Authorization: `bearer ${token.accessToken}` };
+  const get = async (name: string, url: string, headers: Record<string, string> = auth) => {
+    const res = await fetch(url, { headers });
+    console.log(`${name}: HTTP ${res.status}`);
+    if (!res.ok) {
+      console.log('  ', (await res.text()).slice(0, 300));
+      return null;
+    }
+    const data = await res.json();
+    save(`${name}.json`, data);
+    return data;
+  };
+  // Tournaments: events of a region/platform (the same list the game's Compete tab shows).
+  for (const region of ['EU', 'NAC']) {
+    const ev: any = await get(
+      `events-${region}`,
+      `https://events-public-service-live.ol.epicgames.com/api/v1/events/Fortnite/download/${token.accountId}?region=${region}&platform=Windows&teamAccountIds=${token.accountId}`,
+    );
+    if (ev) console.log(`  events: ${ev.events?.length}, templates: ${ev.templates?.length}`);
+  }
+  // Tournament names and posters.
+  await get(
+    'tournamentinformation',
+    'https://fortnitecontent-website-prod07.ol.epicgames.com/content/api/pages/fortnite-game/tournamentinformation',
+    {},
+  );
+  // Calendar: active client events (BR and STW event flags).
+  await get('calendar', `${FN}/calendar/v1/timeline`);
+  // News and the whole content page (STW and BR event texts).
+  await get(
+    'fortnite-game',
+    'https://fortnitecontent-website-prod07.ol.epicgames.com/content/api/pages/fortnite-game',
+    {},
+  );
+  await killSessionToken(token.accessToken);
+}
+
+async function killSessionToken(t: string) {
+  await fetch(`${EPIC_ACCOUNT_HOST}/account/api/oauth/sessions/kill/${t}`, {
+    method: 'DELETE',
+    headers: { Authorization: `bearer ${t}` },
+  });
+}
+
 async function preroll() {
   const token = await loginWithDeviceAuth(epicClient(process.env.EPIC_CLIENT), {
     accountId: process.env.EPIC_ACCOUNT_ID!,
@@ -228,4 +279,5 @@ const mode = process.argv[2];
 if (mode === 'catalog') await catalog();
 else if (mode === 'link') await link();
 else if (mode === 'preroll') await preroll();
-else console.log('Usage: pnpm epic:explore catalog|preroll|link');
+else if (mode === 'events') await events();
+else console.log('Usage: pnpm epic:explore catalog|preroll|events|link');

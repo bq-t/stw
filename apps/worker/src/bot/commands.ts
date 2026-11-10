@@ -5,6 +5,7 @@ import {
   MIN_QTY_MAX,
   REWARD_CATEGORIES,
   SUBSCRIBABLE_ITEMS,
+  TOURNAMENT_REGIONS,
   ZONES,
   type AlertFilter,
 } from '@stw/shared';
@@ -123,6 +124,17 @@ const shopKindOption = {
   ],
 };
 
+const regionOption = {
+  type: STRING,
+  name: 'region',
+  ...desc('region'),
+  choices: TOURNAMENT_REGIONS.map((r) => ({
+    name: en.Bot.regions[r],
+    name_localizations: { ru: ru.Bot.regions[r] },
+    value: r,
+  })),
+};
+
 export const COMMANDS = [
   { name: 'vbucks', ...desc('vbucks'), ...everywhere },
   { name: 'missions', ...desc('missions'), ...everywhere, options: missionOptions },
@@ -134,6 +146,9 @@ export const COMMANDS = [
     options: [{ ...shopKindOption, required: true }],
   },
   { name: 'llamas', ...desc('llamas'), ...everywhere },
+  { name: 'tournaments', ...desc('tournaments'), ...everywhere, options: [regionOption] },
+  { name: 'events', ...desc('events'), ...everywhere },
+  { name: 'reminders', ...desc('reminders'), ...everywhere },
   { name: 'subscribe', ...desc('subscribe'), ...everywhere, options: subscriptionOptions },
   { name: 'subscriptions', ...desc('subscriptions'), ...everywhere },
   { name: 'link', ...desc('link'), ...everywhere },
@@ -156,6 +171,18 @@ export const COMMANDS = [
         name: 'shop',
         ...desc('setupShop'),
         options: [{ ...shopKindOption, required: true }, channelOption, languageOption],
+      },
+      {
+        type: SUB_COMMAND,
+        name: 'tournaments',
+        ...desc('setupTournaments'),
+        options: [channelOption, regionOption, languageOption],
+      },
+      {
+        type: SUB_COMMAND,
+        name: 'events',
+        ...desc('setupEvents'),
+        options: [channelOption, languageOption],
       },
       {
         type: SUB_COMMAND,

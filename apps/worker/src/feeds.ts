@@ -9,6 +9,16 @@ import {
   rotationDay,
   type BrShop,
   type StwShop,
+  currentEvents,
+  extractTournamentNames,
+  parseCalendar,
+  parseTournaments,
+  TOURNAMENT_REGIONS,
+  type Calendar,
+  type GameEvent,
+  type Tournament,
+  type TournamentNames,
+  type TournamentRegion,
 } from '@stw/shared';
 import { epicClient, fetchCatalog, loginWithDeviceAuth } from '@stw/shared/epic';
 import { fetchEpicStatus, statusFingerprint, type EpicStatus } from './bot/status';
@@ -23,7 +33,14 @@ export interface Feed<T> {
   changedAt: number;
 }
 
-export type FeedId = 'epic' | 'shop_br_en' | 'shop_br_ru' | 'shop_stw';
+export type FeedId =
+  | 'epic'
+  | 'shop_br_en'
+  | 'shop_br_ru'
+  | 'shop_stw'
+  | 'calendar'
+  | 'tournament_names'
+  | `tournaments_${TournamentRegion}`;
 
 export async function readFeed<T>(db: Db, id: FeedId): Promise<Feed<T> | null> {
   const row = await db.getServiceStatus(id);
@@ -95,11 +112,7 @@ async function refreshBr(db: Db, locale: Locale, today: string, now: number) {
 }
 
 async function refreshStw(env: Env, db: Db, today: string, now: number) {
-  const token = await loginWithDeviceAuth(epicClient(env.EPIC_CLIENT), {
-    accountId: env.EPIC_ACCOUNT_ID,
-    deviceId: env.EPIC_DEVICE_ID,
-    secret: env.EPIC_DEVICE_SECRET,
-  });
+  const token = await serviceToken(env);
   const shop = parseStwCatalog(await fetchCatalog(token), today);
   const { date: _date, ...offers } = shop;
   await saveFeed(db, 'shop_stw', shop, fingerprintOf(offers), now);
@@ -126,4 +139,107 @@ export async function refreshShops(env: Env, db: Db, now: number): Promise<FeedI
     return (await refreshBr(db, 'ru', today, now)) ? 'shop_br_ru' : null;
   if (await stale('shop_stw')) return (await refreshStw(env, db, today, now)) ? 'shop_stw' : null;
   return null;
+}
+
+// ---------- tournaments, names, calendar ----------
+
+/** The dedicated Epic account (never a player's). */
+function serviceToken(env: Env) {
+  return loginWithDeviceAuth(epicClient(env.EPIC_CLIENT), {
+    accountId: env.EPIC_ACCOUNT_ID,
+    deviceId: env.EPIC_DEVICE_ID,
+    secret: env.EPIC_DEVICE_SECRET,
+  });
+}
+
+const EVENTS_URL =
+  'https://events-public-service-live.ol.epicgames.com/api/v1/events/Fortnite/download';
+const FN_API = 'https://fngw-mcp-gc-livefn.ol.epicgames.com/fortnite/api';
+const NAMES_URL =
+  'https://fortnitecontent-website-prod07.ol.epicgames.com/content/api/pages/fortnite-game/tournamentinformation';
+
+export interface RegionTournaments {
+  region: TournamentRegion;
+  tournaments: Tournament[];
+}
+
+export const tournamentsFeedId = (r: TournamentRegion): FeedId => `tournaments_${r}`;
+
+export const readTournaments = (db: Db, r: TournamentRegion) =>
+  readFeed<RegionTournaments>(db, tournamentsFeedId(r));
+export const readTournamentNames = (db: Db) => readFeed<TournamentNames>(db, 'tournament_names');
+export const readCalendar = (db: Db) => readFeed<Calendar>(db, 'calendar');
+
+async function getJson(url: string, token?: string): Promise<unknown> {
+  const res = await fetch(url, {
+    headers: token ? { Authorization: `bearer ${token}` } : {},
+  });
+  if (!res.ok) throw new Error(`${new URL(url).pathname}: HTTP ${res.status}`);
+  return res.json();
+}
+
+async function refreshRegion(env: Env, db: Db, region: TournamentRegion, now: number) {
+  const token = await serviceToken(env);
+  const raw = await getJson(
+    `${EVENTS_URL}/${token.accountId}?region=${region}&platform=Windows&teamAccountIds=${token.accountId}`,
+    token.accessToken,
+  );
+  const tournaments = parseTournaments(raw, region, now);
+  await saveFeed(
+    db,
+    tournamentsFeedId(region),
+    { region, tournaments },
+    fingerprintOf(tournaments),
+    now,
+  );
+  // Names of tournaments we have not seen yet (EN and RU pages, no login needed).
+  const names = (await readTournamentNames(db))?.data ?? { en: {}, ru: {} };
+  const missing = [...new Set(tournaments.map((t) => t.displayId))].filter((id) => !names.en[id]);
+  if (missing.length) {
+    for (const lang of ['en', 'ru'] as const) {
+      const res = await fetch(`${NAMES_URL}?lang=${lang}`);
+      if (!res.ok) throw new Error(`tournamentinformation: HTTP ${res.status}`);
+      Object.assign(names[lang], extractTournamentNames(await res.text(), missing));
+    }
+    await saveFeed(db, 'tournament_names', names, fingerprintOf(names), now);
+  }
+}
+
+async function refreshCalendar(env: Env, db: Db, now: number) {
+  const token = await serviceToken(env);
+  const cal = parseCalendar(
+    await getJson(`${FN_API}/calendar/v1/timeline`, token.accessToken),
+    now,
+  );
+  await saveFeed(db, 'calendar', cal, fingerprintOf(cal), now);
+}
+
+const STEPS = [...TOURNAMENT_REGIONS, 'calendar'] as const;
+const STEP_MS = 5 * 60 * 1000;
+
+/**
+ * Tournaments and the calendar, one item per cron run in turn (each region and the
+ * calendar every 40 minutes), a missing one first. Returns what was refreshed.
+ */
+export async function refreshSchedule(env: Env, db: Db, now: number): Promise<string> {
+  let step: (typeof STEPS)[number] | undefined;
+  for (const s of STEPS) {
+    const id: FeedId = s === 'calendar' ? 'calendar' : tournamentsFeedId(s);
+    if (!(await db.getServiceStatus(id))) {
+      step = s;
+      break;
+    }
+  }
+  step ??= STEPS[Math.floor(now / STEP_MS) % STEPS.length]!;
+  if (step === 'calendar') await refreshCalendar(env, db, now);
+  else await refreshRegion(env, db, step, now);
+  return step;
+}
+
+/** Events running now (calendar + the STW event named after its llama). */
+export async function readEvents(db: Db, now: number): Promise<GameEvent[] | null> {
+  const [cal, stw] = await Promise.all([readCalendar(db), readStwShop(db)]);
+  if (!cal) return null;
+  const name = stw?.data.eventName;
+  return currentEvents(cal.data, now, name ? { en: name, ru: name } : undefined);
 }

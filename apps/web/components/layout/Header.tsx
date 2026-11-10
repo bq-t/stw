@@ -10,6 +10,7 @@ const NAV = [
   { href: '/questline', key: 'questline' },
   { href: '/side-quests', key: 'sideQuests' },
   { href: '/shop', key: 'shop' },
+  { href: '/events', key: 'events' },
   { href: '/faq', key: 'faq' },
 ] as const;
 

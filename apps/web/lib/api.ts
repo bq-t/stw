@@ -2,6 +2,10 @@ import {
   rotationDay,
   type BrShop,
   type DaySnapshot,
+  type GameEvent,
+  type Tournament,
+  type TournamentName,
+  type TournamentRegion,
   type StwLlama,
   type StwShop,
   type SubscriptionFilter,
@@ -155,6 +159,57 @@ export function fetchStwShop(): Promise<StwShop> {
 /** X-ray llama contents of the logged-in user (Epic link needed: ApiError "not linked"). */
 export function fetchLlamas(): Promise<{ llamas: StwLlama[] }> {
   return send('GET', '/api/shop/llamas');
+}
+
+// ---------- tournaments, events, reminders ----------
+
+export interface TournamentsResponse {
+  region: TournamentRegion;
+  tournaments: Tournament[];
+  names: Record<string, TournamentName>;
+}
+
+export function fetchTournaments(region: TournamentRegion, locale: string) {
+  return get<TournamentsResponse>(
+    `/api/tournaments?region=${region}&lang=${locale === 'ru' ? 'ru' : 'en'}`,
+  );
+}
+
+export function fetchEvents() {
+  return get<{ events: GameEvent[] }>('/api/events');
+}
+
+export interface ReminderItem {
+  id: number;
+  region: TournamentRegion;
+  windowId: string;
+  displayId: string;
+  beginAt: number;
+  offset: number;
+}
+
+export interface RemindersResponse {
+  reminders: ReminderItem[];
+  max: number;
+  installUrl: string;
+}
+
+export function fetchReminders(): Promise<RemindersResponse> {
+  return send('GET', '/api/reminders');
+}
+
+export function addReminder(r: {
+  region: TournamentRegion;
+  windowId: string;
+  offset: number;
+  all: boolean;
+  locale: string;
+}): Promise<RemindersResponse> {
+  return send('POST', '/api/reminders', r);
+}
+
+export function deleteReminder(id: number): Promise<RemindersResponse> {
+  return send('DELETE', `/api/reminders/${id}`);
 }
 
 /** The Worker has not saved today's snapshot yet: the page shows yesterday's with a note. */

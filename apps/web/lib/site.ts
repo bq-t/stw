@@ -12,6 +12,7 @@ export const PAGES = [
   '/questline',
   '/side-quests',
   '/shop',
+  '/events',
   '/faq',
   '/privacy',
 ] as const;

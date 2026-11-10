@@ -16,6 +16,8 @@ import {
   type RewardCategory,
   type SubscriptionFilter,
   type Zone,
+  isTournamentRegion,
+  type TournamentRegion,
 } from '@stw/shared';
 import { ITEMS } from '@stw/shared/items';
 import { Db, type OwnerType, type SubscriptionRow } from '../db';
@@ -32,10 +34,22 @@ import {
 } from './api';
 import APP_EMOJIS from './app-emojis.json';
 import { boardLocale, boardMessageIds, postBoard, type BoardSource } from './boards';
-import { currentStatus } from '../feeds';
+import { currentStatus, readEvents, readTournamentNames, readTournaments } from '../feeds';
 import { fetchLlamas } from '../llamas';
 import { llamasMessage } from './shop';
-import { shopSource, statusSource } from './sources';
+import { eventsSource, shopSource, statusSource, tournamentsSource } from './sources';
+import {
+  eventsPage,
+  findSession,
+  MAX_REMINDERS,
+  offsetsMessage,
+  pickerMessage,
+  REM_DELETE,
+  reminderRows,
+  remindersList,
+  REMIND_OFFSETS,
+  tournamentsPage,
+} from './tournaments';
 import { inviteUrl, userInstallUrl } from './commands';
 import { missionListMessage } from './render';
 import { buildStatusMessage, STATUS_REFRESH_ID } from './status';
@@ -80,7 +94,7 @@ export interface Interaction {
   authorizing_integration_owners?: Record<string, string>;
   member?: { user: { id: string }; permissions?: string };
   user?: { id: string };
-  data?: { name?: string; options?: CommandOption[]; custom_id?: string };
+  data?: { name?: string; options?: CommandOption[]; custom_id?: string; values?: string[] };
   message?: { id: string; channel_id: string };
 }
 
@@ -372,9 +386,40 @@ async function command(i: Interaction, env: Env, now: number, ctx: ExecutionCont
       }));
       return { type: DEFERRED_CHANNEL_MESSAGE, data: { flags: EPHEMERAL } };
     }
+    case 'tournaments': {
+      if (!env.DB) return ephemeral(t.error.generic);
+      const db = new Db(env.DB);
+      const region = regionOption(i.data.options);
+      const [feed, names] = await Promise.all([
+        readTournaments(db, region),
+        readTournamentNames(db),
+      ]);
+      if (!feed) return ephemeral(t.error.notLoaded);
+      return reply(
+        tournamentsPage(region, feed.data.tournaments, names?.data, locale, env.SITE_URL, now),
+      );
+    }
+    case 'events': {
+      if (!env.DB) return ephemeral(t.error.generic);
+      const events = await readEvents(new Db(env.DB), now);
+      if (!events) return ephemeral(t.error.notLoaded);
+      return reply(eventsPage(events, locale, env.SITE_URL));
+    }
+    case 'reminders': {
+      const uid = userId(i);
+      if (!env.DB || !uid) return ephemeral(t.error.generic);
+      const db = new Db(env.DB);
+      const [rows, names] = await Promise.all([db.listReminders(uid), readTournamentNames(db)]);
+      return reply({ ...remindersList(rows, names?.data, locale), flags: EPHEMERAL });
+    }
     case 'setup': {
       const sub = i.data.options?.[0];
-      if (sub?.name === 'status' || sub?.name === 'shop')
+      if (
+        sub?.name === 'status' ||
+        sub?.name === 'shop' ||
+        sub?.name === 'tournaments' ||
+        sub?.name === 'events'
+      )
         return setupBoard(i, sub.name, sub.options, env, now);
       if (sub?.name === 'alerts') return setupAlerts(i, sub.options, env, now);
       if (sub?.name === 'list') {
@@ -387,6 +432,12 @@ async function command(i: Interaction, env: Env, now: number, ctx: ExecutionCont
     default:
       return ephemeral(t.error.unknown);
   }
+}
+
+/** Region option; EU by default (most of our players). */
+function regionOption(opts: CommandOption[] | undefined): TournamentRegion {
+  const r = option(opts, 'region');
+  return isTournamentRegion(r) ? r : 'EU';
 }
 
 /** Common checks of /setup: server install, channel, config. Returns an error reply or null. */
@@ -431,7 +482,7 @@ function noAccessReply(err: unknown, channelId: string, locale: Locale) {
 /** /setup status and /setup shop: posts a board that the cron keeps up to date. */
 async function setupBoard(
   i: Interaction,
-  name: 'status' | 'shop',
+  name: 'status' | 'shop' | 'tournaments' | 'events',
   opts: CommandOption[] | undefined,
   env: Env,
   now: number,
@@ -446,11 +497,13 @@ async function setupBoard(
 
   let source: BoardSource | null;
   if (name === 'status') source = statusSource(await currentStatus(db, now, STATUS_MAX_AGE));
-  else {
+  else if (name === 'shop') {
     const kind = option(opts, 'kind') === 'stw' ? 'shop_stw' : 'shop_br';
     source = await shopSource(db, kind, env.SITE_URL, now);
-    if (!source) return ephemeral(t.shop.noData);
-  }
+  } else if (name === 'tournaments')
+    source = await tournamentsSource(db, regionOption(opts), env.SITE_URL, now);
+  else source = await eventsSource(db, env.SITE_URL, now);
+  if (!source) return ephemeral(t.error.notLoaded);
   try {
     await postBoard(env.DISCORD_BOT_TOKEN!, db, i.guild_id!, channelId, boardLang, source, now);
   } catch (err) {
@@ -458,7 +511,12 @@ async function setupBoard(
     if (denied) return denied;
     throw err;
   }
-  const done = name === 'status' ? t.setup.statusDone : t.setup.shopDone;
+  const done = {
+    status: t.setup.statusDone,
+    shop: t.setup.shopDone,
+    tournaments: t.setup.tournamentsDone,
+    events: t.setup.eventsDone,
+  }[name];
   return ephemeral(fmt(done, { channel: `<#${channelId}>` }));
 }
 
@@ -538,6 +596,9 @@ async function component(i: Interaction, env: Env, now: number, ctx: ExecutionCo
     return { type: DEFERRED_UPDATE_MESSAGE };
   }
 
+  if (id.startsWith('tr:') || id.startsWith(REM_DELETE))
+    return tournamentComponent(i, id, db, locale, now);
+
   if (id.startsWith(DELETE_PREFIX)) {
     const row = await db.getSubscription(Number(id.slice(DELETE_PREFIX.length)));
     const uid = userId(i);
@@ -557,6 +618,78 @@ async function component(i: Interaction, env: Env, now: number, ctx: ExecutionCo
     return { type: UPDATE_MESSAGE, data: subscriptionList(rows, owner, locale) };
   }
 
+  return ephemeral(t.error.unknown);
+}
+
+/** Reminder picker (tr:*) and /reminders delete buttons (rem:del:*). */
+async function tournamentComponent(
+  i: Interaction,
+  id: string,
+  db: Db,
+  locale: Locale,
+  now: number,
+) {
+  const t = messages(locale).Bot;
+  const uid = userId(i);
+  if (!uid) return ephemeral(t.error.generic);
+  const names = (await readTournamentNames(db))?.data;
+
+  if (id.startsWith(REM_DELETE)) {
+    await db.deleteReminder(Number(id.slice(REM_DELETE.length)), uid);
+    return {
+      type: UPDATE_MESSAGE,
+      data: remindersList(await db.listReminders(uid), names, locale),
+    };
+  }
+
+  // tr:<step>:<region>[:…]
+  const [, step, region, ...rest] = id.split(':');
+  if (!isTournamentRegion(region)) return ephemeral(t.error.unknown);
+  const list = (await readTournaments(db, region))?.data.tournaments ?? [];
+
+  // From a board or /tournaments: a new ephemeral picker for this user.
+  if (step === 'pick')
+    return reply({ ...pickerMessage(region, list, names, locale, now), flags: EPHEMERAL });
+
+  // The rest edits the picker itself.
+  const update = (data: Record<string, unknown>) => ({
+    type: UPDATE_MESSAGE,
+    data: { components: [], ...data },
+  });
+  const windowId =
+    step === 'sel'
+      ? String(i.data?.values?.[0] ?? '')
+      : rest.slice(step === 'add' ? 2 : 1).join(':');
+  const session = findSession(list, windowId);
+  if (!session || Date.parse(session.window.begin) <= now)
+    return update({ content: t.tournaments.gone });
+
+  if (step === 'sel') return update(offsetsMessage(region, session, names, locale, false));
+  if (step === 'all')
+    return update(offsetsMessage(region, session, names, locale, rest[0] === '1'));
+  if (step === 'add') {
+    const all = rest[0] === '1';
+    const offset = Number(rest[1]);
+    if (!REMIND_OFFSETS.includes(offset as (typeof REMIND_OFFSETS)[number]))
+      return ephemeral(t.error.unknown);
+    const rows = reminderRows(uid, region, session, offset, all, locale, now);
+    const have = await db.countReminders(uid, now);
+    if (have + rows.length > MAX_REMINDERS)
+      return update({ content: fmt(t.tournaments.limit, { max: MAX_REMINDERS }) });
+    const added = await db.addReminders(rows);
+    if (!added) return update({ content: t.tournaments.already });
+    const name =
+      names?.[locale][session.tournament.displayId]?.title ?? session.tournament.displayId;
+    const before = t.before[String(offset) as keyof typeof t.before];
+    const done =
+      added > 1
+        ? fmt(t.tournaments.saved, { before, name, count: added })
+        : fmt(t.tournaments.savedOne, { before, name });
+    return update({
+      content: `${done}
+-# ${fmt(t.subs.dmNote, { url: `<${userInstallUrl(i.application_id ?? '')}>` })}`,
+    });
+  }
   return ephemeral(t.error.unknown);
 }
 

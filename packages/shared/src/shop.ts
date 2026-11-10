@@ -137,6 +137,11 @@ export interface StwShop {
   event: StwOffer[];
   /** X-ray llamas: contents are personal (StwLlama). */
   llamas: StwOffer[];
+  /**
+   * The running STW event, told by its llama bought with event currency (candy and the
+   * like): "Fortnitemares Llama" → "Fortnitemares". EN only (the catalog has no RU titles).
+   */
+  eventName?: string;
 }
 
 const CURRENCIES: Record<string, StwCurrency> = {
@@ -232,11 +237,26 @@ export function parseStwCatalog(raw: unknown, date: string): StwShop {
     (fronts.find((f: any) => f?.name === name)?.catalogEntries ?? [])
       .map(stwOffer)
       .filter((o: StwOffer | null): o is StwOffer => o !== null);
+  const eventLlama = (
+    fronts.find((f: any) => f?.name === 'CardPackStoreGameplay')?.catalogEntries ?? []
+  )
+    .map((e: any) => ({
+      title: str(e?.title),
+      currency: String(e?.prices?.[0]?.currencySubType ?? ''),
+    }))
+    .find(
+      (x: { title?: string; currency: string }) =>
+        x.title &&
+        x.currency.startsWith('AccountResource:eventcurrency_') &&
+        x.currency !== 'AccountResource:eventcurrency_scaling',
+    );
+  const eventName = eventLlama?.title?.replace(/s*Llama$/i, '').trim();
   return {
     date,
     weekly: offers('STWRotationalEventStorefront'),
     event: offers('STWSpecialEventStorefront'),
     llamas: offers('CardPackStorePreroll'),
+    ...(eventName ? { eventName } : {}),
   };
 }
 

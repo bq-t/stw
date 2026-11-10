@@ -6,3 +6,5 @@ export * from './missions';
 export type { RawWorldInfo } from './schema';
 export * from './subscriptions';
 export * from './shop';
+export * from './tournaments';
+export * from './events';

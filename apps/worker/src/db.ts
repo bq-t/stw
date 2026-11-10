@@ -1,4 +1,4 @@
-import type { DaySnapshot } from '@stw/shared';
+import type { DaySnapshot, TournamentRegion } from '@stw/shared';
 
 // D1 layout: migrations/*.sql. Times are Unix milliseconds.
 
@@ -19,7 +19,8 @@ export interface UserRow {
 }
 
 /** Kinds of boards (see bot/boards.ts). */
-export type BoardKind = 'status' | 'shop_br' | 'shop_stw';
+export type BoardKind =
+  'status' | 'shop_br' | 'shop_stw' | 'events' | `tournaments:${TournamentRegion}`;
 
 export interface BoardRow {
   guild_id: string;
@@ -33,6 +34,20 @@ export interface BoardRow {
 }
 
 export type OwnerType = 'user' | 'guild';
+
+export interface ReminderRow {
+  id: number;
+  user_id: string;
+  region: TournamentRegion;
+  event_id: string;
+  window_id: string;
+  display_id: string;
+  begin_at: number;
+  offset_min: number;
+  remind_at: number;
+  locale: string;
+  created_at: number;
+}
 
 export interface SubscriptionRow {
   id: number;
@@ -271,6 +286,94 @@ export class Db {
       .bind(userId, now, now - intervalMs)
       .run();
     return res.meta.changes > 0;
+  }
+
+  // ---------- tournament reminders ----------
+
+  async countReminders(userId: string, now: number): Promise<number> {
+    const row = await this.d1
+      .prepare('SELECT COUNT(*) AS n FROM reminders WHERE user_id = ?1 AND begin_at > ?2')
+      .bind(userId, now)
+      .first<{ n: number }>();
+    return row?.n ?? 0;
+  }
+
+  async listReminders(userId: string): Promise<ReminderRow[]> {
+    const { results } = await this.d1
+      .prepare('SELECT * FROM reminders WHERE user_id = ?1 ORDER BY remind_at, id')
+      .bind(userId)
+      .all<ReminderRow>();
+    return results;
+  }
+
+  /** Adds reminders; an existing (user, session, offset) is kept. Returns how many are new. */
+  async addReminders(rows: Omit<ReminderRow, 'id'>[]): Promise<number> {
+    if (!rows.length) return 0;
+    const stmt = this.d1.prepare(
+      `INSERT OR IGNORE INTO reminders (user_id, region, event_id, window_id, display_id,
+         begin_at, offset_min, remind_at, locale, created_at)
+       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)`,
+    );
+    const res = await this.d1.batch(
+      rows.map((r) =>
+        stmt.bind(
+          r.user_id,
+          r.region,
+          r.event_id,
+          r.window_id,
+          r.display_id,
+          r.begin_at,
+          r.offset_min,
+          r.remind_at,
+          r.locale,
+          r.created_at,
+        ),
+      ),
+    );
+    return res.reduce((n, r) => n + (r.meta.changes ?? 0), 0);
+  }
+
+  async deleteReminder(id: number, userId: string): Promise<void> {
+    await this.d1
+      .prepare('DELETE FROM reminders WHERE id = ?1 AND user_id = ?2')
+      .bind(id, userId)
+      .run();
+  }
+
+  async dueReminders(now: number, limit: number): Promise<ReminderRow[]> {
+    const { results } = await this.d1
+      .prepare('SELECT * FROM reminders WHERE remind_at <= ?1 ORDER BY remind_at LIMIT ?2')
+      .bind(now, limit)
+      .all<ReminderRow>();
+    return results;
+  }
+
+  async removeReminder(id: number): Promise<void> {
+    await this.d1.prepare('DELETE FROM reminders WHERE id = ?1').bind(id).run();
+  }
+
+  /** The session moved: new start and reminder time. */
+  async rescheduleReminder(id: number, beginAt: number, remindAt: number): Promise<void> {
+    await this.d1
+      .prepare('UPDATE reminders SET begin_at = ?2, remind_at = ?3 WHERE id = ?1')
+      .bind(id, beginAt, remindAt)
+      .run();
+  }
+
+  async getDmChannel(userId: string): Promise<string | null> {
+    const row = await this.d1
+      .prepare('SELECT dm_channel_id FROM users WHERE id = ?1')
+      .bind(userId)
+      .first<{ dm_channel_id: string | null }>();
+    return row?.dm_channel_id ?? null;
+  }
+
+  /** Remembers the DM channel (only for users who logged in on the site: others have no row). */
+  async setDmChannel(userId: string, channelId: string): Promise<void> {
+    await this.d1
+      .prepare('UPDATE users SET dm_channel_id = ?2 WHERE id = ?1')
+      .bind(userId, channelId)
+      .run();
   }
 
   async deleteExpiredSessions(now: number): Promise<void> {

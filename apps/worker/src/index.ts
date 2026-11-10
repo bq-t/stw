@@ -16,10 +16,22 @@ import {
 } from './auth';
 import { handleEpicApi } from './api/epic';
 import { handleLlamasApi } from './api/shop';
+import { handleRemindersApi } from './api/reminders';
 import { handleSubscriptionsApi } from './api/subscriptions';
 import { updateBoards } from './bot/boards';
-import { brShopSource, statusSource, stwShopSource } from './bot/sources';
-import { readBrShop, readStwShop, refreshShops, refreshStatus } from './feeds';
+import { deliverReminders } from './bot/reminders';
+import { scheduledSources, statusSource } from './bot/sources';
+import {
+  readBrShop,
+  readEvents,
+  readStwShop,
+  readTournamentNames,
+  readTournaments,
+  refreshSchedule,
+  refreshShops,
+  refreshStatus,
+} from './feeds';
+import { isTournamentRegion } from '@stw/shared';
 import { deliverSubscriptions } from './bot/subscriptions';
 import { handleInteraction } from './bot/interactions';
 import { Db } from './db';
@@ -151,6 +163,7 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext): P
     ['/api/subscriptions', handleSubscriptionsApi],
     ['/api/epic', handleEpicApi],
     ['/api/shop/llamas', handleLlamasApi],
+    ['/api/reminders', handleRemindersApi],
   ] as const;
   const api = accountApi.find(
     ([base]) => url.pathname === base || url.pathname.startsWith(`${base}/`),
@@ -222,6 +235,34 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext): P
       if (!feed) return json({ error: 'no data yet' }, { status: 503, origin });
       return json(feed.data, { maxAge: 300, origin });
     }
+    case '/api/tournaments': {
+      if (!env.DB) return json({ error: 'no data yet' }, { status: 503, origin });
+      const db = new Db(env.DB);
+      const r = url.searchParams.get('region');
+      const region = isTournamentRegion(r) ? r : 'EU';
+      const [feed, names] = await Promise.all([
+        readTournaments(db, region),
+        readTournamentNames(db),
+      ]);
+      if (!feed) return json({ error: 'no data yet' }, { status: 503, origin });
+      const lang = url.searchParams.get('lang') === 'ru' ? 'ru' : 'en';
+      // Names of this region's tournaments only, in the asked language (EN as a fallback).
+      const ids = new Set(feed.data.tournaments.map((t) => t.displayId));
+      const n = names?.data;
+      const localized = Object.fromEntries(
+        [...ids].map((id) => [id, n?.[lang][id] ?? n?.en[id] ?? { title: id }]),
+      );
+      return json(
+        { region, tournaments: feed.data.tournaments, names: localized },
+        { maxAge: 300, origin },
+      );
+    }
+    case '/api/events': {
+      if (!env.DB) return json({ error: 'no data yet' }, { status: 503, origin });
+      const events = await readEvents(new Db(env.DB), now.getTime());
+      if (!events) return json({ error: 'no data yet' }, { status: 503, origin });
+      return json({ events }, { maxAge: 300, origin });
+    }
     case '/api/health': {
       const health = await store.getHealth();
       const ok = health.lastSnapshotDate === rotationDay(now);
@@ -272,7 +313,18 @@ async function runCron(env: Env): Promise<void> {
     console.error('status failed', err);
   }
 
-  // 3. Subscriptions for today's rotation, in batches.
+  // 3. Tournament reminders: time-critical, before anything else that may wait.
+  try {
+    if (token) {
+      const sent = await deliverReminders(token, db, now, budget);
+      budget -= sent;
+      if (sent) console.log('reminders: requests', sent);
+    }
+  } catch (err) {
+    console.error('reminders failed', err);
+  }
+
+  // 4. Subscriptions for today's rotation, in batches.
   try {
     const snapshot = await new Store(env.MISSIONS).getCurrent();
     if (token && snapshot && snapshot.date === rotationDay(new Date(now))) {
@@ -284,23 +336,32 @@ async function runCron(env: Env): Promise<void> {
     console.error('subscriptions failed', err);
   }
 
-  // 4. Shops after their 00:00 UTC reset: one per run, and not in the run that parsed
-  // world/info (CPU time). Then the shop boards with the requests left.
+  // 5. One big download per run (CPU time: 10 ms on the free plan), never in the run that
+  // parsed world/info: a shop after its 00:00 UTC reset, otherwise the next tournament
+  // region or the calendar in turn.
   try {
     if (daily !== 'saved') {
-      const refreshed = await refreshShops(env, db, now);
-      if (refreshed) console.log('shop refreshed', refreshed);
-    }
-    if (token && budget > 0) {
-      const sources = [
-        await brShopSource(db, env.SITE_URL, now),
-        await stwShopSource(db, env.SITE_URL),
-      ].filter((x) => x !== null);
-      const used = await updateBoards(token, db, sources, now, budget);
-      if (used) console.log('shop boards: requests', used);
+      const refreshed = (await refreshShops(env, db, now)) ?? (await refreshSchedule(env, db, now));
+      console.log('refreshed', refreshed);
     }
   } catch (err) {
-    console.error('shops failed', err);
+    console.error('refresh failed', err);
+  }
+
+  // 6. Shop, events and tournament boards with the requests left.
+  try {
+    if (token && budget > 0) {
+      const used = await updateBoards(
+        token,
+        db,
+        await scheduledSources(db, env.SITE_URL, now),
+        now,
+        budget,
+      );
+      if (used) console.log('boards: requests', used);
+    }
+  } catch (err) {
+    console.error('boards failed', err);
   }
 }
 
