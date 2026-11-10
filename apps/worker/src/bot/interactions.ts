@@ -31,7 +31,11 @@ import {
   discordApi,
 } from './api';
 import APP_EMOJIS from './app-emojis.json';
-import { boardLocale, currentStatus } from './board';
+import { boardLocale, boardMessageIds, postBoard, type BoardSource } from './boards';
+import { currentStatus } from '../feeds';
+import { fetchLlamas } from '../llamas';
+import { llamasMessage } from './shop';
+import { shopSource, statusSource } from './sources';
 import { inviteUrl, userInstallUrl } from './commands';
 import { missionListMessage } from './render';
 import { buildStatusMessage, STATUS_REFRESH_ID } from './status';
@@ -242,6 +246,21 @@ function followUp(
   );
 }
 
+/** Extra messages after a reply (multi-page /shop). */
+async function postFollowUps(i: Interaction, pages: Record<string, unknown>[]) {
+  for (const page of pages) {
+    const res = await fetch(`https://discord.com/api/v10/webhooks/${i.application_id}/${i.token}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(page),
+    });
+    if (!res.ok) {
+      console.error('follow-up page', res.status);
+      return;
+    }
+  }
+}
+
 // ---------- commands ----------
 
 async function command(i: Interaction, env: Env, now: number, ctx: ExecutionContext) {
@@ -271,7 +290,34 @@ async function command(i: Interaction, env: Env, now: number, ctx: ExecutionCont
     case 'status': {
       if (!env.DB) return ephemeral(t.error.generic);
       const known = await currentStatus(new Db(env.DB), now, STATUS_MAX_AGE);
-      return reply(buildStatusMessage(known.status, known.changedAt, locale));
+      return reply(buildStatusMessage(known.data, known.changedAt, locale));
+    }
+    case 'shop': {
+      if (!env.DB) return ephemeral(t.error.generic);
+      const kind = option(i.data.options, 'kind') === 'stw' ? 'shop_stw' : 'shop_br';
+      const source = await shopSource(new Db(env.DB), kind, env.SITE_URL, now);
+      if (!source) return ephemeral(t.shop.noData);
+      const [first, ...rest] = source.pages(locale);
+      // A BR shop takes several messages: the first is the reply, the rest follow-ups.
+      if (rest.length) ctx.waitUntil(postFollowUps(i, rest));
+      return reply(first!);
+    }
+    case 'llamas': {
+      const uid = userId(i);
+      if (!uid) return ephemeral(t.error.generic);
+      followUp(i, ctx, locale, async () => {
+        const r = await fetchLlamas(env, uid, now);
+        if (r.status === 'ok') return llamasMessage(r.llamas, locale, env.SITE_URL, now);
+        return {
+          content:
+            r.status === 'not linked'
+              ? t.shop.notLinked
+              : r.status === 'gone'
+                ? t.shop.gone
+                : t.error.generic,
+        };
+      });
+      return { type: DEFERRED_CHANNEL_MESSAGE, data: { flags: EPHEMERAL } };
     }
     case 'subscribe': {
       const uid = userId(i);
@@ -328,7 +374,8 @@ async function command(i: Interaction, env: Env, now: number, ctx: ExecutionCont
     }
     case 'setup': {
       const sub = i.data.options?.[0];
-      if (sub?.name === 'status') return setupStatus(i, sub.options, env, now);
+      if (sub?.name === 'status' || sub?.name === 'shop')
+        return setupBoard(i, sub.name, sub.options, env, now);
       if (sub?.name === 'alerts') return setupAlerts(i, sub.options, env, now);
       if (sub?.name === 'list') {
         if (!env.DB || !i.guild_id) return ephemeral(t.error.generic);
@@ -363,54 +410,56 @@ async function postToChannel(
   try {
     return await discordApi<{ id: string }>(token, 'POST', `/channels/${channelId}/messages`, body);
   } catch (err) {
-    if (
-      err instanceof DiscordApiError &&
-      [DISCORD_MISSING_ACCESS, DISCORD_MISSING_PERMISSIONS, DISCORD_UNKNOWN_CHANNEL].includes(
-        err.code ?? 0,
-      )
-    )
-      return {
-        error: ephemeral(fmt(messages(locale).Bot.setup.noAccess, { channel: `<#${channelId}>` })),
-      };
+    const denied = noAccessReply(err, channelId, locale);
+    if (denied) return { error: denied };
     throw err;
   }
 }
 
-async function setupStatus(
+/** A missing permission in the channel becomes a friendly reply; null for other errors. */
+function noAccessReply(err: unknown, channelId: string, locale: Locale) {
+  if (
+    err instanceof DiscordApiError &&
+    [DISCORD_MISSING_ACCESS, DISCORD_MISSING_PERMISSIONS, DISCORD_UNKNOWN_CHANNEL].includes(
+      err.code ?? 0,
+    )
+  )
+    return ephemeral(fmt(messages(locale).Bot.setup.noAccess, { channel: `<#${channelId}>` }));
+  return null;
+}
+
+/** /setup status and /setup shop: posts a board that the cron keeps up to date. */
+async function setupBoard(
   i: Interaction,
+  name: 'status' | 'shop',
   opts: CommandOption[] | undefined,
   env: Env,
   now: number,
 ) {
   const locale = localeOf(i.locale);
+  const t = messages(locale).Bot;
   const channelId = String(option(opts, 'channel') ?? '');
   const guard = setupGuard(i, env, channelId);
   if (guard) return guard;
   const db = new Db(env.DB!);
-  const token = env.DISCORD_BOT_TOKEN!;
-  const guildId = i.guild_id!;
-
   const boardLang = (option(opts, 'language') as Locale | undefined) ?? localeOf(i.guild_locale);
-  const known = await currentStatus(db, now, STATUS_MAX_AGE);
-  const posted = await postToChannel(
-    token,
-    channelId,
-    buildStatusMessage(known.status, known.changedAt, boardLang),
-    locale,
-  );
-  if ('error' in posted) return posted.error;
 
-  // One board per server: remove the previous one.
-  const prev = await db.getGuild(guildId);
-  if (prev?.status_message_id && prev.status_channel_id) {
-    await discordApi(
-      token,
-      'DELETE',
-      `/channels/${prev.status_channel_id}/messages/${prev.status_message_id}`,
-    ).catch(() => undefined);
+  let source: BoardSource | null;
+  if (name === 'status') source = statusSource(await currentStatus(db, now, STATUS_MAX_AGE));
+  else {
+    const kind = option(opts, 'kind') === 'stw' ? 'shop_stw' : 'shop_br';
+    source = await shopSource(db, kind, env.SITE_URL, now);
+    if (!source) return ephemeral(t.shop.noData);
   }
-  await db.setStatusBoard(guildId, boardLang, channelId, posted.id, now, known.fingerprint);
-  return ephemeral(fmt(messages(locale).Bot.setup.statusDone, { channel: `<#${channelId}>` }));
+  try {
+    await postBoard(env.DISCORD_BOT_TOKEN!, db, i.guild_id!, channelId, boardLang, source, now);
+  } catch (err) {
+    const denied = noAccessReply(err, channelId, locale);
+    if (denied) return denied;
+    throw err;
+  }
+  const done = name === 'status' ? t.setup.statusDone : t.setup.shopDone;
+  return ephemeral(fmt(done, { channel: `<#${channelId}>` }));
 }
 
 async function setupAlerts(
@@ -475,10 +524,11 @@ async function component(i: Interaction, env: Env, now: number, ctx: ExecutionCo
 
   if (id === STATUS_REFRESH_ID) {
     // A server board keeps its own language; a /status reply follows the user.
-    const guild = i.guild_id ? await db.getGuild(i.guild_id) : null;
-    const lang = guild && guild.status_message_id === i.message?.id ? boardLocale(guild) : locale;
+    const board = i.guild_id ? await db.getBoard(i.guild_id, 'status') : null;
+    const onBoard = board && i.message && boardMessageIds(board).includes(i.message.id);
+    const lang = onBoard ? boardLocale(board) : locale;
     const known = await currentStatus(db, now, 60 * 1000);
-    return { type: UPDATE_MESSAGE, data: buildStatusMessage(known.status, known.changedAt, lang) };
+    return { type: UPDATE_MESSAGE, data: buildStatusMessage(known.data, known.changedAt, lang) };
   }
 
   if (id === EPIC_POLL_ID) {

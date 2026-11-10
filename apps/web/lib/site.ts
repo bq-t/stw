@@ -11,6 +11,7 @@ export const PAGES = [
   '/daily-quests',
   '/questline',
   '/side-quests',
+  '/shop',
   '/faq',
   '/privacy',
 ] as const;

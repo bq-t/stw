@@ -18,13 +18,18 @@ export interface UserRow {
   locale: string | null;
 }
 
-export interface GuildRow {
-  id: string;
+/** Kinds of boards (see bot/boards.ts). */
+export type BoardKind = 'status' | 'shop_br' | 'shop_stw';
+
+export interface BoardRow {
+  guild_id: string;
+  kind: BoardKind;
+  channel_id: string;
+  /** JSON array of message ids, in channel order. */
+  message_ids: string;
   locale: string;
-  status_channel_id: string | null;
-  status_message_id: string | null;
+  fingerprint: string | null;
   updated_at: number;
-  board_fingerprint: string | null;
 }
 
 export type OwnerType = 'user' | 'guild';
@@ -103,51 +108,52 @@ export class Db {
     await this.d1.prepare('DELETE FROM sessions WHERE token_hash = ?1').bind(tokenHash).run();
   }
 
-  // ---------- bot: guilds and the status board ----------
+  // ---------- bot: boards ----------
 
-  getGuild(id: string): Promise<GuildRow | null> {
-    return this.d1.prepare('SELECT * FROM guilds WHERE id = ?1').bind(id).first<GuildRow>();
+  getBoard(guildId: string, kind: BoardKind): Promise<BoardRow | null> {
+    return this.d1
+      .prepare('SELECT * FROM boards WHERE guild_id = ?1 AND kind = ?2')
+      .bind(guildId, kind)
+      .first<BoardRow>();
   }
 
-  async setStatusBoard(
-    guildId: string,
-    locale: string,
-    channelId: string | null,
-    messageId: string | null,
-    now: number,
-    fingerprint: string | null = null,
-  ): Promise<void> {
+  async saveBoard(row: BoardRow): Promise<void> {
     await this.d1
       .prepare(
-        `INSERT INTO guilds (id, locale, status_channel_id, status_message_id, updated_at, board_fingerprint)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6)
-         ON CONFLICT(id) DO UPDATE SET
-           locale = ?2, status_channel_id = ?3, status_message_id = ?4, updated_at = ?5,
-           board_fingerprint = ?6`,
+        `INSERT INTO boards (guild_id, kind, channel_id, message_ids, locale, fingerprint, updated_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+         ON CONFLICT(guild_id, kind) DO UPDATE SET channel_id = ?3, message_ids = ?4,
+           locale = ?5, fingerprint = ?6, updated_at = ?7`,
       )
-      .bind(guildId, locale, channelId, messageId, now, fingerprint)
+      .bind(
+        row.guild_id,
+        row.kind,
+        row.channel_id,
+        row.message_ids,
+        row.locale,
+        row.fingerprint,
+        row.updated_at,
+      )
       .run();
   }
 
-  /** Boards that do not show `fingerprint` yet, oldest first. */
-  async staleBoards(fingerprint: string, limit: number): Promise<GuildRow[]> {
+  async deleteBoard(guildId: string, kind: BoardKind): Promise<void> {
+    await this.d1
+      .prepare('DELETE FROM boards WHERE guild_id = ?1 AND kind = ?2')
+      .bind(guildId, kind)
+      .run();
+  }
+
+  /** Boards of a kind that do not show `fingerprint` yet, oldest first. */
+  async staleBoards(kind: BoardKind, fingerprint: string, limit: number): Promise<BoardRow[]> {
     const { results } = await this.d1
       .prepare(
-        `SELECT * FROM guilds
-         WHERE status_message_id IS NOT NULL
-           AND (board_fingerprint IS NULL OR board_fingerprint != ?1)
-         ORDER BY updated_at LIMIT ?2`,
+        `SELECT * FROM boards WHERE kind = ?1 AND (fingerprint IS NULL OR fingerprint != ?2)
+         ORDER BY updated_at LIMIT ?3`,
       )
-      .bind(fingerprint, limit)
-      .all<GuildRow>();
+      .bind(kind, fingerprint, limit)
+      .all<BoardRow>();
     return results;
-  }
-
-  async setBoardFingerprint(guildId: string, fingerprint: string, now: number): Promise<void> {
-    await this.d1
-      .prepare('UPDATE guilds SET board_fingerprint = ?2, updated_at = ?3 WHERE id = ?1')
-      .bind(guildId, fingerprint, now)
-      .run();
   }
 
   // ---------- subscriptions ----------
@@ -231,6 +237,8 @@ export class Db {
       )
       .run();
   }
+
+  // ---------- data behind the boards: Epic status, shops ----------
 
   getServiceStatus(id: string): Promise<ServiceStatusRow | null> {
     return this.d1

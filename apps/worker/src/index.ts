@@ -15,8 +15,11 @@ import {
   publicUser,
 } from './auth';
 import { handleEpicApi } from './api/epic';
+import { handleLlamasApi } from './api/shop';
 import { handleSubscriptionsApi } from './api/subscriptions';
-import { refreshStatus, updateBoards } from './bot/board';
+import { updateBoards } from './bot/boards';
+import { brShopSource, statusSource, stwShopSource } from './bot/sources';
+import { readBrShop, readStwShop, refreshShops, refreshStatus } from './feeds';
 import { deliverSubscriptions } from './bot/subscriptions';
 import { handleInteraction } from './bot/interactions';
 import { Db } from './db';
@@ -147,6 +150,7 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext): P
   const accountApi = [
     ['/api/subscriptions', handleSubscriptionsApi],
     ['/api/epic', handleEpicApi],
+    ['/api/shop/llamas', handleLlamasApi],
   ] as const;
   const api = accountApi.find(
     ([base]) => url.pathname === base || url.pathname.startsWith(`${base}/`),
@@ -207,6 +211,17 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext): P
       const current = await store.getCurrent();
       return json(history, { maxAge: current ? snapshotMaxAge(current, now) : 300, origin });
     }
+    case '/api/shop/br':
+    case '/api/shop/stw': {
+      if (!env.DB) return json({ error: 'no data yet' }, { status: 503, origin });
+      const db = new Db(env.DB);
+      const feed =
+        url.pathname === '/api/shop/br'
+          ? await readBrShop(db, url.searchParams.get('lang') === 'ru' ? 'ru' : 'en')
+          : await readStwShop(db);
+      if (!feed) return json({ error: 'no data yet' }, { status: 503, origin });
+      return json(feed.data, { maxAge: 300, origin });
+    }
     case '/api/health': {
       const health = await store.getHealth();
       const ok = health.lastSnapshotDate === rotationDay(now);
@@ -221,16 +236,19 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext): P
 
 /**
  * Discord requests one cron run may make. The free plan allows 50 outgoing requests per
- * invocation; Epic login + world/info + the channel webhook + Statuspage take up to 4.
+ * invocation; Epic login + world/info + the channel webhook + Statuspage + one shop
+ * (login + catalog) take up to 6, rate-limit retries a few more.
  */
-const DISCORD_BUDGET = 40;
-/** Board edits per run when the status changed (the rest go out on the next runs). */
-const MAX_BOARD_EDITS = 15;
+const DISCORD_BUDGET = 38;
+/** Status board edits per run when the status changed (the rest go out on the next runs). */
+const MAX_STATUS_EDITS = 15;
 
 async function runCron(env: Env): Promise<void> {
   // 1. The day's snapshot: exits after one KV read once it is saved.
+  let daily: RunResult | 'failed' = 'failed';
   try {
-    console.log('daily', await runDaily(env));
+    daily = await runDaily(env);
+    console.log('daily', daily);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error('daily failed', message);
@@ -248,7 +266,8 @@ async function runCron(env: Env): Promise<void> {
   // 2. Epic status, and the boards that do not show it yet.
   try {
     const known = await refreshStatus(db, now);
-    if (token) budget -= await updateBoards(token, db, known, now, MAX_BOARD_EDITS);
+    if (token)
+      budget -= await updateBoards(token, db, [statusSource(known)], now, MAX_STATUS_EDITS);
   } catch (err) {
     console.error('status failed', err);
   }
@@ -258,10 +277,30 @@ async function runCron(env: Env): Promise<void> {
     const snapshot = await new Store(env.MISSIONS).getCurrent();
     if (token && snapshot && snapshot.date === rotationDay(new Date(now))) {
       const sent = await deliverSubscriptions(token, db, snapshot, env.SITE_URL, now, budget);
+      budget -= sent;
       if (sent) console.log('subscriptions: requests', sent);
     }
   } catch (err) {
     console.error('subscriptions failed', err);
+  }
+
+  // 4. Shops after their 00:00 UTC reset: one per run, and not in the run that parsed
+  // world/info (CPU time). Then the shop boards with the requests left.
+  try {
+    if (daily !== 'saved') {
+      const refreshed = await refreshShops(env, db, now);
+      if (refreshed) console.log('shop refreshed', refreshed);
+    }
+    if (token && budget > 0) {
+      const sources = [
+        await brShopSource(db, env.SITE_URL, now),
+        await stwShopSource(db, env.SITE_URL),
+      ].filter((x) => x !== null);
+      const used = await updateBoards(token, db, sources, now, budget);
+      if (used) console.log('shop boards: requests', used);
+    }
+  } catch (err) {
+    console.error('shops failed', err);
   }
 }
 

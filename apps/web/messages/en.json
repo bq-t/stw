@@ -9,7 +9,8 @@
     "questline": "Questline",
     "sideQuests": "Side Quests",
     "faq": "FAQ",
-    "language": "Language"
+    "language": "Language",
+    "shop": "Shop"
   },
   "Tracker": {
     "title": "Today's missions",
@@ -347,7 +348,8 @@
     "setup": {
       "statusDone": "Status board posted in {channel}. It updates by itself when the status changes.",
       "noAccess": "I cannot post in {channel}. Give Fishstick View Channel, Send Messages and Embed Links there.",
-      "notInServer": "Add Fishstick to this server first, then run the command again: {url}"
+      "notInServer": "Add Fishstick to this server first, then run the command again: {url}",
+      "shopDone": "Shop board posted in {channel}. It updates by itself after each shop reset."
     },
     "error": {
       "noData": "No mission data yet. Try again in a few minutes.",
@@ -374,7 +376,11 @@
       "item": "Exact reward item",
       "min": "Minimum amount of the reward",
       "link": "Link your Epic account to Fishstick",
-      "unlink": "Unlink your Epic account"
+      "unlink": "Unlink your Epic account",
+      "shop": "Today's item shop",
+      "shopKind": "Which shop",
+      "llamas": "Contents of your X-ray llamas (needs /link)",
+      "setupShop": "Post a shop board that updates every day"
     },
     "subs": {
       "saved": "Subscription saved: {summary}. After each rotation (00:00 UTC) Fishstick sends matching missions to your DMs.",
@@ -405,6 +411,35 @@
       "notLinked": "No Epic account is linked.",
       "gone": "Epic no longer accepts the link (password changed or access removed). Run /link again.",
       "warning": "Fishstick gets access to your Epic account to read your Save the World profile (quests, resources, llamas) and to manage daily quests. It never buys, gifts or opens anything. You can unlink at any time."
+    },
+    "shop": {
+      "brTitle": "Item Shop",
+      "stwTitle": "Save the World shop",
+      "kindBr": "Battle Royale",
+      "kindStw": "Save the World",
+      "resets": "Resets {time}",
+      "pricesVbucks": "Prices in V-Bucks",
+      "jamTracks": "Jam Tracks: {count} on sale, see the site",
+      "more": "And {count} more on the site",
+      "open": "Open on the site",
+      "weekly": "Weekly shop",
+      "event": "Event shop",
+      "llamas": "X-ray llamas",
+      "llamasNote": "Llama contents are personal: see yours with /llamas or on the site.",
+      "perWeek": "{n} per week",
+      "perDay": "{n} per day",
+      "perEvent": "{n} per event",
+      "gold": "gold",
+      "xray": "X-ray tickets",
+      "candy": "candy",
+      "voucher": "voucher",
+      "noData": "The shop is not loaded yet. Try again in a few minutes.",
+      "llamasTitle": "Your X-ray llamas",
+      "notLinked": "Link your Epic account first with /link.",
+      "noLlamas": "No llama rolls right now. Open the store in game once, then try again.",
+      "choice": "one of:",
+      "gone": "Epic no longer accepts the link (password changed or access removed). Link again with /link.",
+      "refreshes": "Rolls change after each purchase and at {time}."
     }
   },
   "Notifications": {
@@ -454,5 +489,39 @@
     "error": "Something went wrong. Try again later.",
     "loginFirst": "Log in with Discord first.",
     "warning": "Fishstick gets access to your Epic account to read your Save the World profile (quests, resources, llamas) and to manage daily quests. It never buys, gifts or opens anything. You can unlink at any time."
+  },
+  "Shop": {
+    "title": "Item Shop",
+    "metaDescription": "Today's Fortnite item shop, the Save the World gold shops and your X-ray llama contents. Updated after every reset at 00:00 UTC.",
+    "intro": "Today's Battle Royale item shop and the Save the World shops. Everything resets at 00:00 UTC.",
+    "tabBr": "Battle Royale",
+    "tabStw": "Save the World",
+    "resets": "Resets at 00:00 UTC",
+    "error": "Could not load the shop. Try again later.",
+    "noData": "The shop is not loaded yet. Try again in a few minutes.",
+    "demo": "The shop needs the live API: it is not shown on demo data.",
+    "newItem": "New",
+    "bundleItems": "{count} items",
+    "jamTracks": "Jam Tracks ({count})",
+    "weekly": "Weekly shop",
+    "weeklyNote": "Bought with gold. Purchase limits reset every week.",
+    "event": "Event shop",
+    "eventNote": "Bought with gold while the event lasts.",
+    "llamas": "X-ray llamas",
+    "llamasNote": "What a llama holds is rolled for each player and changes after each purchase.",
+    "llamasLogin": "Log in with Discord and link your Epic account to see what your llamas hold.",
+    "llamasLink": "Link your Epic account to see what your llamas hold.",
+    "loginButton": "Log in with Discord",
+    "llamasEmpty": "No rolls right now. Open the store in game once, then come back.",
+    "llamasGone": "Epic no longer accepts the link. Link your account again.",
+    "llamasError": "Could not read your llamas. Try again later.",
+    "refresh": "Refresh",
+    "choice": "One of:",
+    "perWeek": "{n} per week",
+    "perDay": "{n} per day",
+    "perEvent": "{n} per event",
+    "gold": "gold",
+    "xray": "X-ray tickets",
+    "other": "voucher"
   }
 }

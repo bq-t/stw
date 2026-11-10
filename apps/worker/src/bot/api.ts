@@ -1,6 +1,7 @@
 // Minimal Discord REST client for the bot (bot token auth).
 
 const API = 'https://discord.com/api/v10';
+const MAX_RETRY_WAIT_S = 5;
 
 export class DiscordApiError extends Error {
   constructor(
@@ -18,14 +19,23 @@ export async function discordApi<T = unknown>(
   path: string,
   body?: unknown,
 ): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
-    method,
-    headers: {
-      Authorization: `Bot ${token}`,
-      ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
-    },
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
+  let res: Response;
+  for (let attempt = 0; ; attempt++) {
+    res = await fetch(`${API}${path}`, {
+      method,
+      headers: {
+        Authorization: `Bot ${token}`,
+        ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+      },
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+    // Rate limited (a multi-message board hits the per-channel limit): wait if it is short.
+    // Waiting costs no CPU time; a long wait is left to the next cron run.
+    if (res.status !== 429 || attempt >= 2) break;
+    const after = Number(res.headers.get('Retry-After') ?? '1');
+    if (!(after <= MAX_RETRY_WAIT_S)) break;
+    await new Promise((r) => setTimeout(r, after * 1000 + 100));
+  }
   if (!res.ok) {
     const text = await res.text();
     let code: number | undefined;

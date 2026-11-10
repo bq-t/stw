@@ -160,6 +160,16 @@ export async function mcp<T = unknown>(
   profileId: string,
   body: Record<string, unknown> = {},
 ): Promise<T> {
+  return JSON.parse(await mcpText(token, operation, profileId, body)) as T;
+}
+
+/** The raw response text, for callers that cut out only what they need (big profiles). */
+export async function mcpText(
+  token: EpicToken,
+  operation: McpOperation,
+  profileId: string,
+  body: Record<string, unknown> = {},
+): Promise<string> {
   const allowed = MCP_ALLOWED[operation] as readonly string[] | undefined;
   if (!allowed?.includes(profileId))
     throw new Error(`MCP ${operation} on ${profileId} is not allowed`);
@@ -172,7 +182,7 @@ export async function mcp<T = unknown>(
     },
   );
   if (!res.ok) await throwEpicError(res, `MCP ${operation}`);
-  return (await res.json()) as T;
+  return res.text();
 }
 
 /** Catalog of the dedicated account (BR and STW storefronts). */

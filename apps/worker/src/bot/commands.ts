@@ -113,10 +113,27 @@ const languageOption = {
   ],
 };
 
+const shopKindOption = {
+  type: STRING,
+  name: 'kind',
+  ...desc('shopKind'),
+  choices: [
+    { name: en.Bot.shop.kindBr, name_localizations: { ru: ru.Bot.shop.kindBr }, value: 'br' },
+    { name: en.Bot.shop.kindStw, name_localizations: { ru: ru.Bot.shop.kindStw }, value: 'stw' },
+  ],
+};
+
 export const COMMANDS = [
   { name: 'vbucks', ...desc('vbucks'), ...everywhere },
   { name: 'missions', ...desc('missions'), ...everywhere, options: missionOptions },
   { name: 'status', ...desc('status'), ...everywhere },
+  {
+    name: 'shop',
+    ...desc('shop'),
+    ...everywhere,
+    options: [{ ...shopKindOption, required: true }],
+  },
+  { name: 'llamas', ...desc('llamas'), ...everywhere },
   { name: 'subscribe', ...desc('subscribe'), ...everywhere, options: subscriptionOptions },
   { name: 'subscriptions', ...desc('subscriptions'), ...everywhere },
   { name: 'link', ...desc('link'), ...everywhere },
@@ -133,6 +150,12 @@ export const COMMANDS = [
         name: 'status',
         ...desc('setupStatus'),
         options: [channelOption, languageOption],
+      },
+      {
+        type: SUB_COMMAND,
+        name: 'shop',
+        ...desc('setupShop'),
+        options: [{ ...shopKindOption, required: true }, channelOption, languageOption],
       },
       {
         type: SUB_COMMAND,

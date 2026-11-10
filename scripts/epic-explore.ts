@@ -3,6 +3,8 @@
 // responses to fixtures/ (git-ignored).
 //
 //   pnpm epic:explore catalog   # STW storefronts with the dedicated account + BR shop source
+//   pnpm epic:explore preroll   # X-ray llama contents of the dedicated account (populates them
+//                               # like opening the store in game does)
 //   pnpm epic:explore link      # device code flow: prints a link, waits for "Confirm",
 //                               # then reads the profile summary. Creates nothing permanent.
 //
@@ -186,7 +188,44 @@ async function link() {
   console.log('Sessions closed.');
 }
 
+async function preroll() {
+  const token = await loginWithDeviceAuth(epicClient(process.env.EPIC_CLIENT), {
+    accountId: process.env.EPIC_ACCOUNT_ID!,
+    deviceId: process.env.EPIC_DEVICE_ID!,
+    secret: process.env.EPIC_DEVICE_SECRET!,
+  });
+  const call = async (op: string) =>
+    json(
+      await fetch(
+        `${FN}/game/v2/profile/${token.accountId}/client/${op}?profileId=campaign&rvn=-1`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `bearer ${token.accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: '{}',
+        },
+      ),
+      op,
+    );
+  const prerolls = (r: any) =>
+    Object.entries(r.profileChanges?.[0]?.profile?.items ?? {}).filter(([, v]: any) =>
+      String(v.templateId).startsWith('PrerollData:'),
+    );
+  let r = await call('QueryProfile');
+  console.log('PrerollData before:', prerolls(r).length);
+  if (!prerolls(r).length) {
+    const p = await call('PopulatePrerolledOffers');
+    save('populate-prerolled.json', p);
+    r = await call('QueryProfile');
+  }
+  save('profile-campaign-preroll.json', r);
+  for (const [id, v] of prerolls(r) as any[]) console.log(id, JSON.stringify(v).slice(0, 2000));
+}
+
 const mode = process.argv[2];
 if (mode === 'catalog') await catalog();
 else if (mode === 'link') await link();
-else console.log('Usage: pnpm epic:explore catalog|link');
+else if (mode === 'preroll') await preroll();
+else console.log('Usage: pnpm epic:explore catalog|preroll|link');

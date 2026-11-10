@@ -1,6 +1,6 @@
 'use client';
 
-import { itemInfo, readableItemId } from '@stw/shared/items';
+import { stwItemName } from '@stw/shared';
 import { useLocale, useTranslations } from 'next-intl';
 
 function titleCase(key: string): string {
@@ -22,12 +22,11 @@ export function useBiomeLabel() {
   return (key: string) => (t.has(key) ? t(key) : titleCase(key));
 }
 
-/** Item name from the catalog in the current language, otherwise a readable form of the ID. */
+/**
+ * Item name from the catalog in the current language; survivors, defenders and choice packs
+ * get a generic name, the rest a readable form of the ID.
+ */
 export function useItemName() {
   const locale = useLocale();
-  return (itemId: string) => {
-    const info = itemInfo(itemId);
-    if (!info) return readableItemId(itemId);
-    return locale === 'ru' ? info.name.ru : info.name.en;
-  };
+  return (itemId: string) => stwItemName(itemId)[locale === 'ru' ? 'ru' : 'en'];
 }

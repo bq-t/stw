@@ -1,6 +1,9 @@
 import {
   rotationDay,
+  type BrShop,
   type DaySnapshot,
+  type StwLlama,
+  type StwShop,
   type SubscriptionFilter,
   type VbucksHistory,
 } from '@stw/shared';
@@ -137,6 +140,21 @@ export function pollEpicLink(): Promise<EpicLinkStatus> {
 
 export function unlinkEpic(): Promise<EpicLinkStatus> {
   return send('DELETE', '/api/epic');
+}
+
+// ---------- shops ----------
+
+export function fetchBrShop(locale: string): Promise<BrShop> {
+  return get<BrShop>(`/api/shop/br?lang=${locale === 'ru' ? 'ru' : 'en'}`);
+}
+
+export function fetchStwShop(): Promise<StwShop> {
+  return get<StwShop>('/api/shop/stw');
+}
+
+/** X-ray llama contents of the logged-in user (Epic link needed: ApiError "not linked"). */
+export function fetchLlamas(): Promise<{ llamas: StwLlama[] }> {
+  return send('GET', '/api/shop/llamas');
 }
 
 /** The Worker has not saved today's snapshot yet: the page shows yesterday's with a note. */
