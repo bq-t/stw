@@ -74,6 +74,17 @@ pnpm discord:preview    # post today's Discord message (live Worker data) to DIS
 - Change parse.ts → extend packages/shared/test (synthetic world-info fixture there is committed; real ones in /fixtures are not).
 - Versions: TypeScript stays on 6.0.x (typescript-eslint does not support 7 yet); ESLint 9 (eslint-config-next does not support 10 yet).
 
+## Working agreements
+
+- The owner writes in Russian: reply in Russian.
+- Production steps (remote D1 migrations, push to `main`, `wrangler secret put`, `pnpm bot:register`, Discord app settings) only after the owner says yes for that step. The owner sets Worker secrets: Claude's auto mode blocks secret writes.
+- Order of a deploy: secrets and `db:migrate` (remote) before the push (CI deploys the Worker on push), `bot:register` after it.
+- Run `pnpm --filter web build` before pushing web changes: typecheck misses static export errors.
+- MVP first: cosmetic and style fixes wait until the feature work is done.
+- Locally the bot and DMs go through the production Discord app: `/…` commands can only be tried after a deploy, and a local cron run sends real DMs.
+- Do not stop processes you did not start (the owner may run `wrangler pages dev` on port 8788). `wrangler dev` leaves `workerd` children behind when its task is stopped: find them by port and parent.
+- Moving to another PC: `.env`, `apps/worker/.dev.vars`, `apps/web/.env.local` (secrets), `icons-inbox/` (owner's source images) and `fixtures/` (regenerable with `pnpm epic:explore` / `pnpm fetch:world`) are not in git: copy them by hand. Local D1/KV: `pnpm --filter worker db:migrate:local`, `pnpm seed:local`.
+
 ## Open TODOs
 
 - Side quests: SSD 10 = 150 V-Bucks follows freethevbucks and the wiki side quest list (single SSD 10 wiki pages say 100): check in game. Many Canny Valley side quests on the wiki ask for 22+–30+ zones, which looks like the old power scaling; check that they still exist. FAQ minimums (daily 100+, alerts 50+) come from the v37.50 rounding to 50.
