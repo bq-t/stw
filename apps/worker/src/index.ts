@@ -14,6 +14,7 @@ import {
   logout,
   publicUser,
 } from './auth';
+import { handleEpicApi } from './api/epic';
 import { handleSubscriptionsApi } from './api/subscriptions';
 import { refreshStatus, updateBoards } from './bot/board';
 import { deliverSubscriptions } from './bot/subscriptions';
@@ -119,7 +120,7 @@ function snapshotMaxAge(snapshot: DaySnapshot, now: Date): number {
   return Math.max(60, Math.min(seconds, 24 * 60 * 60));
 }
 
-async function handleFetch(request: Request, env: Env): Promise<Response> {
+async function handleFetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const origin = corsOrigin(request, env);
   const url = new URL(request.url);
   const store = new Store(env.MISSIONS);
@@ -143,21 +144,28 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
     });
   }
 
-  if (url.pathname === '/api/subscriptions' || url.pathname.startsWith('/api/subscriptions/')) {
+  const accountApi = [
+    ['/api/subscriptions', handleSubscriptionsApi],
+    ['/api/epic', handleEpicApi],
+  ] as const;
+  const api = accountApi.find(
+    ([base]) => url.pathname === base || url.pathname.startsWith(`${base}/`),
+  )?.[1];
+  if (api) {
     // CSRF: changes only from the site (the session cookie is SameSite=Lax as well).
     if (request.method !== 'GET' && !origin)
       return json({ error: 'forbidden' }, { status: 403, origin });
     try {
-      const r = await handleSubscriptionsApi(request, env, url, now.getTime());
+      const r = await api(request, env, url, now.getTime());
       return json(r.body, { status: r.status, origin });
     } catch (err) {
-      console.error('subscriptions api', err);
+      console.error('account api', url.pathname, err);
       return json({ error: 'error' }, { status: 500, origin });
     }
   }
 
   if (request.method === 'POST') {
-    if (url.pathname === '/api/discord/interactions') return handleInteraction(request, env);
+    if (url.pathname === '/api/discord/interactions') return handleInteraction(request, env, ctx);
     if (url.pathname === '/api/auth/logout') {
       // CSRF: only from the site (SameSite=Lax already keeps the cookie off cross-site POSTs).
       if (!origin && request.headers.get('Origin') !== url.origin)

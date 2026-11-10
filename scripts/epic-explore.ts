@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- exploring raw, undocumented Epic responses */
 // Read-only checks before the Epic link and the shops (Fishstick stage 4). Saves raw
 // responses to fixtures/ (git-ignored).
 //
@@ -67,7 +68,7 @@ async function catalog() {
   const res = await fetch('https://fortnite-api.com/v2/shop?language=en');
   console.log(`  HTTP ${res.status}`);
   if (res.ok) {
-    const shop = await res.json();
+    const shop: any = await res.json();
     save('br-shop.json', shop);
     const entries = shop.data?.entries ?? [];
     console.log(`  ${entries.length} entries, date ${shop.data?.date}`);
@@ -117,7 +118,7 @@ async function link() {
       console.log(`  poll failed (${(err as Error).message}), retrying`);
       continue;
     }
-    const body = await res.json();
+    const body: any = await res.json();
     if (res.ok) token = body;
     else if (body.errorCode !== 'errors.com.epicgames.account.oauth.authorization_pending')
       throw new Error(`device_code: ${res.status} ${body.errorCode}`);
@@ -166,7 +167,7 @@ async function link() {
   const items = Object.values(qp.profileChanges?.[0]?.profile?.items ?? {}) as any[];
   const byType = new Map<string, number>();
   for (const it of items) {
-    const t = String(it.templateId).split(':')[0];
+    const t = String(it.templateId).split(':')[0] ?? '';
     byType.set(t, (byType.get(t) ?? 0) + 1);
   }
   console.log('Campaign profile items by type:', Object.fromEntries(byType));

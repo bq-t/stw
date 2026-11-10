@@ -290,7 +290,8 @@
     "loginWith": "Log in with Discord",
     "logout": "Log out",
     "menu": "Account",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "account": "Account"
   },
   "Bot": {
     "card": {
@@ -371,7 +372,9 @@
       "setupAlerts": "Post matching missions in a channel after each rotation",
       "setupList": "Subscriptions of this server",
       "item": "Exact reward item",
-      "min": "Minimum amount of the reward"
+      "min": "Minimum amount of the reward",
+      "link": "Link your Epic account to Fishstick",
+      "unlink": "Unlink your Epic account"
     },
     "subs": {
       "saved": "Subscription saved: {summary}. After each rotation (00:00 UTC) Fishstick sends matching missions to your DMs.",
@@ -389,6 +392,19 @@
       "notifTitle": "Missions for your subscription",
       "anyMission": "Any alert",
       "pl": "PL {min}–{max}"
+    },
+    "epic": {
+      "start": "Open the link, sign in to Epic and press **Confirm**. Then press **Done** here.",
+      "open": "Open Epic",
+      "done": "Done",
+      "pending": "Not confirmed yet. Press Confirm on the Epic page, then Done again.",
+      "expired": "The code expired. Run /link again.",
+      "linked": "Linked: **{name}**.",
+      "already": "Already linked: **{name}**. To link another account, run /unlink first.",
+      "unlinked": "Unlinked. Fishstick no longer has access to your Epic account.",
+      "notLinked": "No Epic account is linked.",
+      "gone": "Epic no longer accepts the link (password changed or access removed). Run /link again.",
+      "warning": "Fishstick gets access to your Epic account to read your Save the World profile (quests, resources, llamas) and to manage daily quests. It never buys, gifts or opens anything. You can unlink at any time."
     }
   },
   "Notifications": {
@@ -422,5 +438,21 @@
     "joinServer": "Join our Discord",
     "serverNote": "Alerts in a server channel: run /setup alerts in Discord (needs Manage Server).",
     "addApp": "Add Fishstick to my account"
+  },
+  "Epic": {
+    "title": "Epic account",
+    "metaDescription": "Link your Epic account to see your personal Save the World data.",
+    "intro": "Your account on this site is your Discord account. Link Epic to it to see your X-ray llamas and sync your progress.",
+    "discord": "Discord",
+    "link": "Link Epic account",
+    "waiting": "Confirm on the Epic page that opened. This page updates by itself.",
+    "openAgain": "Open the Epic page again",
+    "linked": "Linked: {name}",
+    "unlink": "Unlink",
+    "expired": "The code expired. Try again.",
+    "notConfigured": "Epic linking is not available yet.",
+    "error": "Something went wrong. Try again later.",
+    "loginFirst": "Log in with Discord first.",
+    "warning": "Fishstick gets access to your Epic account to read your Save the World profile (quests, resources, llamas) and to manage daily quests. It never buys, gifts or opens anything. You can unlink at any time."
   }
 }

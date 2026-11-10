@@ -12,3 +12,5 @@ DISCORD_CLIENT_SECRET=
 AUTH_ORIGIN=http://localhost:8787
 # Discord bot "Fishstick": Bot → Reset Token
 DISCORD_BOT_TOKEN=
+# AES-GCM key for linked Epic accounts: node -e "console.log(require(\"crypto\").randomBytes(32).toString(\"base64\"))"
+EPIC_LINK_KEY=

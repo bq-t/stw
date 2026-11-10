@@ -18,6 +18,8 @@ export interface Env {
   /** Bot: Public Key (var, checks interaction signatures) and Bot Token (secret, REST calls). */
   DISCORD_PUBLIC_KEY?: string;
   DISCORD_BOT_TOKEN?: string;
+  /** AES-GCM key (32 bytes, base64) for linked Epic accounts in D1. Losing it = everyone links again. */
+  EPIC_LINK_KEY?: string;
   /** Origin of the OAuth callback; only for local dev (wrangler dev rewrites the host). */
   AUTH_ORIGIN?: string;
 }

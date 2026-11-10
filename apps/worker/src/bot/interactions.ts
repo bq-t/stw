@@ -37,6 +37,7 @@ import { missionListMessage } from './render';
 import { buildStatusMessage, STATUS_REFRESH_ID } from './status';
 import { describeFilter, MAX_SUBSCRIPTIONS, parseRowFilter } from './subscriptions';
 import { verifyDiscordRequest } from './verify';
+import { EpicLinks, isEpicLinkConfigured } from '../epic-link';
 
 // Interaction and response types
 const PING = 1;
@@ -52,6 +53,10 @@ const STATUS_MAX_AGE = 2 * 60 * 1000;
 const ADMINISTRATOR = 1n << 3n;
 const MANAGE_GUILD = 1n << 5n;
 const DELETE_PREFIX = 'sub:del:';
+const EPIC_POLL_ID = 'epic:poll';
+// Deferred responses: "thinking…" now, the message follows (Epic takes a few seconds).
+const DEFERRED_CHANNEL_MESSAGE = 5;
+const DEFERRED_UPDATE_MESSAGE = 6;
 
 interface CommandOption {
   name: string;
@@ -62,6 +67,9 @@ interface CommandOption {
 
 export interface Interaction {
   type: number;
+  /** For editing the deferred reply (valid 15 minutes). */
+  token?: string;
+  application_id?: string;
   guild_id?: string;
   locale?: string;
   guild_locale?: string;
@@ -166,9 +174,77 @@ export function subscriptionList(rows: SubscriptionRow[], owner: OwnerType, loca
   return { content: `### ${title}\n${lines.join('\n')}`, components };
 }
 
+// ---------- Epic link ----------
+
+function epicPrompt(verificationUrl: string, locale: Locale) {
+  const t = messages(locale).Bot.epic;
+  return {
+    content: `${t.warning}
+
+${t.start}`,
+    components: [
+      {
+        type: 1,
+        components: [
+          { type: 2, style: 5, label: t.open, url: verificationUrl },
+          { type: 2, style: 1, label: t.done, custom_id: EPIC_POLL_ID },
+        ],
+      },
+    ],
+    allowed_mentions: { parse: [] },
+  };
+}
+
+/** Text + buttons after a check of the link in progress. */
+async function epicPoll(env: Env, userId: string, locale: Locale, now: number) {
+  const t = messages(locale).Bot.epic;
+  if (!isEpicLinkConfigured(env))
+    return { content: messages(locale).Bot.error.generic, components: [] };
+  const r = await new EpicLinks(env).poll(userId, now);
+  if (r.status === 'linked')
+    return { content: fmt(t.linked, { name: r.displayName }), components: [] };
+  if (r.status === 'pending')
+    return {
+      ...epicPrompt(r.verificationUrl, locale),
+      content: `${t.pending}
+
+${t.start}`,
+    };
+  return { content: t.expired, components: [] };
+}
+
+/** Edits the deferred reply once the work is done (or shows the generic error). */
+function followUp(
+  i: Interaction,
+  ctx: ExecutionContext,
+  locale: Locale,
+  work: () => Promise<Record<string, unknown>>,
+) {
+  ctx.waitUntil(
+    work()
+      .catch((err: unknown) => {
+        console.error('deferred', i.data?.name ?? i.data?.custom_id, err);
+        return { content: messages(locale).Bot.error.generic, components: [] };
+      })
+      .then((data) =>
+        fetch(
+          `https://discord.com/api/v10/webhooks/${i.application_id}/${i.token}/messages/@original`,
+          {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ allowed_mentions: { parse: [] }, ...data }),
+          },
+        ),
+      )
+      .then((res) => {
+        if (!res.ok) console.error('follow-up', res.status);
+      }),
+  );
+}
+
 // ---------- commands ----------
 
-async function command(i: Interaction, env: Env, now: number) {
+async function command(i: Interaction, env: Env, now: number, ctx: ExecutionContext) {
   const locale = localeOf(i.locale);
   const t = messages(locale).Bot;
   const store = new Store(env.MISSIONS);
@@ -228,6 +304,27 @@ async function command(i: Interaction, env: Env, now: number) {
       if (!env.DB || !uid) return ephemeral(t.error.generic);
       const rows = await new Db(env.DB).listSubscriptions('user', uid);
       return reply({ ...subscriptionList(rows, 'user', locale), flags: EPHEMERAL });
+    }
+    case 'link': {
+      const uid = userId(i);
+      if (!isEpicLinkConfigured(env) || !uid) return ephemeral(t.error.generic);
+      const links = new EpicLinks(env);
+      const current = await links.status(uid, now);
+      if (current.status === 'linked')
+        return ephemeral(fmt(t.epic.already, { name: current.displayName }));
+      followUp(i, ctx, locale, async () => {
+        const { verificationUrl } = await links.start(uid, now);
+        return epicPrompt(verificationUrl, locale);
+      });
+      return { type: DEFERRED_CHANNEL_MESSAGE, data: { flags: EPHEMERAL } };
+    }
+    case 'unlink': {
+      const uid = userId(i);
+      if (!isEpicLinkConfigured(env) || !uid) return ephemeral(t.error.generic);
+      followUp(i, ctx, locale, async () => ({
+        content: (await new EpicLinks(env).unlink(uid)) ? t.epic.unlinked : t.epic.notLinked,
+      }));
+      return { type: DEFERRED_CHANNEL_MESSAGE, data: { flags: EPHEMERAL } };
     }
     case 'setup': {
       const sub = i.data.options?.[0];
@@ -369,7 +466,7 @@ async function setupAlerts(
 
 // ---------- buttons ----------
 
-async function component(i: Interaction, env: Env, now: number) {
+async function component(i: Interaction, env: Env, now: number, ctx: ExecutionContext) {
   const locale = localeOf(i.locale);
   const t = messages(locale).Bot;
   const id = i.data?.custom_id ?? '';
@@ -382,6 +479,13 @@ async function component(i: Interaction, env: Env, now: number) {
     const lang = guild && guild.status_message_id === i.message?.id ? boardLocale(guild) : locale;
     const known = await currentStatus(db, now, 60 * 1000);
     return { type: UPDATE_MESSAGE, data: buildStatusMessage(known.status, known.changedAt, lang) };
+  }
+
+  if (id === EPIC_POLL_ID) {
+    const uid = userId(i);
+    if (!uid) return ephemeral(t.error.generic);
+    followUp(i, ctx, locale, () => epicPoll(env, uid, locale, now));
+    return { type: DEFERRED_UPDATE_MESSAGE };
   }
 
   if (id.startsWith(DELETE_PREFIX)) {
@@ -406,7 +510,11 @@ async function component(i: Interaction, env: Env, now: number) {
   return ephemeral(t.error.unknown);
 }
 
-export async function handleInteraction(request: Request, env: Env): Promise<Response> {
+export async function handleInteraction(
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext,
+): Promise<Response> {
   if (!env.DISCORD_PUBLIC_KEY) return new Response('bot not configured', { status: 503 });
   const body = await request.text();
   const ok = await verifyDiscordRequest(
@@ -422,8 +530,8 @@ export async function handleInteraction(request: Request, env: Env): Promise<Res
   let response: unknown;
   try {
     if (i.type === PING) response = { type: PONG };
-    else if (i.type === APPLICATION_COMMAND) response = await command(i, env, now);
-    else if (i.type === MESSAGE_COMPONENT) response = await component(i, env, now);
+    else if (i.type === APPLICATION_COMMAND) response = await command(i, env, now, ctx);
+    else if (i.type === MESSAGE_COMPONENT) response = await component(i, env, now, ctx);
     else response = ephemeral(messages(localeOf(i.locale)).Bot.error.unknown);
   } catch (err) {
     console.error('interaction', i.data?.name ?? i.data?.custom_id, err);

@@ -119,6 +119,8 @@ export const COMMANDS = [
   { name: 'status', ...desc('status'), ...everywhere },
   { name: 'subscribe', ...desc('subscribe'), ...everywhere, options: subscriptionOptions },
   { name: 'subscriptions', ...desc('subscriptions'), ...everywhere },
+  { name: 'link', ...desc('link'), ...everywhere },
+  { name: 'unlink', ...desc('unlink'), ...everywhere },
   {
     name: 'setup',
     ...desc('setup'),

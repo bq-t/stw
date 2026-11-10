@@ -114,6 +114,31 @@ export function testSubscription(
   return send('POST', '/api/subscriptions/test', { filter, locale });
 }
 
+// ---------- Epic link ----------
+
+export type EpicLinkStatus =
+  | { status: 'none' }
+  | { status: 'pending'; verificationUrl: string; expiresAt: number }
+  | { status: 'expired' }
+  | { status: 'linked'; displayName: string };
+
+export function fetchEpicLink(): Promise<EpicLinkStatus> {
+  return send('GET', '/api/epic');
+}
+
+/** Starts (or resumes) linking: open `verificationUrl`, then poll. */
+export function startEpicLink(): Promise<EpicLinkStatus & { status: 'pending' }> {
+  return send('POST', '/api/epic/link');
+}
+
+export function pollEpicLink(): Promise<EpicLinkStatus> {
+  return send('POST', '/api/epic/link/poll');
+}
+
+export function unlinkEpic(): Promise<EpicLinkStatus> {
+  return send('DELETE', '/api/epic');
+}
+
 /** The Worker has not saved today's snapshot yet: the page shows yesterday's with a note. */
 export function isStale(snapshot: DaySnapshot, now: Date = new Date()): boolean {
   return snapshot.date !== rotationDay(now);

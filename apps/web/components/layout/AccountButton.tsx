@@ -61,6 +61,9 @@ export function AccountButton() {
       </PopoverTrigger>
       <PopoverContent align="end" className="w-56 rounded-none">
         <p className="truncate font-semibold">{user.name}</p>
+        <Link href="/account" className="fn-tab w-full justify-center px-3 py-1">
+          <span>{t('account')}</span>
+        </Link>
         <Link href="/notifications" className="fn-tab w-full justify-center px-3 py-1">
           <span>{t('notifications')}</span>
         </Link>
