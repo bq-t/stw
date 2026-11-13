@@ -106,6 +106,36 @@ describe('parseBrShop', () => {
     ]);
   });
 
+  it('puts bundles first in a section, then the game sort priority; format 2', () => {
+    const tile = (name: string, p: number, bundle = false) => ({
+      offerId: `v2:/${name}`,
+      finalPrice: 500,
+      regularPrice: 500,
+      sortPriority: p,
+      ...(bundle ? { bundle: { name, info: 'Bundle' } } : {}),
+      brItems: [{ name, type: { displayValue: 'Outfit' }, rarity: { value: 'epic' } }],
+      layout: { name: 'Main Stage', rank: 180 },
+    });
+    const s = parseBrShop({
+      data: {
+        date: '2026-11-13T00:00:00Z',
+        entries: [
+          tile('Skin', 0),
+          tile('Small bundle', -1, true),
+          tile('Emote', -2),
+          tile('Big bundle', -3, true),
+        ],
+      },
+    });
+    expect(s.format).toBe(2);
+    expect(s.sections[0]!.items.map((i) => i.name)).toEqual([
+      'Small bundle',
+      'Big bundle',
+      'Skin',
+      'Emote',
+    ]);
+  });
+
   const shop = parseBrShop(brRaw);
 
   it('keeps the shop day and orders sections by layout rank', () => {

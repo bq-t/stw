@@ -4,6 +4,7 @@
 
 import {
   fingerprintOf,
+  BR_SHOP_FORMAT,
   parseBrShop,
   parseStwCatalog,
   rotationDay,
@@ -127,15 +128,17 @@ async function refreshStw(env: Env, db: Db, today: string, now: number) {
  */
 export async function refreshShops(env: Env, db: Db, now: number): Promise<FeedId | null> {
   const today = rotationDay(new Date(now));
-  const stale = async (id: FeedId) => {
+  const stale = async (id: FeedId, after = '') => {
     const row = await db.getServiceStatus(id);
     if (!row) return true;
     // Shops are stored with `date` first: no need to parse 100+ KB to read it.
-    return !row.json.startsWith(`{"date":"${today}"`);
+    return !row.json.startsWith(`{"date":"${today}"${after}`);
   };
-  if (await stale('shop_br_en'))
+  // A BR shop of an older format (BR_SHOP_FORMAT) is fetched again the same day.
+  const br = `,"format":${BR_SHOP_FORMAT}`;
+  if (await stale('shop_br_en', br))
     return (await refreshBr(db, 'en', today, now)) ? 'shop_br_en' : null;
-  if (await stale('shop_br_ru'))
+  if (await stale('shop_br_ru', br))
     return (await refreshBr(db, 'ru', today, now)) ? 'shop_br_ru' : null;
   if (await stale('shop_stw')) return (await refreshStw(env, db, today, now)) ? 'shop_stw' : null;
   return null;

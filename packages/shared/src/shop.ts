@@ -65,9 +65,17 @@ export interface BrShopSection {
   items: BrShopItem[];
 }
 
+/**
+ * Bumped when the stored BR shop changes shape or order: the Worker fetches today's shop again.
+ * 2: bundles first, sections without a layout left out, categories (shops saved before had "Other").
+ */
+export const BR_SHOP_FORMAT = 2;
+
 export interface BrShop {
-  /** Shop day, YYYY-MM-DD (resets at 00:00 UTC). */
+  /** Shop day, YYYY-MM-DD (resets at 00:00 UTC). Stays the first field (see refreshShops). */
   date: string;
+  /** BR_SHOP_FORMAT the shop was parsed with; the second field. */
+  format?: number;
   hash: string;
   sections: BrShopSection[];
 }
@@ -162,7 +170,8 @@ function brItem(e: any, day?: string): BrShopItem | null {
 /**
  * fortnite-api.com /v2/shop → sections in the game's order: by the layout rank, highest first
  * (the layout index does not follow the game), sections of one category kept together where the
- * highest of them stands, offers by their sort priority (the API's order breaks ties). Offers
+ * highest of them stands, bundles first, then offers by their sort priority (the API's order
+ * breaks ties). Offers
  * without a layout are left out: single items of a bundle that the game does not show on their own.
  */
 export function parseBrShop(raw: unknown): BrShop {
@@ -196,13 +205,14 @@ export function parseBrShop(raw: unknown): BrShop {
   const place = (s: Group) => (s.category ? categoryRank.get(s.category)! : s.rank);
   return {
     date: String(data.date ?? '').slice(0, 10),
+    format: BR_SHOP_FORMAT,
     hash: String(data.hash ?? ''),
     sections: [...sections.entries()]
       .sort((a, b) => place(b[1]) - place(a[1]) || b[1].rank - a[1].rank)
       .map(([name, s]) => ({
         name,
         category: s.category,
-        // Bundles first (wide tiles on the site), then the game's sort priority.
+        // Bundles first (two-cell tiles on the site), then the game's sort priority.
         items: s.items
           .sort(
             (a, b) =>
