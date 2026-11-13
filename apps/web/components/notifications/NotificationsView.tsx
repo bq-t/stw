@@ -279,6 +279,7 @@ export function NotificationsView() {
         <p className="text-muted-foreground">{t('loginText')}</p>
         <div>
           <button
+            data-fish-smile
             type="button"
             onClick={() => window.location.assign(loginUrl(window.location.href))}
             className="fn-tab px-4 py-1.5"

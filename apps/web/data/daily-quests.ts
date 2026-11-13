@@ -37,6 +37,8 @@ export interface DailyQuest {
   name: L;
   objective: L;
   vbucks: 100 | 150;
+  /** Gold besides the V-Bucks (game files: 250, Mission Veteran 410); DAILY_GOLD when missing. */
+  gold?: number;
   tips?: QuestTip[];
   /** Screenshot captions by file name without extension ("1", "2"...). */
   captions?: Record<string, L>;
@@ -50,15 +52,18 @@ export interface QuestCategory {
   notes: QuestTip[];
 }
 
-export const QUESTS_CHECKED = '2026-11-04';
+export const QUESTS_CHECKED = '2026-11-13';
 
-const VBUCKS_ALERTS = '/?alert=vbucks';
+const VBUCKS_ALERTS = '/pve?alert=vbucks';
+
+/** Gold of a Daily Quest unless it sets its own (game files, 43.10). */
+export const DAILY_GOLD = 250;
 
 export const QUEST_CATEGORIES: QuestCategory[] = [
   {
     id: 'destroy',
     icon: 'destroy',
-    name: { en: 'Daily Destroy', ru: 'Ежедневное уничтожение' },
+    name: { en: 'Destroy', ru: 'Уничтожение' },
     notes: [
       {
         kind: 'tip',
@@ -93,7 +98,7 @@ export const QUEST_CATEGORIES: QuestCategory[] = [
   {
     id: 'discovery',
     icon: 'discovery',
-    name: { en: 'Daily Discovery', ru: 'Ежедневная разведка' },
+    name: { en: 'Discovery', ru: 'Разведка' },
     notes: [
       {
         kind: 'tip',
@@ -107,13 +112,13 @@ export const QUEST_CATEGORIES: QuestCategory[] = [
   {
     id: 'husks',
     icon: 'exterminate',
-    name: { en: 'Husk Extermination', ru: 'Истребление хасков' },
+    name: { en: 'Husk Extermination', ru: 'Истребление мозгляков' },
     notes: [
       {
         kind: 'tip',
         text: {
           en: 'A husk you damaged counts even if a teammate finishes it.',
-          ru: 'Хаск, которого вы ранили, засчитывается, даже если добил напарник.',
+          ru: 'Мозгляк, которого вы ранили, засчитывается, даже если добил напарник.',
         },
       },
       {
@@ -128,7 +133,7 @@ export const QUEST_CATEGORIES: QuestCategory[] = [
         missions: ['fight-the-storm', 'ride-the-lightning', 'launch-the-rocket'],
         text: {
           en: 'Missions with husk waves give the most kills.',
-          ru: 'Больше всего хасков в миссиях с волнами.',
+          ru: 'Больше всего мозгляков в миссиях с волнами.',
         },
       },
     ],
@@ -136,7 +141,7 @@ export const QUEST_CATEGORIES: QuestCategory[] = [
   {
     id: 'missions',
     icon: 'missions',
-    name: { en: 'Mission Specialist', ru: 'Специалист по заданиям' },
+    name: { en: 'Mission Specialist', ru: 'Миссия выполнима' },
     notes: [
       {
         kind: 'tip',
@@ -176,7 +181,7 @@ const commanderTip = (cls: L): QuestTip => ({
 const CLASSES = {
   constructor: { en: 'Constructor', ru: 'Конструктор' },
   ninja: { en: 'Ninja', ru: 'Ниндзя' },
-  outlander: { en: 'Outlander', ru: 'Исследователь' },
+  outlander: { en: 'Outlander', ru: 'Путешественник' },
   soldier: { en: 'Soldier', ru: 'Солдат' },
 } as const satisfies Record<string, L>;
 
@@ -195,7 +200,7 @@ const destroy = (id: string, title: L, objective: L, tips: QuestTip[]): DailyQue
   category: 'destroy',
   name: {
     en: `Daily Destroy (${title.en})`,
-    ru: `Ежедневное уничтожение (${title.ru})`,
+    ru: `Ежедневный погром (${title.ru})`,
   },
   objective,
   vbucks: 100,
@@ -214,12 +219,12 @@ const discovery = (id: string, title: L, objective: L, tips: QuestTip[] = []): D
 const WEAPONS = [
   {
     id: 'assault-rifle',
-    title: { en: 'Assault Rifle', ru: 'штурмовая винтовка' },
+    title: { en: 'Assault Rifle', ru: 'автомат' },
     with: { en: 'assault rifles', ru: 'из штурмовых винтовок' },
   },
   {
     id: 'smg',
-    title: { en: 'SMG', ru: 'ПП' },
+    title: { en: 'SMG', ru: 'пистолет-пулемёт' },
     with: { en: 'SMGs', ru: 'из пистолетов-пулемётов' },
   },
   {
@@ -239,7 +244,7 @@ const WEAPONS = [
   },
   {
     id: 'melee',
-    title: { en: 'Melee', ru: 'ближний бой' },
+    title: { en: 'Melee', ru: 'холодное оружие' },
     with: { en: 'melee weapons', ru: 'оружием ближнего боя' },
     tips: [
       {
@@ -254,7 +259,7 @@ const WEAPONS = [
 ] as const;
 
 export const DAILY_QUESTS: DailyQuest[] = [
-  // Daily Destroy
+  // Destroy
   destroy(
     'transformers',
     { en: 'Transformers', ru: 'трансформаторы' },
@@ -308,7 +313,7 @@ export const DAILY_QUESTS: DailyQuest[] = [
   ),
   destroy(
     'park-seesaws',
-    { en: 'Park Seesaws', ru: 'качели в парке' },
+    { en: 'Park Seesaws', ru: 'парковые качели' },
     {
       en: 'Destroy 6 Park Seesaws in successful missions (often found in Suburban zones)',
       ru: 'Уничтожьте 6 качелей в парке в успешных миссиях (часто встречаются в пригородах)',
@@ -410,7 +415,7 @@ export const DAILY_QUESTS: DailyQuest[] = [
     ],
   ),
 
-  // Daily Discovery
+  // Discovery
   discovery(
     'rural',
     { en: 'Rural', ru: 'сельская местность' },
@@ -467,7 +472,7 @@ export const DAILY_QUESTS: DailyQuest[] = [
   ),
   discovery(
     'industrial-construction',
-    { en: 'Industrial Construction', ru: 'стройплощадки' },
+    { en: 'Industrial Construction', ru: 'промышленные стройки' },
     {
       en: 'Discover 3 Industrial Construction Sites',
       ru: 'Найдите 3 промышленные стройплощадки',
@@ -490,10 +495,10 @@ export const DAILY_QUESTS: DailyQuest[] = [
   {
     id: 'husks-any-hero',
     category: 'husks',
-    name: { en: 'Husk Extermination (Any Hero)', ru: 'Истребление хасков (любой герой)' },
+    name: { en: 'Husk Extermination (Any Hero)', ru: 'Истребление мозгляков (любой герой)' },
     objective: {
       en: 'Eliminate 500 Husks in successful missions',
-      ru: 'Уничтожьте 500 хасков в успешных миссиях',
+      ru: 'Уничтожьте 500 мозгляков в успешных миссиях',
     },
     vbucks: 100,
   },
@@ -503,11 +508,11 @@ export const DAILY_QUESTS: DailyQuest[] = [
     icon: cls,
     name: {
       en: `Husk Extermination (${CLASSES[cls].en})`,
-      ru: `Истребление хасков (${lower(CLASSES[cls]).ru})`,
+      ru: `Истребление мозгляков (${lower(CLASSES[cls]).ru})`,
     },
     objective: {
       en: `Eliminate 300 Husks in successful missions as ${article(cls)} ${CLASSES[cls].en}`,
-      ru: `Уничтожьте 300 хасков в успешных миссиях за героя класса «${CLASSES[cls].ru}»`,
+      ru: `Уничтожьте 300 мозгляков в успешных миссиях за героя класса «${CLASSES[cls].ru}»`,
     },
     vbucks: 100,
     tips: [commanderTip(CLASSES[cls])],
@@ -518,11 +523,11 @@ export const DAILY_QUESTS: DailyQuest[] = [
     icon: w.id,
     name: {
       en: `Husk Extermination (${w.title.en})`,
-      ru: `Истребление хасков (${w.title.ru})`,
+      ru: `Истребление мозгляков (${w.title.ru})`,
     },
     objective: {
       en: `Eliminate 300 Husks with ${w.with.en} in successful missions`,
-      ru: `Уничтожьте 300 хасков ${w.with.ru} в успешных миссиях`,
+      ru: `Уничтожьте 300 мозгляков ${w.with.ru} в успешных миссиях`,
     },
     vbucks: 100,
     tips: 'tips' in w ? [...w.tips] : undefined,
@@ -531,10 +536,10 @@ export const DAILY_QUESTS: DailyQuest[] = [
     id: 'husks-trap',
     category: 'husks',
     icon: 'trap',
-    name: { en: 'Husk Extermination (Trap)', ru: 'Истребление хасков (ловушки)' },
+    name: { en: 'Husk Extermination (Trap)', ru: 'Истребление мозгляков (ловушки)' },
     objective: {
       en: 'Eliminate 150 Husks with traps in successful missions',
-      ru: 'Уничтожьте 150 хасков ловушками в успешных миссиях',
+      ru: 'Уничтожьте 150 мозгляков ловушками в успешных миссиях',
     },
     vbucks: 100,
     tips: [
@@ -543,7 +548,7 @@ export const DAILY_QUESTS: DailyQuest[] = [
         missions: ['fight-the-storm', 'storm-shield-defense'],
         text: {
           en: 'Defence missions where husks walk set paths: build a trap tunnel on their way to the objective.',
-          ru: 'Миссии на оборону, где хаски идут по одним и тем же путям: постройте туннель с ловушками на подходе к цели.',
+          ru: 'Миссии на оборону, где мозгляки идут по одним и тем же путям: постройте туннель с ловушками на подходе к цели.',
         },
       },
     ],
@@ -553,16 +558,17 @@ export const DAILY_QUESTS: DailyQuest[] = [
   {
     id: 'missions-any-hero',
     category: 'missions',
-    name: { en: 'Mission Specialist (Any Hero)', ru: 'Специалист по заданиям (любой герой)' },
+    name: { en: 'Mission Specialist (Any Hero)', ru: 'Миссия выполнима (любой герой)' },
     objective: { en: 'Complete 3 missions', ru: 'Выполните 3 миссии' },
     vbucks: 100,
   },
   {
     id: 'missions-veteran',
     category: 'missions',
-    name: { en: 'Mission Veteran (Any Hero)', ru: 'Ветеран заданий (любой герой)' },
+    name: { en: 'Mission Veteran (Any Hero)', ru: 'Любая миссия выполнима (любой герой)' },
     objective: { en: 'Complete 5 missions', ru: 'Выполните 5 миссий' },
     vbucks: 150,
+    gold: 410,
   },
   ...CLASS_IDS.map((cls): DailyQuest => ({
     id: `missions-${cls}`,
@@ -570,7 +576,7 @@ export const DAILY_QUESTS: DailyQuest[] = [
     icon: cls,
     name: {
       en: `Mission Specialist (${CLASSES[cls].en})`,
-      ru: `Специалист по заданиям (${lower(CLASSES[cls]).ru})`,
+      ru: `Миссия выполнима (${lower(CLASSES[cls]).ru})`,
     },
     objective: {
       en: `Complete 3 missions as ${article(cls)} ${CLASSES[cls].en}`,
@@ -585,7 +591,7 @@ export const DAILY_QUESTS: DailyQuest[] = [
     id: 'party-of-25',
     category: 'other',
     icon: 'survivors',
-    name: { en: 'Party of 25', ru: 'Компания из 25' },
+    name: { en: 'Party of 25', ru: '25 друзей командира' },
     objective: {
       en: 'Save 25 Survivors in successful missions',
       ru: 'Спасите 25 выживших в успешных миссиях',
@@ -606,7 +612,7 @@ export const DAILY_QUESTS: DailyQuest[] = [
     id: 'all-together-now',
     category: 'other',
     icon: 'survivors',
-    name: { en: 'All Together Now', ru: 'Все вместе' },
+    name: { en: 'All Together Now', ru: 'А теперь все вместе!' },
     objective: {
       en: 'Save 50 Survivors in successful missions',
       ru: 'Спасите 50 выживших в успешных миссиях',
@@ -648,7 +654,7 @@ export const DAILY_QUESTS: DailyQuest[] = [
     id: 'playing-it-safe',
     category: 'other',
     icon: 'safe',
-    name: { en: 'Playing It Safe', ru: 'Надёжно и безопасно' },
+    name: { en: 'Playing It Safe', ru: 'Надёжное место' },
     objective: {
       en: 'Loot a Safe in a successful mission',
       ru: 'Вскройте сейф в успешной миссии',

@@ -8,8 +8,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return PAGES.flatMap((path) =>
     routing.locales.map((locale) => ({
       url: pageUrl(path, locale),
-      changeFrequency: path === '/' ? ('daily' as const) : ('weekly' as const),
-      priority: path === '/' ? 1 : 0.7,
+      changeFrequency: path === '/pve' ? ('daily' as const) : ('weekly' as const),
+      priority: path === '/pve' ? 1 : 0.7,
       alternates: {
         languages: Object.fromEntries(routing.locales.map((l) => [l, pageUrl(path, l)])),
       },

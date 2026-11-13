@@ -27,3 +27,9 @@ Thumbs.db
 
 # raw icons dropped by hand, sorted into apps/web/public/icons by Claude
 icons-inbox/
+
+# game files exported from the local Fortnite install (tools/game-export)
+game-export/
+tools/game-export/bin/
+tools/game-export/obj/
+tools/game-export/.cache/

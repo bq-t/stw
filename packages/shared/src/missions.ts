@@ -7,6 +7,7 @@ export type RewardCategory =
   | 'vbucks'
   | 'xray'
   | 'event'
+  | 'gold'
   | 'xp'
   | 'evo'
   | 'perk'
@@ -20,6 +21,7 @@ export const REWARD_CATEGORIES: readonly RewardCategory[] = [
   'vbucks',
   'xray',
   'event',
+  'gold',
   'xp',
   'evo',
   'perk',
@@ -35,6 +37,8 @@ export function rewardCategory(itemId: string): RewardCategory {
   const [type = '', name = ''] = itemId.toLowerCase().split(':');
   if (itemId === 'AccountResource:currency_mtxswap') return 'vbucks';
   if (name.startsWith('currency_xrayllama')) return 'xray';
+  // eventcurrency_scaling is Gold in the game (weekly and event store), not event tickets.
+  if (name === 'eventcurrency_scaling') return 'gold';
   if (name === 'campaign_event_currency' || name.startsWith('eventcurrency')) return 'event';
   if (name === 'personnelxp' || name === 'schematicxp' || name === 'heroxp' || name === 'peoplexp')
     return 'xp';

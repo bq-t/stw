@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { currentEvents, parseCalendar } from '../src/events';
+import { currentEvents, parseCalendar, seasonName } from '../src/events';
 import { parseStwCatalog } from '../src/shop';
 import { extractTournamentNames, parseTournaments, upcomingSessions } from '../src/tournaments';
 
@@ -122,6 +122,7 @@ describe('calendar and events', () => {
             validFrom: '2026-11-10T11:00:00Z',
             state: {
               seasonNumber: 43,
+              seasonBegin: '2026-10-25T14:00:00Z',
               seasonEnd: '2026-12-12T14:00:00Z',
               stwEventStoreEnd: '2026-11-19T00:00:00.000Z',
               stwWeeklyStoreEnd: '2026-11-12T00:00:00.000Z',
@@ -130,6 +131,11 @@ describe('calendar and events', () => {
                   eventType: 'EventFlag.Event_S43_TreasureHuntQuests',
                   eventStart: '2026-11-01T14:00:00Z',
                   eventEnd: '2026-12-05T19:00:00Z',
+                },
+                {
+                  eventType: 'EventFlag.Event_S43_WeeklyQuests',
+                  eventStart: '2026-11-01T14:00:37Z',
+                  eventEnd: '2026-12-05T21:00:00Z',
                 },
                 {
                   eventType: 'EventFlag.Event_Unknown',
@@ -147,7 +153,7 @@ describe('calendar and events', () => {
 
   it('reads the state in force and shows only known flags', () => {
     const cal = parseCalendar(raw, NOW);
-    expect(cal.flags).toHaveLength(2);
+    expect(cal.flags).toHaveLength(3);
     const events = currentEvents(cal, NOW, { en: 'Fortnitemares', ru: 'Fortnitemares' });
     expect(events.map((e) => e.id)).toEqual([
       'stw-weekly',
@@ -156,8 +162,18 @@ describe('calendar and events', () => {
       'season',
     ]);
     expect(events[2]!.name.ru).toBe('Охота за сокровищами');
-    expect(events[3]!.name.en).toBe('Season 43');
+    expect(events[3]!.name.en).toBe('Chapter 7 Season 5');
+    expect(events[3]!.name.ru).toBe('Глава 7, сезон 5');
+    // In-game season dates from the weekly quests flag, not the padded seasonBegin/seasonEnd.
+    expect(events[3]!.start).toBe('2026-11-01T14:00:37Z');
+    expect(events[3]!.end).toBe('2026-12-05T21:00:00Z');
+    expect(currentEvents({ ...cal, flags: [] }, NOW).find((e) => e.id === 'season')).toMatchObject({
+      start: '2026-10-25T14:00:00Z',
+      end: '2026-12-12T14:00:00Z',
+    });
     expect(events[1]!.name.en).toBe('Fortnitemares');
+    expect(events[1]!.image).toBe('/images/events/fortnitemares.webp');
+    expect(events[0]!.image).toBe('/images/events/weekly-store.webp');
   });
 
   it('names the STW event after its llama', () => {
@@ -182,5 +198,15 @@ describe('calendar and events', () => {
       '2026-11-10',
     );
     expect(shop.eventName).toBe('Fortnitemares');
+  });
+});
+
+describe('seasonName', () => {
+  it('turns the running season count into chapter and season', () => {
+    expect(seasonName(39).en).toBe('Chapter 7 Season 1');
+    expect(seasonName(43).ru).toBe('Глава 7, сезон 5');
+    expect(seasonName(44).en).toBe('Chapter 8 Season 1');
+    expect(seasonName(38).en).toBe('Season 38');
+    expect(seasonName(undefined).en).toBe('Season');
   });
 });

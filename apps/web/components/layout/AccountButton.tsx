@@ -30,6 +30,7 @@ export function AccountButton() {
   if (!data.user) {
     return (
       <button
+        data-fish-smile
         type="button"
         onClick={() => {
           // Drop a leftover ?login=… from a failed attempt before coming back.
@@ -38,7 +39,7 @@ export function AccountButton() {
           window.location.assign(loginUrl(back.toString()));
         }}
         title={t('loginWith')}
-        className="fn-tab px-2.5 py-1 text-sm"
+        className="fn-tab px-3.5 py-1 text-base"
       >
         <span>{t('login')}</span>
       </button>
@@ -50,7 +51,7 @@ export function AccountButton() {
     <Popover>
       <PopoverTrigger
         aria-label={t('menu')}
-        className="fn-tab flex items-center gap-2 py-0.5 pr-2.5 pl-0.5 text-sm"
+        className="fn-tab flex items-center gap-2 py-0.5 pr-3.5 pl-0.5 text-base"
       >
         <span className="flex items-center gap-2">
           {/* Discord CDN, static export: plain <img>. */}

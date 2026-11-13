@@ -4,9 +4,10 @@
  * 2026-11-04). Data is in side-quests-data.ts. Names stay in English, like the questline.
  */
 import type { L, Objective, QReward } from './questline';
+import { SIDE_QUESTS_RU } from './quest-names-ru';
 import { CHALLENGES, SIDE_QUESTS } from './side-quests-data';
 
-export const SIDE_CHECKED = '2026-11-04';
+export const SIDE_CHECKED = '2026-11-13';
 
 export type SideGroupId =
   'stonewood' | 'plankerton' | 'canny-valley' | 'twine-peaks' | 'lok' | 'other';
@@ -68,7 +69,7 @@ export const SIDE_GROUPS: { id: SideGroupId; title?: L; note?: L }[] = [
     title: { en: 'Lok’s Book of Monsters', ru: 'Книга монстров Лока' },
     note: {
       en: 'Gather data from a type of husk in successful missions.',
-      ru: 'Собирайте данные о определённом типе хасков в успешных миссиях.',
+      ru: 'Собирайте данные о определённом типе мозгляков в успешных миссиях.',
     },
   },
   {
@@ -97,6 +98,10 @@ const vbucksOf = (rewards: QReward[]) =>
   rewards.reduce((s, r) => s + (r.t === 'vbucks' ? r.n : 0), 0);
 
 export const questVbucks = (q: SideQuest) => vbucksOf(q.rewards);
+
+/** Side quest name in the page language: the game's Russian name when we have it. */
+export const sideQuestName = (q: SideQuest, locale: string): string =>
+  (locale === 'ru' && SIDE_QUESTS_RU[q.id]) || q.name;
 export const stageVbucks = (s: ChallengeStage) => vbucksOf(s.rewards);
 export const seriesVbucks = (c: ChallengeSeries) =>
   c.stages.reduce((s, st) => s + stageVbucks(st), 0);

@@ -31,6 +31,7 @@ export function AccountView() {
         <p className="text-muted-foreground">{t('loginFirst')}</p>
         <div>
           <button
+            data-fish-smile
             type="button"
             onClick={() => window.location.assign(loginUrl(window.location.href))}
             className="fn-tab fn-tab-active px-4 py-1.5"

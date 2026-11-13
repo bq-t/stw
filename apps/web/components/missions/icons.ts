@@ -77,6 +77,7 @@ export const REWARD_ICONS: Record<RewardCategory, LucideIcon> = {
   vbucks: Coins,
   xray: Ticket,
   event: Star,
+  gold: Coins,
   xp: Sparkles,
   evo: FlaskConical,
   perk: CircleArrowUp,
@@ -91,7 +92,8 @@ export const REWARD_ICONS: Record<RewardCategory, LucideIcon> = {
 export const REWARD_CATEGORY_ICON_NAMES: Record<RewardCategory, string[]> = {
   vbucks: ['currency_mtxswap'],
   xray: ['currency_xrayllama'],
-  event: ['eventcurrency_scaling', 'campaign_event_currency'],
+  event: ['campaign_event_currency'],
+  gold: ['eventcurrency_scaling'],
   xp: ['heroxp'],
   evo: ['reagent_c_t04'],
   perk: ['reagent_alteration_upgrade_sr'],

@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import manifest from '@/lib/icons-manifest.json';
 import { cn } from '@/lib/utils';
+import { ItemIcon } from './ItemIcon';
 
 export type IconGroup = 'missions' | 'alerts' | 'rewards' | 'ui' | 'quests';
 
@@ -33,6 +34,10 @@ export function GameIcon({
   className?: string;
   label?: string;
 }) {
+  // Rewards also look among the game's item icons, loaded in the browser (ItemIcon).
+  if (group === 'rewards') {
+    return <ItemIcon names={names} fallback={Fallback} className={className} label={label} />;
+  }
   const src = gameIconSrc(group, ...names);
   if (!src) {
     return label ? (

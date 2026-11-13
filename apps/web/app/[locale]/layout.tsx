@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Fira_Sans_Extra_Condensed, Onest, Unbounded } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
@@ -7,6 +7,8 @@ import { routing } from '@/i18n/routing';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { DiscordButton } from '@/components/layout/DiscordButton';
+import { ScrollTopButton } from '@/components/layout/ScrollTopButton';
+import { INTRO_SCRIPT, IntroGate } from '@/components/layout/IntroGate';
 import { PlexusShine } from '@/components/layout/PlexusShine';
 import { RouteProgress } from '@/components/layout/RouteProgress';
 import { QueryProvider } from '@/components/QueryProvider';
@@ -37,6 +39,16 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+/**
+ * iOS Safari: the page runs under the status bar and the toolbars (viewport-fit=cover; the
+ * header, footer and floating buttons keep clear of them by env(safe-area-inset-*)), and the
+ * browser chrome takes the header's orange.
+ */
+export const viewport: Viewport = {
+  themeColor: '#db5814',
+  viewportFit: 'cover',
+};
+
 export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Meta' });
@@ -54,10 +66,14 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
 
   return (
     <html
+      data-scroll-behavior="smooth"
       lang={locale}
       className={`${unbounded.variable} ${onest.variable} ${fnFont.variable} h-full antialiased`}
+      // INTRO_SCRIPT sets data-intro before hydration.
+      suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
+        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
         <PlexusShine />
         <RouteProgress />
         <NextIntlClientProvider>
@@ -67,6 +83,8 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
               <main className="mx-auto w-full max-w-7xl flex-1 px-4 pt-9 pb-12">{children}</main>
               <Footer />
               <DiscordButton />
+              <ScrollTopButton />
+              <IntroGate />
             </TooltipProvider>
           </QueryProvider>
         </NextIntlClientProvider>

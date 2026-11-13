@@ -1,6 +1,7 @@
-// Generated from the Fortnite wiki ("Side Quests", "Challenge Quests", 2026-11-04), then edited by hand.
-// This file is the source of truth now: fix mistakes here, do not regenerate.
-import { item, missions, res, text, unlock, vb } from './questline';
+// Quest list from the Fortnite wiki ("Side Quests", "Challenge Quests", 2026-11-04); rewards and
+// objectives of the side quests come from the game files (43.10) via tools/game-export/apply.mts.
+// Challenge series were checked against the game (goals and V-Bucks match).
+import { choice, game, item, missions, res, text, unlock, vb } from './questline';
 import type { ChallengeSeries, SideGroupId, SideQuest } from './side-quests';
 
 export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
@@ -10,57 +11,43 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       name: "Ol' Woody",
       objectives: [
         text(
-          'Complete Stonewood Storm Shield Defense 1',
-          'Пройдите защиту штормового щита 1 в Камнелесье',
+          'Complete Homebase Storm Shield Defense 1',
+          'Выполните миссию «Оборона щита главной базы #1»',
         ),
       ],
-      rewards: [item('pickaxe', { name: "Ol' Woody", rarity: 'uncommon' })],
+      rewards: [game('AthenaPickaxe:pickaxe_id_stw001_tier_1')],
     },
     {
       id: 'basic-basher',
       name: 'Basic Basher',
       objectives: [
-        text(
-          'Complete the Before and After Science quest',
-          'Выполните квест Before and After Science',
-        ),
+        text('Complete Before and After Science', 'Выполните задание «До и после науки».'),
       ],
-      rewards: [item('pickaxe', { name: 'Basic Basher', rarity: 'uncommon' })],
+      rewards: [game('AthenaPickaxe:pickaxe_id_stw007_basic')],
     },
     {
       id: 'tech-axe',
       name: 'Tech Axe',
-      objectives: [
-        text(
-          'Earn the level 1 Pickaxe upgrade (Command → Upgrades → Tools)',
-          'Получите улучшение кирки 1-го уровня (Командование → Улучшения → Инструменты)',
-        ),
-      ],
-      rewards: [item('pickaxe', { name: 'Tech Axe', rarity: 'uncommon' })],
+      objectives: [text('Reach Homebase Level 25', 'Достигните 25-го уровня базы')],
+      rewards: [game('AthenaPickaxe:pickaxe_id_stw002_tier_3')],
     },
     {
       id: 'hydraulic-wrecker',
       name: 'Hydraulic Wrecker',
-      objectives: [
-        text('Earn the level 2 Pickaxe upgrade', 'Получите улучшение кирки 2-го уровня'),
-      ],
-      rewards: [item('pickaxe', { name: 'Hydraulic Wrecker', rarity: 'uncommon' })],
+      objectives: [text('Earn Level 2 Pickaxe upgrade', 'Получите улучшение кирки 2-го уровня')],
+      rewards: [game('AthenaPickaxe:pickaxe_id_stw003_tier_4')],
     },
     {
       id: 'vindertech-elite',
       name: 'Vindertech Elite',
-      objectives: [
-        text('Earn the level 4 Pickaxe upgrade', 'Получите улучшение кирки 4-го уровня'),
-      ],
-      rewards: [item('pickaxe', { name: 'Vindertech Elite', rarity: 'uncommon' })],
+      objectives: [text('Earn Level 4 Pickaxe upgrade', 'Получите улучшение кирки 4-го уровня')],
+      rewards: [game('AthenaPickaxe:pickaxe_id_stw004_tier_5')],
     },
     {
       id: 'laser-pick',
       name: 'Laser Pick',
-      objectives: [
-        text('Earn the level 6 Pickaxe upgrade', 'Получите улучшение кирки 6-го уровня'),
-      ],
-      rewards: [item('pickaxe', { name: 'Laser Pick', rarity: 'uncommon' })],
+      objectives: [text('Earn Level 6 Pickaxe upgrade', 'Получите улучшение кирки 6-го уровня')],
+      rewards: [game('AthenaPickaxe:pickaxe_id_stw005_tier_6')],
     },
     {
       id: 'troll-thieves',
@@ -68,10 +55,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Whack 2 Trolls in successful missions in a 5+ zone',
-          'Отлупите 2 троллей в успешных миссиях в зоне 5+',
+          'Прихлопните 2 троллей в ходе успешно выполненных миссий (мощь Бури: 5+)',
         ),
       ],
-      rewards: [res('schematic-xp', 1500), item('melee')],
+      rewards: [game('AccountResource:schematicxp', 1000), game('CardPack:cardpack_melee_uc')],
     },
     {
       id: 'group-effort',
@@ -79,38 +66,48 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete 2 Play with Others missions in Stonewood',
-          'Выполните 2 миссии в режиме «Играть с другими» в Камнелесье',
+          'Завершите 2 совместных вылазки в Камнелесье',
         ),
       ],
-      rewards: [item('ranged', { name: 'Ranger' }), item('ranged', { name: 'Deathstalker' })],
+      rewards: [
+        choice(
+          game('Weapon:wid_assault_doubleshot_vr_ore_t01'),
+          game('Weapon:wid_assault_surgical_vr_ore_t01'),
+        ),
+      ],
     },
     {
       id: 'the-prestige',
       name: 'The Prestige',
-      objectives: [text('Complete 3 missions in a 10+ zone', 'Выполните 3 миссии в зоне 10+')],
-      rewards: [res('hero-xp', 2500), item('hero', { name: 'Survivalist Jonesy', rarity: 'rare' })],
+      objectives: [
+        text('Save 15 Survivors', 'Спасите 15 выживших'),
+        text('Complete 3 missions in a 10+ zone', 'Выполните 3 миссии (мощь Бури: 10+)'),
+      ],
+      rewards: [game('AccountResource:peoplexp', 2500), game('Hero:hid_commando_guntough_r_t01')],
     },
     {
       id: 'troll-key',
       name: 'Troll Key',
-      objectives: [text('Find the Troll Key in a 10+ zone', 'Найдите ключ тролля в зоне 10+')],
-      rewards: [res('schematic-xp', 2000), item('trap', { rarity: 'rare' })],
+      objectives: [
+        text('Find the Troll Key in a 10+ zone', 'Найдите ключ тролля (мощь Бури: 10+)'),
+      ],
+      rewards: [game('AccountResource:schematicxp', 1700), game('CardPack:cardpack_trap_r')],
     },
     {
       id: 'epic-troll-stash',
       name: 'Epic Troll Stash',
       objectives: [
-        text('Find the Troll Loot Stash in a 10+ zone', 'Найдите тайник тролля в зоне 10+'),
+        text('Find the Troll Loot Stash in a 10+ zone', 'Найдите тайник тролля (мощь Бури: 10+)'),
       ],
-      rewards: [item('melee', { rarity: 'epic' }), item('ranged', { rarity: 'epic' })],
+      rewards: [choice(game('CardPack:cardpack_melee_vr'), game('CardPack:cardpack_ranged_vr'))],
     },
     {
       id: 'stonewood-storm-shield-defense-7',
       name: 'Stonewood Storm Shield Defense 7',
       objectives: [
         text(
-          'Complete Stonewood Storm Shield Defense 7',
-          'Пройдите защиту штормового щита 7 в Камнелесье',
+          'Complete Homebase Storm Shield Defense 7',
+          'Выполните миссию «Оборона щита главной базы #7»',
         ),
       ],
       rewards: [vb(100)],
@@ -120,8 +117,8 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       name: 'Stonewood Storm Shield Defense 8',
       objectives: [
         text(
-          'Complete Stonewood Storm Shield Defense 8',
-          'Пройдите защиту штормового щита 8 в Камнелесье',
+          'Complete Homebase Storm Shield Defense 8',
+          'Выполните миссию «Оборона щита главной базы #8»',
         ),
       ],
       rewards: [vb(100)],
@@ -131,8 +128,8 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       name: 'Stonewood Storm Shield Defense 9',
       objectives: [
         text(
-          'Complete Stonewood Storm Shield Defense 9',
-          'Пройдите защиту штормового щита 9 в Камнелесье',
+          'Complete Homebase Storm Shield Defense 9',
+          'Выполните миссию «Оборона щита главной базы #9»',
         ),
       ],
       rewards: [vb(100)],
@@ -142,79 +139,74 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       name: 'Stonewood Storm Shield Defense 10',
       objectives: [
         text(
-          'Complete Stonewood Storm Shield Defense 10',
-          'Пройдите защиту штормового щита 10 в Камнелесье',
+          'Complete Homebase Storm Shield Defense 10',
+          'Выполните миссию «Оборона щита главной базы #10»',
         ),
       ],
-      rewards: [unlock('Hero Loadout', 'Новый набор героев'), vb(150)],
+      rewards: [vb(150), unlock('Hero Loadout', 'Раскладка героев')],
     },
     {
       id: 'stonewood-endurance-defense',
       name: 'Stonewood Endurance Defense',
       objectives: [
         text(
-          'Complete wave 30 of Endurance Defense in Stonewood',
-          'Пройдите 30-ю волну обороны на выносливость в Камнелесье',
+          'Complete Wave 30 of Endurance Defense in Stonewood',
+          'Отбейте 30-ю волну во время испытания на прочность в Камнелесье',
         ),
       ],
-      rewards: [res('upgrade-llama', 1), item('banner', { name: 'Stonewood Endurance Banner' })],
+      rewards: [
+        game('AccountResource:voucher_cardpack_jackpot'),
+        game('CardPack:cardpack_endurancewave30banner_theater01'),
+      ],
     },
   ],
   plankerton: [
     {
       id: 'save-the-world',
       name: 'Save the World',
-      objectives: [
-        text(
-          'Save 100 Survivors in successful missions',
-          'Спасите 100 выживших в успешных миссиях',
-        ),
-      ],
-      rewards: [res('gold', 100)],
+      objectives: [text('Save Survivors ×100', 'Спасите выживших ×100')],
+      rewards: [game('AccountResource:eventcurrency_scaling', 100)],
     },
     {
       id: 'husk-takedown',
       name: 'Husk Takedown',
       objectives: [
-        text(
-          'Eliminate 1,000 Husks in successful missions in a 40+ zone',
-          'Уничтожьте 1 000 хасков в успешных миссиях в зоне 40+',
-        ),
+        text('Eliminate Husks in a 40+ zone ×1000', 'Уничтожьте мозгляков (мощь Бури: 40+) ×1000'),
       ],
-      rewards: [res('flux', 30, 'rare')],
+      rewards: [game('AccountResource:reagent_evolverarity_r', 30)],
     },
     {
       id: 'mist-monster-hunter',
       name: 'Mist Monster Hunter',
       objectives: [
         text(
-          'Eliminate 100 Mist Monsters in successful missions in a 40+ zone',
-          'Уничтожьте 100 туманных монстров в успешных миссиях в зоне 40+',
+          'Eliminate Mist Monsters in a 40+ zone ×100',
+          'Уничтожьте туманных монстров (мощь Бури: 40+) ×100',
         ),
       ],
-      rewards: [res('gold', 100)],
+      rewards: [game('AccountResource:eventcurrency_scaling', 100)],
     },
     {
       id: 'portraits-of-someone-special',
       name: 'Portraits of Someone Special',
       objectives: [
         text(
-          'Gather 10 portraits of Karolina in a 40+ zone',
-          'Соберите 10 портретов Каролины в зоне 40+',
+          'Gather Portraits of Karolina in a 40+ zone ×10',
+          'Соберите портреты Каролины (мощь Бури: 40+) ×10',
         ),
       ],
-      rewards: [res('survivor-xp', 30000), item('survivor', { name: 'Karolina' })],
+      rewards: [game('AccountResource:peoplexp', 13500), game('Worker:worker_karolina_ur_t01')],
     },
     {
       id: 'joels-pub',
       name: "Joel's Pub",
       objectives: [
         text(
-          "Visit Joel's Pub twice in a 40+ zone (found in City zones)",
-          'Дважды посетите паб Джоэла в зоне 40+ (встречается в городе)',
+          "Become a regular at Joel's Pub by visiting it on two occasions in a 40+ zone. Found in City zones. ×2",
+          'Станьте завсегдатаем паба Джоэла, дважды посетив его в зоне с уровнем мощи 40+. Паб можно найти в городах. ×2',
         ),
       ],
-      rewards: [res('survivor-xp', 30000), item('survivor', { name: 'Joel' })],
+      rewards: [game('AccountResource:peoplexp', 13500), game('Worker:worker_joel_ur_t01')],
     },
     {
       id: 'plankerton-storm-shield-defense-7',
@@ -222,7 +214,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Plankerton Storm Shield Defense 7',
-          'Пройдите защиту штормового щита 7 в Планкертоне',
+          'Выполните миссию «Оборона щита в Планкертоне #7»',
         ),
       ],
       rewards: [vb(100)],
@@ -233,7 +225,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Plankerton Storm Shield Defense 8',
-          'Пройдите защиту штормового щита 8 в Планкертоне',
+          'Выполните миссию «Оборона щита в Планкертоне #8»',
         ),
       ],
       rewards: [vb(100)],
@@ -244,7 +236,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Plankerton Storm Shield Defense 9',
-          'Пройдите защиту штормового щита 9 в Планкертоне',
+          'Выполните миссию «Оборона щита в Планкертоне #9»',
         ),
       ],
       rewards: [vb(100)],
@@ -255,21 +247,24 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Plankerton Storm Shield Defense 10',
-          'Пройдите защиту штормового щита 10 в Планкертоне',
+          'Выполните миссию «Оборона щита в Планкертоне #10»',
         ),
       ],
-      rewards: [unlock('Hero Loadout', 'Новый набор героев'), vb(150)],
+      rewards: [vb(150), unlock('Hero Loadout', 'Раскладка героев')],
     },
     {
       id: 'plankerton-endurance-defense',
       name: 'Plankerton Endurance Defense',
       objectives: [
         text(
-          'Complete wave 30 of Endurance Defense in Plankerton',
-          'Пройдите 30-ю волну обороны на выносливость в Планкертоне',
+          'Complete Wave 30 of Endurance Defense in Plankerton',
+          'Отбейте 30-ю волну во время испытания на прочность в Планкертоне',
         ),
       ],
-      rewards: [res('upgrade-llama', 1), item('banner', { name: 'Plankerton Endurance Banner' })],
+      rewards: [
+        game('AccountResource:voucher_cardpack_jackpot'),
+        game('CardPack:cardpack_endurancewave30banner_theater02'),
+      ],
     },
   ],
   'canny-valley': [
@@ -279,35 +274,45 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete 2 Play with Others missions in Canny Valley',
-          'Выполните 2 миссии в режиме «Играть с другими» в Вещей долине',
+          'Завершите 2 совместных вылазки в Вещей долине',
         ),
       ],
-      rewards: [res('gold', 45)],
+      rewards: [game('AccountResource:eventcurrency_scaling', 150)],
     },
     {
       id: 'smashing',
       name: 'Smashing!',
       objectives: [
         text(
-          'Eliminate 15 Mist Monsters in successful missions in a 22+ zone',
-          'Уничтожьте 15 туманных монстров в успешных миссиях в зоне 22+',
+          'Eliminate 15 Mist Monsters in a 22+ zone',
+          'Уничтожьте 15 туманных монстров (мощь Бури: 22+)',
         ),
       ],
-      rewards: [res('perk-up', 75, 'rare'), res('schematic-xp', 4000)],
+      rewards: [
+        game('AccountResource:reagent_alteration_upgrade_r', 75),
+        game('AccountResource:schematicxp', 9400),
+      ],
     },
     {
       id: 'bring-them-home',
       name: 'Bring Them Home',
       objectives: [
-        text('Save 15 Survivors in successful missions', 'Спасите 15 выживших в успешных миссиях'),
+        text('Save 15 Survivors', 'Спасите 15 выживших'),
+        text('Complete 3 missions in a zone', 'Выполните 3 миссии (мощь Бури: )'),
       ],
-      rewards: [res('hero-xp', 4000), res('flux', 45, 'rare')],
+      rewards: [
+        game('AccountResource:peoplexp', 18700),
+        game('AccountResource:reagent_evolverarity_r', 45),
+      ],
     },
     {
       id: 'triple-threat',
       name: 'Triple Threat',
       objectives: [missions(2, ['fight-the-category-3-storm'], 22)],
-      rewards: [res('gold', 45), res('schematic-xp', 4000)],
+      rewards: [
+        game('AccountResource:eventcurrency_scaling', 150),
+        game('AccountResource:schematicxp', 9400),
+      ],
     },
     {
       id: 'pressing-matters',
@@ -319,7 +324,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           22,
         ),
       ],
-      rewards: [res('malachite-ore', 5), res('rotating-gizmo', 2)],
+      rewards: [
+        game('Ingredient:ingredient_ore_malachite', 5),
+        game('Ingredient:ingredient_rare_mechanism', 2),
+      ],
     },
     {
       id: 'all-husks-breaks-loose',
@@ -327,7 +335,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['evacuate-the-shelter', 'fight-the-storm', 'retrieve-the-data'], 22),
       ],
-      rewards: [res('lightning-in-a-bottle', 10), res('schematic-xp', 4000)],
+      rewards: [
+        game('AccountResource:reagent_c_t02', 10),
+        game('AccountResource:schematicxp', 9400),
+      ],
     },
     {
       id: 'better-safe-than-sorry',
@@ -335,7 +346,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['ride-the-lightning', 'fight-the-category-2-storm', 'repair-the-shelter'], 22),
       ],
-      rewards: [res('re-perk', 200), res('schematic-xp', 4000)],
+      rewards: [
+        game('AccountResource:reagent_alteration_generic', 200),
+        game('AccountResource:schematicxp', 9400),
+      ],
     },
     {
       id: 'no-pain-no-gain',
@@ -343,7 +357,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['deliver-the-bomb', 'retrieve-the-data', 'evacuate-the-shelter'], 22),
       ],
-      rewards: [res('gold', 150)],
+      rewards: [
+        game('AccountResource:eventcurrency_scaling', 150),
+        game('AccountResource:peoplexp', 18700),
+      ],
     },
     {
       id: 'something-suddenly-came-up',
@@ -351,7 +368,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['ride-the-lightning', 'deliver-the-bomb', 'fight-the-category-2-storm'], 22),
       ],
-      rewards: [res('mini-llama', 2)],
+      rewards: [game('AccountResource:voucher_basicpack', 2)],
     },
     {
       id: 'deal-with-it',
@@ -359,7 +376,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-3-storm', 'retrieve-the-data', 'repair-the-shelter'], 22),
       ],
-      rewards: [res('flux', 45, 'rare'), res('schematic-xp', 4000)],
+      rewards: [
+        game('AccountResource:reagent_evolverarity_r', 45),
+        game('AccountResource:schematicxp', 9400),
+      ],
     },
     {
       id: 'get-all-worked-up',
@@ -371,24 +391,27 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           22,
         ),
       ],
-      rewards: [res('hero-xp', 4000), res('perk-up', 75, 'rare')],
+      rewards: [
+        game('AccountResource:peoplexp', 18700),
+        game('AccountResource:reagent_alteration_upgrade_r', 75),
+      ],
     },
     {
       id: 'save-the-teddy-bears',
       name: 'Save the Teddy Bears!',
       objectives: [
-        text(
-          'Loot 5 Teddy Bears in successful missions in a 22+ zone',
-          'Обыщите 5 плюшевых медведей в успешных миссиях в зоне 22+',
-        ),
+        text('Loot 5 Teddy Bears in a 22+ zone', 'Опустошите 5 плюшевых медведей (мощь Бури: 22+)'),
       ],
-      rewards: [res('hero-xp', 4000), item('hero', { name: 'Ranger', rarity: 'rare' })],
+      rewards: [
+        game('AccountResource:peoplexp', 18700),
+        game('Hero:hid_outlander_zonepistol_r_t01'),
+      ],
     },
     {
       id: 'mission-redux',
       name: 'Mission Redux',
       objectives: [missions(3, ['deliver-the-bomb', 'retrieve-the-data', 'fight-the-storm'], 22)],
-      rewards: [res('lightning-in-a-bottle', 10)],
+      rewards: [game('AccountResource:reagent_c_t02', 10)],
     },
     {
       id: 'a-call-to-action',
@@ -396,41 +419,47 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['repair-the-shelter', 'fight-the-category-2-storm', 'ride-the-lightning'], 22),
       ],
-      rewards: [res('schematic-xp', 4000), item('ranged', { weapon: 'sniper' })],
+      rewards: [
+        game('AccountResource:schematicxp', 9400),
+        game('CardPack:cardpack_ranged_sniper_r'),
+      ],
     },
     {
       id: 'quad-squad',
       name: 'Quad Squad',
       objectives: [missions(1, ['fight-the-category-4-storm'], 24)],
-      rewards: [res('mini-llama', 2)],
+      rewards: [game('AccountResource:voucher_basicpack', 2)],
     },
     {
       id: 'what-is-this-thing',
       name: 'What IS This Thing?',
       objectives: [
         text(
-          'Smash 3 anomalies in successful missions in a 24+ zone',
-          'Разбейте 3 аномалии в успешных миссиях в зоне 24+',
+          'Smash 3 Anomalies in successful missions in a 24+ zone',
+          'Уничтожьте 3 аномалии в ходе успешно выполненных миссий (мощь Бури: 24+)',
         ),
       ],
-      rewards: [res('gold', 150)],
+      rewards: [game('AccountResource:eventcurrency_scaling', 150)],
     },
     {
       id: 'decamp',
       name: 'Decamp',
       objectives: [
         text(
-          'Clear 5 Husk encampments in successful missions in a 24+ zone',
-          'Уничтожьте 5 лагерей хасков в успешных миссиях в зоне 24+',
+          'Clear 5 Husk Encampments in successful missions in a 24+ zone',
+          'Зачистите 5 порталов мозгляков в ходе успешно выполненных миссий (мощь Бури: 24+)',
         ),
       ],
-      rewards: [res('survivor-xp', 54000), res('flux', 15, 'epic')],
+      rewards: [
+        game('AccountResource:peoplexp', 26700),
+        game('AccountResource:reagent_evolverarity_vr', 15),
+      ],
     },
     {
       id: 'gimme-shelter',
       name: 'Gimme Shelter',
       objectives: [missions(3, ['repair-the-shelter'], 24)],
-      rewards: [res('survivor-xp', 54000), item('lead-survivor')],
+      rewards: [game('AccountResource:peoplexp', 26700), game('CardPack:cardpack_manager_r')],
     },
     {
       id: 'in-harms-way',
@@ -442,7 +471,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           24,
         ),
       ],
-      rewards: [res('perk-up', 115, 'epic'), res('schematic-xp', 4500)],
+      rewards: [
+        game('AccountResource:reagent_alteration_upgrade_vr', 115),
+        game('AccountResource:schematicxp', 10700),
+      ],
     },
     {
       id: 'par-for-the-course',
@@ -450,7 +482,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['ride-the-lightning', 'retrieve-the-data', 'deliver-the-bomb'], 24),
       ],
-      rewards: [res('malachite-ore', 5), res('rotating-gizmo', 3)],
+      rewards: [
+        game('Ingredient:ingredient_ore_malachite', 5),
+        game('Ingredient:ingredient_rare_mechanism', 3),
+      ],
     },
     {
       id: 'a-shot-in-the-dark',
@@ -458,7 +493,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['fight-the-storm', 'fight-the-category-2-storm', 'repair-the-shelter'], 24),
       ],
-      rewards: [res('hero-xp', 4500), res('eye-of-the-storm', 15)],
+      rewards: [game('AccountResource:peoplexp', 26700), game('AccountResource:reagent_c_t03', 15)],
     },
     {
       id: 'to-husk-in-a-hand-basket',
@@ -466,7 +501,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['retrieve-the-data', 'fight-the-category-3-storm', 'ride-the-lightning'], 24),
       ],
-      rewards: [res('training-manual', 200), res('trap-designs', 200), res('weapon-designs', 200)],
+      rewards: [
+        game('AccountResource:reagent_people', 200),
+        game('AccountResource:reagent_schematic', 200),
+      ],
     },
     {
       id: 'back-to-square-one',
@@ -474,7 +512,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['deliver-the-bomb', 'repair-the-shelter', 'evacuate-the-shelter'], 24),
       ],
-      rewards: [res('gold', 150), res('schematic-xp', 4500)],
+      rewards: [
+        game('AccountResource:eventcurrency_scaling', 150),
+        game('AccountResource:schematicxp', 10700),
+      ],
     },
     {
       id: 'mission-critical',
@@ -482,7 +523,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-3-storm', 'ride-the-lightning', 'retrieve-the-data'], 24),
       ],
-      rewards: [res('active-powercell', 3)],
+      rewards: [game('Ingredient:ingredient_rare_powercell', 3)],
     },
     {
       id: 'raise-the-bar',
@@ -494,7 +535,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           24,
         ),
       ],
-      rewards: [res('re-perk', 200), res('schematic-xp', 4500)],
+      rewards: [
+        game('AccountResource:reagent_alteration_generic', 200),
+        game('AccountResource:schematicxp', 10700),
+      ],
     },
     {
       id: 'setting-ground-rules',
@@ -502,7 +546,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['ride-the-lightning', 'fight-the-category-3-storm', 'fight-the-storm'], 24),
       ],
-      rewards: [res('flux', 45, 'epic'), res('schematic-xp', 4500)],
+      rewards: [
+        game('AccountResource:reagent_evolverarity_vr', 15),
+        game('AccountResource:schematicxp', 10700),
+      ],
     },
     {
       id: 'bring-it',
@@ -510,7 +557,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['evacuate-the-shelter', 'deliver-the-bomb', 'fight-the-category-2-storm'], 24),
       ],
-      rewards: [res('lightning-in-a-bottle', 15)],
+      rewards: [game('AccountResource:reagent_c_t02', 15)],
     },
     {
       id: 'bear-down',
@@ -518,13 +565,19 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['deliver-the-bomb', 'repair-the-shelter', 'fight-the-category-3-storm'], 24),
       ],
-      rewards: [res('survivor-xp', 54000), res('perk-up', 115, 'epic')],
+      rewards: [
+        game('AccountResource:peoplexp', 26700),
+        game('AccountResource:reagent_alteration_upgrade_vr', 115),
+      ],
     },
     {
       id: 'storms-are-brewin',
       name: "Storms Are Brewin'",
       objectives: [missions(2, ['fight-the-category-2-storm'], 24)],
-      rewards: [res('hero-xp', 4500), item('hero', { name: 'Tank Penny', rarity: 'rare' })],
+      rewards: [
+        game('AccountResource:peoplexp', 26700),
+        game('Hero:hid_constructor_hammertank_r_t01'),
+      ],
     },
     {
       id: 'help-wanted',
@@ -532,36 +585,45 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['evacuate-the-shelter', 'fight-the-storm', 'retrieve-the-data'], 24),
       ],
-      rewards: [res('hero-xp', 4500), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 26700), game('CardPack:cardpack_defender_r')],
     },
     {
       id: 'unexpected-meetings',
       name: 'Unexpected Meetings',
       objectives: [missions(2, ['evacuate-the-survivors'], 26)],
-      rewards: [res('hero-xp', 5000), item('hero', { name: 'Survivalist Jonesy', rarity: 'epic' })],
+      rewards: [game('AccountResource:peoplexp', 29900), game('Hero:hid_commando_guntough_vr_t01')],
     },
     {
       id: 'goods-and-services',
       name: 'Goods and Services',
-      objectives: [missions(1, ['deliver-the-bomb'], 26)],
-      rewards: [res('re-perk', 200)],
+      objectives: [
+        text(
+          'Complete a Refuel the Homebase mission in a zone',
+          'Выполните миссию «Дозаправка главной базы» (мощь Бури: )',
+        ),
+        text(
+          'Complete a Deliver the Bomb mission in a zone',
+          'Выполните миссию «Доставка бомбы» (мощь Бури: )',
+        ),
+      ],
+      rewards: [game('AccountResource:reagent_alteration_generic', 200)],
     },
     {
       id: 'far-flung',
       name: 'Far Flung',
       objectives: [
         text(
-          'Eliminate 20 Mist Monsters in successful missions in a 26+ zone',
-          'Уничтожьте 20 туманных монстров в успешных миссиях в зоне 26+',
+          'Eliminate 20 Mist Monsters in a 26+ zone',
+          'Уничтожьте 20 туманных монстров (мощь Бури: 26+)',
         ),
       ],
-      rewards: [res('schematic-xp', 5000), item('ranged')],
+      rewards: [game('AccountResource:schematicxp', 12000), game('CardPack:cardpack_ranged_vr')],
     },
     {
       id: 'blast-from-the-past',
       name: 'Blast from the Past',
       objectives: [missions(2, ['fight-the-category-4-storm'], 26)],
-      rewards: [res('survivor-xp', 60000), item('lead-survivor')],
+      rewards: [game('AccountResource:peoplexp', 29900), game('CardPack:cardpack_manager_r')],
     },
     {
       id: 'history-repeats-itself',
@@ -569,7 +631,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['retrieve-the-data', 'evacuate-the-shelter', 'ride-the-lightning'], 26),
       ],
-      rewards: [res('schematic-xp', 5000), item('melee')],
+      rewards: [game('AccountResource:schematicxp', 12000), game('CardPack:cardpack_melee_vr')],
     },
     {
       id: 'keep-your-eyes-open',
@@ -581,7 +643,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           26,
         ),
       ],
-      rewards: [res('hero-xp', 5000), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 29900), game('CardPack:cardpack_defender_vr')],
     },
     {
       id: 'time-and-again',
@@ -589,13 +651,16 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['retrieve-the-data', 'ride-the-lightning', 'fight-the-category-3-storm'], 26),
       ],
-      rewards: [res('schematic-xp', 5000), item('schematic')],
+      rewards: [game('AccountResource:schematicxp', 12000), game('CardPack:cardpack_schematic_vr')],
     },
     {
       id: 'go-for-broke',
       name: 'Go for Broke',
       objectives: [missions(3, ['deliver-the-bomb', 'fight-the-storm', 'retrieve-the-data'], 26)],
-      rewards: [res('training-manual', 200), res('trap-designs', 200), res('weapon-designs', 200)],
+      rewards: [
+        game('AccountResource:reagent_people', 200),
+        game('AccountResource:reagent_schematic', 200),
+      ],
     },
     {
       id: 'a-necessary-evil',
@@ -607,7 +672,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           26,
         ),
       ],
-      rewards: [res('schematic-xp', 5000), item('trap')],
+      rewards: [game('AccountResource:schematicxp', 12000), game('CardPack:cardpack_trap_vr')],
     },
     {
       id: 'business-at-hand',
@@ -615,13 +680,13 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['ride-the-lightning', 'repair-the-shelter', 'retrieve-the-data'], 26),
       ],
-      rewards: [res('survivor-xp', 60000), item('melee')],
+      rewards: [game('AccountResource:peoplexp', 29900), game('CardPack:cardpack_worker_vr')],
     },
     {
       id: 'tooth-and-nail',
       name: 'Tooth and Nail',
       objectives: [missions(3, ['retrieve-the-data', 'deliver-the-bomb', 'fight-the-storm'], 26)],
-      rewards: [res('mini-llama', 2)],
+      rewards: [game('AccountResource:voucher_basicpack', 2)],
     },
     {
       id: 'live-and-learn',
@@ -629,7 +694,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['repair-the-shelter', 'evacuate-the-shelter', 'ride-the-lightning'], 26),
       ],
-      rewards: [res('active-powercell', 4)],
+      rewards: [game('Ingredient:ingredient_rare_powercell', 4)],
     },
     {
       id: 'up-the-ante',
@@ -637,7 +702,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-storm', 'retrieve-the-data', 'fight-the-category-2-storm'], 26),
       ],
-      rewards: [res('schematic-xp', 5000), item('melee')],
+      rewards: [game('AccountResource:schematicxp', 12000), game('CardPack:cardpack_melee_vr')],
     },
     {
       id: 'get-to-the-bottom-of-it',
@@ -649,7 +714,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           26,
         ),
       ],
-      rewards: [res('survivor-xp', 60000), item('lead-survivor')],
+      rewards: [game('AccountResource:peoplexp', 29900), game('CardPack:cardpack_manager_r')],
     },
     {
       id: 'haste-makes-waste',
@@ -657,18 +722,16 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['fight-the-category-2-storm', 'fight-the-storm', 'deliver-the-bomb'], 26),
       ],
-      rewards: [res('eye-of-the-storm', 5), item('lead-survivor')],
+      rewards: [game('AccountResource:reagent_c_t03', 5)],
     },
     {
       id: 'safe-cracker',
       name: 'Safe Cracker',
-      objectives: [
-        text(
-          'Loot 5 Safes in successful missions in a 26+ zone',
-          'Вскройте 5 сейфов в успешных миссиях в зоне 26+',
-        ),
+      objectives: [text('Loot 5 Safes in a 26+ zone', 'Опустошите 5 сейфов (мощь Бури: 26+)')],
+      rewards: [
+        game('AccountResource:peoplexp', 29900),
+        game('Hero:hid_outlander_spherefragment_vr_t01'),
       ],
-      rewards: [res('hero-xp', 5000), item('hero', { name: 'Trailblazer Quinn', rarity: 'epic' })],
     },
     {
       id: 'all-heroes-are-welcome',
@@ -676,7 +739,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-3-storm', 'ride-the-lightning', 'fight-the-storm'], 26),
       ],
-      rewards: [res('hero-xp', 5000), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 29900), game('CardPack:cardpack_defender_vr')],
     },
     {
       id: 'dangerous-assignments',
@@ -684,7 +747,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-3-storm', 'ride-the-lightning', 'deliver-the-bomb'], 24),
       ],
-      rewards: [res('schematic-xp', 4500), item('ranged', { weapon: 'pistol' })],
+      rewards: [
+        game('AccountResource:schematicxp', 10700),
+        game('CardPack:cardpack_ranged_pistol_vr'),
+      ],
     },
     {
       id: 'explore-build-and-defend',
@@ -696,7 +762,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           24,
         ),
       ],
-      rewards: [res('survivor-xp', 54000), item('survivor')],
+      rewards: [game('AccountResource:peoplexp', 26700), game('CardPack:cardpack_worker_vr')],
     },
     {
       id: 'please-stand-up',
@@ -704,10 +770,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Destroy 2 Mimics in successful missions in a 28+ zone',
-          'Уничтожьте 2 мимиков в успешных миссиях в зоне 28+',
+          'Уничтожьте 2 мимиков в ходе успешно выполненных миссий (мощь Бури: 28+)',
         ),
       ],
-      rewards: [res('schematic-xp', 6000), item('trap')],
+      rewards: [game('AccountResource:schematicxp', 13300), game('CardPack:cardpack_trap_vr')],
     },
     {
       id: 'you-threatening-me',
@@ -719,18 +785,26 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           28,
         ),
       ],
-      rewards: [item('ranged', { weapon: 'assault', rarity: 'epic' }), item('ranged')],
+      rewards: [
+        choice(
+          game('CardPack:cardpack_ranged_assault_vr'),
+          game('CardPack:cardpack_ranged_shotgun_vr'),
+        ),
+      ],
     },
     {
       id: 'takers-weepers',
       name: 'Takers Weepers',
       objectives: [
         text(
-          'Eliminate 25 Mist Monsters in successful missions in a 28+ zone',
-          'Уничтожьте 25 туманных монстров в успешных миссиях в зоне 28+',
+          'Eliminate 25 Mist Monsters in a 28+ zone',
+          'Уничтожьте 25 туманных монстров (мощь Бури: 28+)',
         ),
       ],
-      rewards: [res('hero-xp', 6000), item('hero', { name: 'Hype', rarity: 'epic' })],
+      rewards: [
+        game('AccountResource:peoplexp', 33200),
+        game('Hero:hid_constructor_rushbase_f_vr_t01'),
+      ],
     },
     {
       id: 'trololo',
@@ -738,22 +812,28 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Whack a Troll in a successful mission in a 28+ zone',
-          'Отлупите тролля в успешной миссии в зоне 28+',
+          'Прихлопните тролля в ходе успешно выполненной миссии (мощь Бури: 28+)',
         ),
       ],
-      rewards: [res('eye-of-the-storm', 10)],
+      rewards: [game('AccountResource:reagent_c_t03', 10)],
     },
     {
       id: 'home-invasion',
       name: 'Home Invasion',
       objectives: [missions(3, ['destroy-the-encampments'], 28)],
-      rewards: [res('survivor-xp', 72000), item('survivor')],
+      rewards: [game('AccountResource:peoplexp', 33200), game('CardPack:cardpack_worker_vr')],
     },
     {
       id: 'operation-save-them-all',
       name: 'Operation: Save Them All!',
-      objectives: [text('Complete 2 missions in a 28+ zone', 'Выполните 2 миссии в зоне 28+')],
-      rewards: [res('schematic-xp', 6000)],
+      objectives: [
+        text('Save 10 Survivors', 'Спасите 10 выживших'),
+        text('Complete 2 missions in a 28+ zone', 'Выполните 2 миссии (мощь Бури: 28+)'),
+      ],
+      rewards: [
+        game('AccountResource:schematicxp', 13300),
+        game('Schematic:sid_floor_health_vr_t01'),
+      ],
     },
     {
       id: 'the-road-less-traveled',
@@ -761,13 +841,13 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-2-storm', 'repair-the-shelter', 'deliver-the-bomb'], 28),
       ],
-      rewards: [item('hero', { heroClass: 'soldier', rarity: 'epic' })],
+      rewards: [game('CardPack:cardpack_hero_commando_vr')],
     },
     {
       id: 'dont-look-back',
       name: "Don't Look Back",
       objectives: [missions(3, ['fight-the-storm', 'ride-the-lightning', 'retrieve-the-data'], 28)],
-      rewards: [res('active-powercell', 5)],
+      rewards: [game('Ingredient:ingredient_rare_powercell', 5)],
     },
     {
       id: 'carry-the-team',
@@ -775,7 +855,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['retrieve-the-data', 'fight-the-category-2-storm', 'ride-the-lightning'], 28),
       ],
-      rewards: [res('survivor-xp', 72000), item('lead-survivor')],
+      rewards: [game('AccountResource:peoplexp', 33200), game('CardPack:cardpack_manager_r')],
     },
     {
       id: 'grasping-at-straws',
@@ -783,7 +863,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-3-storm', 'evacuate-the-shelter', 'fight-the-storm'], 28),
       ],
-      rewards: [item('hero', { heroClass: 'constructor', rarity: 'epic' }), item('ranged')],
+      rewards: [game('AccountResource:schematicxp', 13300), game('CardPack:cardpack_ranged_vr')],
     },
     {
       id: 'a-drop-in-the-bucket',
@@ -791,7 +871,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-2-storm', 'ride-the-lightning', 'deliver-the-bomb'], 28),
       ],
-      rewards: [res('schematic-xp', 6000)],
+      rewards: [game('CardPack:cardpack_hero_constructor_vr')],
     },
     {
       id: 'survival-of-the-fittest',
@@ -799,7 +879,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['evacuate-the-shelter', 'retrieve-the-data', 'fight-the-storm'], 28),
       ],
-      rewards: [res('training-manual', 200), res('trap-designs', 200), res('weapon-designs', 200)],
+      rewards: [
+        game('AccountResource:reagent_people', 200),
+        game('AccountResource:reagent_schematic', 200),
+      ],
     },
     {
       id: 'the-big-picture',
@@ -807,7 +890,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['ride-the-lightning', 'deliver-the-bomb', 'fight-the-category-2-storm'], 28),
       ],
-      rewards: [item('hero', { heroClass: 'outlander', rarity: 'epic' })],
+      rewards: [game('CardPack:cardpack_hero_outlander_vr')],
     },
     {
       id: 'the-husks-dont-stand-a-chance',
@@ -815,7 +898,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['retrieve-the-data', 'fight-the-storm', 'fight-the-category-3-storm'], 28),
       ],
-      rewards: [res('mini-llama', 2)],
+      rewards: [game('AccountResource:voucher_basicpack', 2)],
     },
     {
       id: 'hands-on',
@@ -823,7 +906,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['evacuate-the-shelter', 'fight-the-category-2-storm', 'deliver-the-bomb'], 28),
       ],
-      rewards: [item('hero', { heroClass: 'ninja', rarity: 'epic' })],
+      rewards: [game('CardPack:cardpack_hero_ninja_vr')],
     },
     {
       id: 'second-wind',
@@ -831,19 +914,22 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-2-storm', 'retrieve-the-data', 'ride-the-lightning'], 28),
       ],
-      rewards: [res('survivor-xp', 78000), item('survivor')],
+      rewards: [game('AccountResource:peoplexp', 33200), game('CardPack:cardpack_worker_vr')],
     },
     {
       id: 'twin-blast',
       name: 'Twin Blast',
       objectives: [missions(3, ['fight-the-category-2-storm'], 28)],
-      rewards: [res('hero-xp', 6500), item('hero', { name: 'Assassin Sarah', rarity: 'epic' })],
+      rewards: [
+        game('AccountResource:peoplexp', 33200),
+        game('Hero:hid_ninja_starsassassin_vr_t01'),
+      ],
     },
     {
       id: 'the-storm-rages-on',
       name: 'The Storm Rages On',
       objectives: [missions(3, ['ride-the-lightning', 'deliver-the-bomb', 'fight-the-storm'], 28)],
-      rewards: [res('hero-xp', 6500), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 33200), game('CardPack:cardpack_defender_vr')],
     },
     {
       id: 'turn-on-the-action',
@@ -851,7 +937,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['deliver-the-bomb', 'retrieve-the-data', 'fight-the-category-2-storm'], 26),
       ],
-      rewards: [res('schematic-xp', 5000), item('schematic')],
+      rewards: [game('AccountResource:schematicxp', 12000), game('CardPack:cardpack_schematic_vr')],
     },
     {
       id: 'seeking-answers',
@@ -859,7 +945,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['evacuate-the-shelter', 'fight-the-storm', 'deliver-the-bomb'], 26),
       ],
-      rewards: [item('survivor', { rarity: 'epic' })],
+      rewards: [game('CardPack:cardpack_worker_vr')],
     },
     {
       id: 'the-missions-must-go-on',
@@ -867,30 +953,36 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['deliver-the-bomb', 'repair-the-shelter', 'evacuate-the-shelter'], 30),
       ],
-      rewards: [res('schematic-xp', 7000), item('trap')],
+      rewards: [game('AccountResource:schematicxp', 14600), game('CardPack:cardpack_trap_vr')],
     },
     {
       id: 'how-high',
       name: 'How High?',
-      objectives: [text('Complete 3 missions in a 30+ zone', 'Выполните 3 миссии в зоне 30+')],
-      rewards: [res('survivor-xp', 84000), item('survivor')],
+      objectives: [
+        text('Save 15 Survivors', 'Спасите 15 выживших'),
+        text('Complete 3 missions in a 30+ zone', 'Выполните 3 миссии (мощь Бури: 30+)'),
+      ],
+      rewards: [game('AccountResource:peoplexp', 36400), game('CardPack:cardpack_worker_vr')],
     },
     {
       id: 'falling-down',
       name: 'Falling Down',
       objectives: [
         text(
-          'Eliminate 30 Mist Monsters in successful missions in a 30+ zone',
-          'Уничтожьте 30 туманных монстров в успешных миссиях в зоне 30+',
+          'Eliminate 30 Mist Monsters in a 30+ zone',
+          'Уничтожьте 30 туманных монстров (мощь Бури: 30+)',
         ),
       ],
-      rewards: [res('hero-xp', 7500), item('hero', { heroClass: 'soldier' })],
+      rewards: [
+        game('AccountResource:peoplexp', 36400),
+        game('CardPack:cardpack_hero_commando_vr'),
+      ],
     },
     {
       id: 'need-more-bluglo',
       name: 'Need More BluGlo',
       objectives: [missions(2, ['refuel-the-homebase'], 30)],
-      rewards: [res('active-powercell', 5)],
+      rewards: [game('Ingredient:ingredient_rare_powercell', 5)],
     },
     {
       id: 'revenge-of-the-trolls',
@@ -898,21 +990,21 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Whack a Troll in a successful mission in a 30+ zone',
-          'Отлупите тролля в успешной миссии в зоне 30+',
+          'Прихлопните тролля в ходе успешно выполненной миссии (мощь Бури: 30+)',
         ),
       ],
-      rewards: [res('hero-xp', 7500), item('hero', { heroClass: 'ninja' })],
+      rewards: [game('AccountResource:peoplexp', 36400), game('CardPack:cardpack_hero_ninja_vr')],
     },
     {
       id: 'a-disturbance-in-the-valley',
       name: 'A Disturbance in the Valley',
       objectives: [
         text(
-          'Smash 3 anomalies in successful missions in a 30+ zone',
-          'Разбейте 3 аномалии в успешных миссиях в зоне 30+',
+          'Smash 3 Anomalies in successful missions in a 30+ zone',
+          'Уничтожьте 3 аномалии в ходе успешно выполненных миссий (мощь Бури: 30+)',
         ),
       ],
-      rewards: [res('survivor-xp', 84000), item('lead-survivor')],
+      rewards: [game('AccountResource:peoplexp', 36400), game('CardPack:cardpack_manager_vr')],
     },
     {
       id: 'leave-no-mission-unfinished',
@@ -920,7 +1012,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['fight-the-category-3-storm', 'deliver-the-bomb', 'ride-the-lightning'], 30),
       ],
-      rewards: [res('schematic-xp', 7500), item('melee')],
+      rewards: [game('AccountResource:schematicxp', 14600), game('CardPack:cardpack_melee_vr')],
     },
     {
       id: 'cross-the-line',
@@ -932,7 +1024,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           30,
         ),
       ],
-      rewards: [res('survivor-xp', 90000), item('survivor')],
+      rewards: [game('AccountResource:peoplexp', 36400), game('CardPack:cardpack_worker_vr')],
     },
     {
       id: 'just-around-the-bend',
@@ -940,7 +1032,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['evacuate-the-shelter', 'repair-the-shelter', 'ride-the-lightning'], 30),
       ],
-      rewards: [res('mini-llama', 2)],
+      rewards: [game('AccountResource:voucher_basicpack', 2)],
     },
     {
       id: 'trail-by-fire',
@@ -956,7 +1048,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-storm', 'repair-the-shelter', 'ride-the-lightning'], 30),
       ],
-      rewards: [res('survivor-xp', 84000), item('lead-survivor')],
+      rewards: [game('AccountResource:peoplexp', 36400), game('CardPack:cardpack_manager_vr')],
     },
     {
       id: 'go-against-the-grain',
@@ -964,7 +1056,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['deliver-the-bomb', 'fight-the-category-2-storm', 'retrieve-the-data'], 30),
       ],
-      rewards: [res('schematic-xp', 7500), item('trap')],
+      rewards: [game('AccountResource:schematicxp', 14600), game('CardPack:cardpack_trap_vr')],
     },
     {
       id: 'sounds-like-a-plan',
@@ -976,7 +1068,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           30,
         ),
       ],
-      rewards: [res('hero-xp', 7500), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 36400), game('CardPack:cardpack_defender_vr')],
     },
     {
       id: 'high-hopes',
@@ -984,7 +1076,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['retrieve-the-data', 'fight-the-category-2-storm', 'fight-the-storm'], 30),
       ],
-      rewards: [res('hero-xp', 7500), item('hero', { heroClass: 'outlander' })],
+      rewards: [
+        game('AccountResource:peoplexp', 36400),
+        game('CardPack:cardpack_hero_outlander_vr'),
+      ],
     },
     {
       id: 'its-now-or-never',
@@ -992,7 +1087,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-3-storm', 'deliver-the-bomb', 'repair-the-shelter'], 30),
       ],
-      rewards: [res('schematic-xp', 7500), item('ranged')],
+      rewards: [game('AccountResource:schematicxp', 14600), game('CardPack:cardpack_ranged_vr')],
     },
     {
       id: 'the-ends-justifies-the-means',
@@ -1000,7 +1095,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-2-storm', 'ride-the-lightning', 'fight-the-storm'], 30),
       ],
-      rewards: [res('training-manual', 200), res('trap-designs', 200), res('weapon-designs', 200)],
+      rewards: [
+        game('AccountResource:reagent_people', 200),
+        game('AccountResource:reagent_schematic', 200),
+      ],
     },
     {
       id: 'just-one-more-thing',
@@ -1012,7 +1110,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           30,
         ),
       ],
-      rewards: [res('schematic-xp', 7500), item('melee')],
+      rewards: [game('AccountResource:schematicxp', 14600), game('CardPack:cardpack_melee_vr')],
     },
     {
       id: 'cut-to-the-chase',
@@ -1020,7 +1118,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['repair-the-shelter', 'retrieve-the-data', 'fight-the-category-2-storm'], 28),
       ],
-      rewards: [res('hero-xp', 6500), item('hero')],
+      rewards: [game('AccountResource:peoplexp', 33200), game('CardPack:cardpack_hero_vr')],
     },
     {
       id: 'desperate-times',
@@ -1028,13 +1126,22 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-storm', 'ride-the-lightning', 'fight-the-category-3-storm'], 28),
       ],
-      rewards: [res('hero-xp', 6500), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 33200), game('CardPack:cardpack_defender_vr')],
     },
     {
       id: 'special-delivery',
       name: 'Special Delivery',
-      objectives: [missions(1, ['deliver-the-bomb'], 30)],
-      rewards: [item('ranged', { rarity: 'legendary' })],
+      objectives: [
+        text(
+          'Complete 2 Repair the Shelter missions in a zone',
+          'Выполните 2 миссии «Ремонт убежища» (мощь Бури: )',
+        ),
+        text(
+          'Complete a Deliver the Bomb mission in a zone',
+          'Выполните миссию «Доставка бомбы» (мощь Бури: )',
+        ),
+      ],
+      rewards: [game('CardPack:cardpack_weapon_sr')],
     },
     {
       id: 'critical-objectives',
@@ -1042,7 +1149,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-storm', 'repair-the-shelter', 'ride-the-lightning'], 30),
       ],
-      rewards: [item('trap', { rarity: 'legendary' })],
+      rewards: [game('CardPack:cardpack_trap_sr')],
     },
     {
       id: 'special-operations',
@@ -1050,7 +1157,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['deliver-the-bomb', 'evacuate-the-shelter', 'fight-the-category-3-storm'], 30),
       ],
-      rewards: [item('survivor', { rarity: 'legendary' })],
+      rewards: [game('CardPack:cardpack_worker_sr')],
     },
     {
       id: 'just-cause',
@@ -1058,7 +1165,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['retrieve-the-data', 'fight-the-storm', 'fight-the-category-2-storm'], 30),
       ],
-      rewards: [item('defender', { rarity: 'legendary' })],
+      rewards: [game('CardPack:cardpack_defender_sr')],
     },
     {
       id: 'the-journey-continues',
@@ -1066,7 +1173,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['deliver-the-bomb', 'fight-the-category-3-storm', 'retrieve-the-data'], 30),
       ],
-      rewards: [item('lead-survivor', { rarity: 'legendary' })],
+      rewards: [game('CardPack:cardpack_manager_vr')],
     },
     {
       id: 'canny-valley-storm-shield-defense-7',
@@ -1074,7 +1181,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Canny Valley Storm Shield Defense 7',
-          'Пройдите защиту штормового щита 7 в Вещей долине',
+          'Выполните миссию «Оборона щита в Вещей долине #7»',
         ),
       ],
       rewards: [vb(100)],
@@ -1085,7 +1192,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Canny Valley Storm Shield Defense 8',
-          'Пройдите защиту штормового щита 8 в Вещей долине',
+          'Выполните миссию «Оборона щита в Вещей долине #8»',
         ),
       ],
       rewards: [vb(100)],
@@ -1096,7 +1203,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Canny Valley Storm Shield Defense 9',
-          'Пройдите защиту штормового щита 9 в Вещей долине',
+          'Выполните миссию «Оборона щита в Вещей долине #9»',
         ),
       ],
       rewards: [vb(100)],
@@ -1107,21 +1214,24 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Canny Valley Storm Shield Defense 10',
-          'Пройдите защиту штормового щита 10 в Вещей долине',
+          'Выполните миссию «Оборона щита в Вещей долине #10»',
         ),
       ],
-      rewards: [unlock('Hero Loadout', 'Новый набор героев'), vb(150)],
+      rewards: [vb(150), unlock('Hero Loadout', 'Раскладка героев')],
     },
     {
       id: 'canny-valley-endurance-defense',
       name: 'Canny Valley Endurance Defense',
       objectives: [
         text(
-          'Complete wave 30 of Endurance Defense in Canny Valley',
-          'Пройдите 30-ю волну обороны на выносливость в Вещей долине',
+          'Complete Wave 30 of Endurance Defense in Canny Valley',
+          'Отбейте 30-ю волну во время испытания на прочность в Вещей долине',
         ),
       ],
-      rewards: [res('upgrade-llama', 1), item('banner', { name: 'Canny Valley Endurance Banner' })],
+      rewards: [
+        game('AccountResource:voucher_cardpack_jackpot'),
+        game('CardPack:cardpack_endurancewave30banner_theater03'),
+      ],
     },
   ],
   'twine-peaks': [
@@ -1131,7 +1241,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-category-3-storm', 'deliver-the-bomb', 'repair-the-shelter'], 32),
       ],
-      rewards: [res('hero-xp', 7500), item('hero', { name: 'Shock Trooper Renegade' })],
+      rewards: [
+        game('AccountResource:peoplexp', 51000),
+        game('Hero:hid_commando_shockdamage_r_t01'),
+      ],
     },
     {
       id: 'urgent-engagements',
@@ -1139,7 +1252,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-storm', 'fight-the-category-2-storm', 'ride-the-lightning'], 32),
       ],
-      rewards: [res('survivor-xp', 120000), item('survivor')],
+      rewards: [game('AccountResource:peoplexp', 51000), game('CardPack:cardpack_worker_r')],
     },
     {
       id: 'all-in-a-days-work',
@@ -1147,7 +1260,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['ride-the-lightning', 'retrieve-the-data', 'deliver-the-bomb'], 34),
       ],
-      rewards: [res('hero-xp', 8000), item('hero', { name: 'Trailblazer Quinn', rarity: 'rare' })],
+      rewards: [
+        game('AccountResource:peoplexp', 71000),
+        game('Hero:hid_outlander_spherefragment_r_t01'),
+      ],
     },
     {
       id: 'test-your-mettle',
@@ -1159,7 +1275,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           34,
         ),
       ],
-      rewards: [res('hero-xp', 8000), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 71000), game('CardPack:cardpack_defender_r')],
     },
     {
       id: 'secure-tomorrow',
@@ -1167,7 +1283,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['deliver-the-bomb', 'retrieve-the-data', 'ride-the-lightning'], 36),
       ],
-      rewards: [res('hero-xp', 8500), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 80700), game('CardPack:cardpack_defender_vr')],
     },
     {
       id: 'relentless-hunt',
@@ -1180,8 +1296,8 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
         ),
       ],
       rewards: [
-        res('hero-xp', 8500),
-        item('hero', { name: 'Urban Assault Headhunter', rarity: 'epic' }),
+        game('AccountResource:peoplexp', 80700),
+        game('Hero:hid_commando_gunheadshot_vr_t01'),
       ],
     },
     {
@@ -1190,7 +1306,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['fight-the-category-3-storm', 'retrieve-the-data', 'ride-the-lightning'], 38),
       ],
-      rewards: [res('hero-xp', 9250), item('hero', { name: 'Deadly Blade Crash', rarity: 'epic' })],
+      rewards: [game('AccountResource:peoplexp', 90500), game('Hero:hid_ninja_010_f_vr_t01')],
     },
     {
       id: 'at-your-earliest-convenience',
@@ -1198,7 +1314,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['evacuate-the-shelter', 'deliver-the-bomb', 'repair-the-shelter'], 38),
       ],
-      rewards: [res('hero-xp', 9250), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 90500), game('CardPack:cardpack_defender_vr')],
     },
     {
       id: 'time-sensitive',
@@ -1210,7 +1326,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           32,
         ),
       ],
-      rewards: [res('schematic-xp', 7500), item('melee')],
+      rewards: [game('AccountResource:schematicxp', 20400), game('CardPack:cardpack_melee_r')],
     },
     {
       id: 'threat-level-elevated',
@@ -1218,7 +1334,10 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['retrieve-the-data', 'fight-the-category-2-storm', 'deliver-the-bomb'], 34),
       ],
-      rewards: [res('schematic-xp', 8000), item('ranged', { weapon: 'pistol' })],
+      rewards: [
+        game('AccountResource:schematicxp', 23700),
+        game('CardPack:cardpack_ranged_pistol_vr'),
+      ],
     },
     {
       id: 'restore-hope',
@@ -1226,7 +1345,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['repair-the-shelter', 'evacuate-the-shelter', 'fight-the-storm'], 34),
       ],
-      rewards: [res('survivor-xp', 128000), item('survivor')],
+      rewards: [game('AccountResource:peoplexp', 71000), game('CardPack:cardpack_worker_vr')],
     },
     {
       id: 'helping-hand',
@@ -1234,7 +1353,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['ride-the-lightning', 'repair-the-shelter', 'fight-the-category-2-storm'], 36),
       ],
-      rewards: [res('survivor-xp', 136000), item('survivor')],
+      rewards: [game('AccountResource:peoplexp', 80700), game('CardPack:cardpack_worker_vr')],
     },
     {
       id: 'every-little-helps',
@@ -1242,7 +1361,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['fight-the-storm', 'evacuate-the-shelter', 'retrieve-the-data'], 36),
       ],
-      rewards: [res('schematic-xp', 8500), item('schematic')],
+      rewards: [game('AccountResource:schematicxp', 26900), game('CardPack:cardpack_schematic_vr')],
     },
     {
       id: 'know-our-enemy',
@@ -1250,7 +1369,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['fight-the-storm', 'ride-the-lightning', 'fight-the-category-3-storm'], 38),
       ],
-      rewards: [res('storm-shard', 10)],
+      rewards: [game('AccountResource:reagent_c_t04', 10)],
     },
     {
       id: 'turn-the-page',
@@ -1258,7 +1377,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['repair-the-shelter', 'retrieve-the-data', 'fight-the-category-2-storm'], 38),
       ],
-      rewards: [res('hero-xp', 9250), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 90500), game('CardPack:cardpack_defender_vr')],
     },
     {
       id: 'the-quiet-before-the-storm',
@@ -1266,13 +1385,13 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['retrieve-the-data', 'ride-the-lightning', 'deliver-the-bomb'], 40),
       ],
-      rewards: [res('survivor-xp', 160000), item('lead-survivor')],
+      rewards: [game('AccountResource:peoplexp', 100200), game('CardPack:cardpack_manager_vr')],
     },
     {
       id: 'day-of-reckoning',
       name: 'Day of Reckoning',
       objectives: [missions(3, ['fight-the-storm', 'repair-the-shelter', 'deliver-the-bomb'], 40)],
-      rewards: [res('schematic-xp', 10000), item('ranged')],
+      rewards: [game('AccountResource:schematicxp', 33400), game('CardPack:cardpack_weapon_sr')],
     },
     {
       id: 'a-new-horizon',
@@ -1284,7 +1403,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
           40,
         ),
       ],
-      rewards: [res('hero-xp', 10000), item('hero')],
+      rewards: [game('AccountResource:peoplexp', 100200), game('CardPack:cardpack_hero_sr')],
     },
     {
       id: 'proceed-with-caution',
@@ -1292,7 +1411,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(2, ['fight-the-category-2-storm', 'deliver-the-bomb', 'retrieve-the-data'], 40),
       ],
-      rewards: [res('hero-xp', 10000), item('defender')],
+      rewards: [game('AccountResource:peoplexp', 100200), game('CardPack:cardpack_defender_sr')],
     },
     {
       id: 'the-beginning-of-the-end',
@@ -1300,7 +1419,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         missions(3, ['repair-the-shelter', 'fight-the-storm', 'evacuate-the-shelter'], 40),
       ],
-      rewards: [res('survivor-xp', 160000), item('survivor')],
+      rewards: [game('AccountResource:peoplexp', 100200), game('CardPack:cardpack_worker_sr')],
     },
     {
       id: 'twine-peaks-storm-shield-defense-7',
@@ -1308,7 +1427,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Twine Peaks Storm Shield Defense 7',
-          'Пройдите защиту штормового щита 7 в Линч-Пиксе',
+          'Выполните миссию «Оборона щита в Линч-Пикс #7»',
         ),
       ],
       rewards: [vb(100)],
@@ -1319,7 +1438,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Twine Peaks Storm Shield Defense 8',
-          'Пройдите защиту штормового щита 8 в Линч-Пиксе',
+          'Выполните миссию «Оборона щита в Линч-Пикс #8»',
         ),
       ],
       rewards: [vb(100)],
@@ -1330,7 +1449,7 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Twine Peaks Storm Shield Defense 9',
-          'Пройдите защиту штормового щита 9 в Линч-Пиксе',
+          'Выполните миссию «Оборона щита в Линч-Пикс #9»',
         ),
       ],
       rewards: [vb(100)],
@@ -1341,21 +1460,24 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       objectives: [
         text(
           'Complete Twine Peaks Storm Shield Defense 10',
-          'Пройдите защиту штормового щита 10 в Линч-Пиксе',
+          'Выполните миссию «Оборона щита в Линч-Пикс #10»',
         ),
       ],
-      rewards: [unlock('Hero Loadout', 'Новый набор героев'), vb(150)],
+      rewards: [vb(150), unlock('Hero Loadout', 'Раскладка героев')],
     },
     {
       id: 'twine-peaks-endurance-defense',
       name: 'Twine Peaks Endurance Defense',
       objectives: [
         text(
-          'Complete wave 30 of Endurance Defense in Twine Peaks',
-          'Пройдите 30-ю волну обороны на выносливость в Линч-Пиксе',
+          'Complete Wave 30 of Endurance Defense in Twine Peaks',
+          'Отбейте 30-ю волну во время испытания на прочность в Линч-Пикс',
         ),
       ],
-      rewards: [res('upgrade-llama', 1), item('banner', { name: 'Twine Peaks Endurance Banner' })],
+      rewards: [
+        game('AccountResource:voucher_cardpack_jackpot'),
+        game('CardPack:cardpack_endurancewave30banner_theater04'),
+      ],
     },
   ],
   lok: [
@@ -1364,8 +1486,8 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       name: 'Lok’s Book of Monsters: Floating Freaks',
       objectives: [
         text(
-          'Gather 20 pieces of Shielder data in successful missions',
-          'Соберите 20 образцов данных о щитоносцах в успешных миссиях',
+          'Gather 20 pieces of Shielder data',
+          'Соберите 20 фрагментов данных о духах-хранителях',
         ),
       ],
       rewards: [vb(100)],
@@ -1375,216 +1497,211 @@ export const SIDE_QUESTS: Record<SideGroupId, SideQuest[]> = {
       name: "Lok's Monster: Smashers",
       objectives: [
         text(
-          'Gather 5 pieces of Smasher data in successful missions in a 7+ zone',
-          'Соберите 5 образцов данных о громилах в успешных миссиях в зоне 7+',
+          'Gather 5 pieces of Smasher data in a 7+ zone',
+          'Соберите 5 фрагментов данных о громилах (мощь Бури: 7+)',
         ),
       ],
-      rewards: [res('schematic-xp', 1750), item('ranged', { weapon: 'assault' })],
+      rewards: [
+        game('AccountResource:schematicxp', 1400),
+        game('CardPack:cardpack_ranged_assault_r'),
+      ],
     },
     {
       id: 'loks-monster-takers',
       name: "Lok's Monster: Takers",
       objectives: [
         text(
-          'Gather 5 pieces of Taker data in successful missions in a 10+ zone',
-          'Соберите 5 образцов данных о похитителях в успешных миссиях в зоне 10+',
+          'Gather 5 pieces of Taker data in a 10+ zone',
+          'Соберите 5 фрагментов данных о хищниках (мощь Бури: 10+)',
         ),
       ],
-      rewards: [res('schematic-xp', 2000), item('melee')],
+      rewards: [game('AccountResource:schematicxp', 1700), game('CardPack:cardpack_melee_sword_r')],
     },
     {
       id: 'loks-monsters-on-blast',
       name: "Lok's Monsters: On Blast!",
       objectives: [
         text(
-          'Gather 10 pieces of Blaster data in successful missions in a 12+ zone',
-          'Соберите 10 образцов данных о бластерах в успешных миссиях в зоне 12+',
+          'Gather 10 pieces of Blaster enemy data in a 12+ zone',
+          'Соберите 10 фрагментов данных о бластерах (мощь Бури: 12+)',
         ),
       ],
-      rewards: [res('survivor-xp', 16000), item('survivor')],
+      rewards: [game('AccountResource:peoplexp', 4700), game('CardPack:cardpack_worker_r')],
     },
     {
       id: 'loks-monsters-bees',
       name: "Lok's Monsters: Bees!",
       objectives: [
         text(
-          'Gather 10 pieces of Bee Lobber data in successful missions in a 14+ zone',
-          'Соберите 10 образцов данных о пчеловодах в успешных миссиях в зоне 14+',
+          'Gather 10 pieces of Bee Lobber enemy data in a 14+ zone',
+          'Соберите 10 фрагментов данных о ядовитых кидалах (мощь Бури: 14+)',
         ),
       ],
-      rewards: [res('active-powercell', 3)],
+      rewards: [game('Ingredient:ingredient_rare_powercell', 2)],
     },
     {
       id: 'loks-monsters-flingers',
       name: "Lok's Monsters: Flingers",
       objectives: [
         text(
-          'Gather 5 pieces of Flinger data in successful missions in a 14+ zone',
-          'Соберите 5 образцов данных о метателях в успешных миссиях в зоне 14+',
+          'Gather 5 pieces of Flinger enemy data in a 14+ zone',
+          'Соберите 5 фрагментов данных о метателях (мощь Бури: 14+)',
         ),
       ],
-      rewards: [res('silver-ore', 5), res('rotating-gizmo', 3)],
+      rewards: [
+        game('Ingredient:ingredient_ore_silver', 5),
+        game('Ingredient:ingredient_rare_mechanism', 3),
+      ],
     },
     {
       id: 'loks-monsters-lightning',
       name: "Lok's Monsters: Lightning!",
       objectives: [
         text(
-          'Gather 10 pieces of Lightning monster data in successful missions in a 16+ zone',
-          'Соберите 10 образцов данных о грозовых монстрах в успешных миссиях в зоне 16+',
+          'Gather 10 pieces of Lightning monster data in a 16+ zone',
+          'Соберите 10 фрагментов данных об электрических монстрах (мощь Бури: 16+)',
         ),
       ],
-      rewards: [res('survivor-xp', 28000), item('survivor')],
+      rewards: [game('AccountResource:peoplexp', 11700), game('CardPack:cardpack_worker_r')],
     },
     {
       id: 'loks-monsters-fire-husks',
       name: "Lok's Monsters: Fire Husks",
       objectives: [
         text(
-          'Gather 10 pieces of Fire monster data in successful missions in a 18+ zone',
-          'Соберите 10 образцов данных об огненных монстрах в успешных миссиях в зоне 18+',
+          'Gather 10 pieces of Fire monster data in a 18+ zone',
+          'Соберите 10 фрагментов данных об огненных монстрах (мощь Бури: 18+)',
         ),
       ],
-      rewards: [res('schematic-xp', 3250), item('ranged')],
+      rewards: [
+        game('AccountResource:schematicxp', 4900),
+        game('CardPack:cardpack_ranged_assault_r'),
+      ],
     },
     {
       id: 'loks-monster-husky-elementals',
       name: "Lok's Monster: Husky Elementals",
       objectives: [
         text(
-          'Gather 10 pieces of Elemental Husky data in successful missions in a 20+ zone',
-          'Соберите 10 образцов данных о стихийных хасках-здоровяках в успешных миссиях в зоне 20+',
+          'Gather 10 pieces of Elemental Husky Husk data in a 20+ zone',
+          'Соберите 10 фрагментов данных о стихийных крепышах (мощь Бури: 20+)',
         ),
       ],
-      rewards: [item('ranged', { rarity: 'rare' })],
+      rewards: [game('CardPack:cardpack_ranged_r')],
     },
     {
       id: 'loks-monster-water',
       name: "Lok's Monster: Water",
       objectives: [
         text(
-          'Gather 10 pieces of Water monster data in successful missions in a 20+ zone',
-          'Соберите 10 образцов данных о водных монстрах в успешных миссиях в зоне 20+',
+          'Gather 10 pieces of Water monster data in a 20+ zone',
+          'Соберите 10 фрагментов данных о водных монстрах (мощь Бури: 20+)',
         ),
       ],
-      rewards: [item('melee', { rarity: 'rare' })],
+      rewards: [game('CardPack:cardpack_melee_r')],
     },
   ],
   other: [
     {
       id: 'talented-builder',
       name: 'Talented Builder',
-      objectives: [
-        text(
-          'Build 500,000 structures in successful missions',
-          'Постройте 500 000 конструкций в успешных миссиях',
-        ),
-      ],
-      rewards: [item('banner', { name: 'Talented Builder' })],
+      objectives: [text('Build Structures ×500000', 'Постройте сооружения ×500000')],
+      rewards: [game('CardPack:cardpack_achievement_banner_talentedbuilder')],
     },
     {
       id: 'go-gnome',
       name: 'Go Gnome!',
-      objectives: [
-        text(
-          'Destroy 100 Garden Gnomes in successful missions',
-          'Уничтожьте 100 садовых гномов в успешных миссиях',
-        ),
-      ],
-      rewards: [item('banner', { name: 'Go Gnome!' })],
+      objectives: [text('Destroy Garden Gnomes ×100', 'Уничтожьте садовых гномов ×100')],
+      rewards: [game('CardPack:cardpack_achievement_banner_gognome')],
     },
     {
       id: 'world-explorer',
       name: 'World Explorer',
       objectives: [
         text(
-          'Fully explore 1,500 zones in successful missions',
-          'Полностью исследуйте 1 500 зон в успешных миссиях',
+          'Fully explore zones in successful missions ×1500',
+          'Полностью исследуйте зоны в ходе успешно выполненных миссий. ×1500',
         ),
       ],
-      rewards: [item('banner', { name: 'World Explorer' })],
+      rewards: [game('CardPack:cardpack_achievement_banner_worldexplorer')],
     },
     {
       id: 'unspeakable-horrors',
       name: 'Unspeakable Horrors',
-      objectives: [
-        text(
-          'Eliminate 20,000 Mist Monsters in successful missions',
-          'Уничтожьте 20 000 туманных монстров в успешных миссиях',
-        ),
-      ],
-      rewards: [item('banner', { name: 'Unspeakable Horrors' })],
+      objectives: [text('Eliminate Mist Monsters ×20000', 'Уничтожьте туманных монстров ×20000')],
+      rewards: [game('CardPack:cardpack_achievement_banner_unspeakablehorrors')],
     },
     {
       id: 'loot-legend',
       name: 'Loot Legend',
-      objectives: [text('Loot 300 Treasure Chests', 'Откройте 300 сундуков с сокровищами')],
-      rewards: [item('banner', { name: 'Loot Legend' })],
+      objectives: [text('Loot Treasure Chests ×300', 'Опустошите сундуки с сокровищами ×300')],
+      rewards: [game('CardPack:cardpack_achievement_banner_lootlegend')],
     },
     {
       id: 'plays-well-with-others',
       name: 'Plays Well with Others',
       objectives: [
-        text(
-          'Complete 1,000 Play with Others missions',
-          'Выполните 1 000 миссий в режиме «Играть с другими»',
-        ),
+        text('Complete Play With Others missions ×1000', 'Выполните совместные миссии. ×1000'),
       ],
-      rewards: [item('banner', { name: 'Plays Well with Others' })],
+      rewards: [game('CardPack:cardpack_achievement_banner_playswellwithothers')],
     },
     {
       id: 'guardian-angel',
       name: 'Guardian Angel',
-      objectives: [
-        text(
-          'Complete 10,000 Play with Others missions',
-          'Выполните 10 000 миссий в режиме «Играть с другими»',
-        ),
-      ],
-      rewards: [item('banner', { name: 'Guardian Angel' })],
+      objectives: [text('Save Survivors ×10000', 'Спасите выживших ×10000')],
+      rewards: [game('CardPack:cardpack_achievement_banner_guardianangel')],
     },
     {
       id: 'collections',
       name: 'Collections',
-      objectives: [
-        text('Level up your Collection Book twice', 'Дважды повысьте уровень книги коллекций'),
-      ],
-      rewards: [res('schematic-xp', 1000)],
+      objectives: [text('Level Up Your Collection Book ×2', 'Повысьте уровень книги коллекций ×2')],
+      rewards: [game('AccountResource:schematicxp', 700)],
     },
     {
       id: 'hero-rarity-upgrade',
       name: 'Hero Rarity Upgrade',
-      objectives: [text('Upgrade the rarity of a Hero', 'Повысьте редкость героя')],
-      rewards: [res('training-manual', 75)],
+      objectives: [text('Upgrade the Rarity of a Hero', 'Повысьте редкость героя')],
+      rewards: [game('AccountResource:reagent_people', 75)],
     },
     {
       id: 'perk-replacement',
       name: 'Perk Replacement',
-      objectives: [text('Replace a perk on a schematic', 'Замените перк на чертеже')],
-      rewards: [res('re-perk', 1200)],
+      objectives: [text('Replace a Perk', 'Замените любое свойство')],
+      rewards: [
+        game('AccountResource:reagent_alteration_generic', 1200),
+        game('AccountResource:reagent_alteration_upgrade_r', 150),
+        game('AccountResource:reagent_alteration_upgrade_uc', 100),
+        game('AccountResource:reagent_alteration_upgrade_vr', 225),
+      ],
     },
     {
       id: 'perk-upgrade',
       name: 'Perk Upgrade',
-      objectives: [text('Upgrade a perk on a schematic', 'Улучшите перк на чертеже')],
-      rewards: [res('re-perk', 1200)],
+      objectives: [text('Upgrade a Perk', 'Улучшите любое свойство')],
+      rewards: [
+        game('AccountResource:reagent_alteration_generic', 1200),
+        game('AccountResource:reagent_alteration_upgrade_r', 150),
+        game('AccountResource:reagent_alteration_upgrade_sr', 345),
+        game('AccountResource:reagent_alteration_upgrade_uc', 100),
+        game('AccountResource:reagent_alteration_upgrade_vr', 225),
+      ],
     },
     {
       id: 'weapon-enhancement',
       name: 'Weapon Enhancement',
-      objectives: [text('Level up a weapon', 'Повысьте уровень оружия')],
-      rewards: [res('rusty-parts', 5)],
+      objectives: [text('Level Up a Weapon', 'Повысьте уровень оружия')],
+      rewards: [
+        game('Ingredient:ingredient_mechanical_parts_t01', 5),
+        game('Ingredient:ingredient_ore_copper', 3),
+      ],
     },
     {
       id: 'weapon-trap-evolution',
       name: 'Weapon/Trap Evolution',
       objectives: [
-        text(
-          'Evolve a weapon or trap by 1 star',
-          'Повысьте эволюцию оружия или ловушки на 1 звезду',
-        ),
+        text('Evolve a Weapon or Trap by 1 Star', 'Развейте оружие или ловушку на 1 звезду'),
       ],
-      rewards: [res('weapon-designs', 75)],
+      rewards: [game('AccountResource:reagent_schematic', 75)],
     },
   ],
 };

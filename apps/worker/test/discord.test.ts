@@ -80,7 +80,7 @@ describe('buildDiscordMessage', () => {
     expect(t).toContain('Yesterday **80**');
     expect(t).toContain('7 days **230**');
     expect(t).toContain('Fight the Storm');
-    expect(JSON.stringify(msg)).toContain('https://stw.example/?alert=vbucks');
+    expect(JSON.stringify(msg)).toContain('https://stw.example/pve?alert=vbucks');
     expect(JSON.stringify(msg)).not.toContain('example//');
   });
 

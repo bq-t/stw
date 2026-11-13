@@ -1,13 +1,14 @@
-import { ChevronDown, Camera, Link2 } from 'lucide-react';
+import { ChevronDown, Camera, Coins, Link2 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import type { DailyQuest } from '@/data/daily-quests';
+import { DAILY_GOLD, type DailyQuest } from '@/data/daily-quests';
 import shotsManifest from '@/lib/quest-shots.json';
-import { GameIcon } from '@/components/missions/GameIcon';
+import { GameIcon, gameIconSrc } from '@/components/missions/GameIcon';
 import { VbucksIcon } from '@/components/missions/VbucksIcon';
 import { QUEST_ICONS } from './icons';
 import { QuestTips } from './QuestTips';
 
 const SHOTS = shotsManifest as Record<string, string[]>;
+const GOLD_ICON = gameIconSrc('rewards', 'eventcurrency_scaling');
 
 /** File name without extension: "/images/quests/x/2.webp" → "2". */
 const baseName = (src: string) => src.slice(src.lastIndexOf('/') + 1).replace(/\.[^.]+$/, '');
@@ -48,6 +49,19 @@ export function QuestCard({ quest, categoryIcon }: { quest: DailyQuest; category
             className="size-3.5 text-muted-foreground"
           />
         )}
+        <span
+          aria-label={t('DailyQuests.goldAmount', { count: quest.gold ?? DAILY_GOLD })}
+          className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground tabular-nums"
+        >
+          {GOLD_ICON ? (
+            // Server component: a plain <img> from the manifest (GameIcon "rewards" is client-side).
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={GOLD_ICON} alt="" aria-hidden className="size-4 object-contain" />
+          ) : (
+            <Coins aria-hidden className="size-4" />
+          )}
+          <span>{quest.gold ?? DAILY_GOLD}</span>
+        </span>
         <span
           data-rarity="legendary"
           aria-label={t('Mission.vbucksAmount', { count: quest.vbucks })}

@@ -25,8 +25,8 @@ export default async function NotificationsPage({ params }: PageProps<'/[locale]
   return (
     <article className="flex max-w-3xl flex-col gap-6">
       <header className="flex flex-col gap-2">
-        <h1 className="font-display text-2xl font-extrabold uppercase">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('intro')}</p>
+        <h1 className="font-display text-2xl font-extrabold text-white uppercase">{t('title')}</h1>
+        <p className="text-white/80">{t('intro')}</p>
       </header>
       <NotificationsView />
     </article>

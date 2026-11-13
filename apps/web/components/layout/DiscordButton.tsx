@@ -21,7 +21,7 @@ export function DiscordButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={t('join')}
-      className="fn-tab fn-discord fixed right-4 bottom-4 z-40 gap-2 px-5 py-2 text-xl shadow-lg sm:right-6 sm:bottom-6"
+      className="fn-tab fn-discord discord-fab fixed right-4 bottom-4 z-40 gap-2 px-5 py-2 text-xl shadow-lg sm:right-6 sm:bottom-6"
     >
       <DiscordIcon className="size-6" />
       <span>Discord</span>

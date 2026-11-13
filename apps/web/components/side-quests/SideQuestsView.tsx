@@ -10,6 +10,7 @@ import {
   SIDE_QUESTS,
   questVbucks,
   seriesVbucks,
+  sideQuestName,
   stageVbucks,
   vbucksSources,
   type ChallengeSeries,
@@ -40,6 +41,7 @@ function VbucksBadge({ children, className }: { children: React.ReactNode; class
 }
 
 function SideQuestCard({ quest }: { quest: SideQuest }) {
+  const locale = useLocale();
   const vbucks = questVbucks(quest);
   return (
     // The glow sits on the outer <li>: the card's clip-path would cut a glow on the card itself.
@@ -50,7 +52,7 @@ function SideQuestCard({ quest }: { quest: SideQuest }) {
           vbucks > 0 && '[--stripe:var(--vbucks)]',
         )}
       >
-        <h3 className="text-sm leading-tight font-semibold">{quest.name}</h3>
+        <h3 className="text-sm leading-tight font-semibold">{sideQuestName(quest, locale)}</h3>
         <ul className="flex flex-col gap-1 text-sm leading-snug text-muted-foreground">
           {quest.objectives.map((o, i) => (
             <li key={i}>
@@ -116,7 +118,10 @@ function ChallengeCard({ series }: { series: ChallengeSeries }) {
           <summary className="cursor-pointer text-xs text-accent-ui select-none hover:underline">
             {t('allStages', { count: series.stages.length })}
           </summary>
-          <ol className="mt-2 grid grid-cols-1 gap-1 sm:grid-cols-2">
+          <ol
+            className="mt-2 grid grid-cols-1 gap-1 sm:grid-flow-col sm:grid-cols-2 sm:grid-rows-[repeat(var(--rows),auto)]"
+            style={{ '--rows': Math.ceil(series.stages.length / 2) } as React.CSSProperties}
+          >
             {series.stages.map((s, i) => (
               <li
                 key={i}
@@ -204,7 +209,7 @@ export function SideQuestsView() {
         <h2 id="h-challenges" className="font-display text-base font-extrabold uppercase">
           {t('SideQuests.challenges')}
         </h2>
-        <p className="text-sm text-muted-foreground">{t('SideQuests.challengesNote')}</p>
+        <p className="text-sm text-white/80">{t('SideQuests.challengesNote')}</p>
         <ul className="grid grid-cols-1 items-start gap-2 lg:grid-cols-2">
           {challenges.map((c) => (
             <ChallengeCard key={c.id} series={c} />
@@ -251,7 +256,7 @@ export function SideQuestsView() {
                 {t('Questline.questsCount', { count: all.length })}
               </span>
             </header>
-            {g.note && <p className="text-sm text-muted-foreground">{g.note[locale]}</p>}
+            {g.note && <p className="text-sm text-white/80">{g.note[locale]}</p>}
             <ul className="grid grid-cols-1 items-start gap-2 md:grid-cols-2 xl:grid-cols-3">
               {quests.map((q) => (
                 <SideQuestCard key={q.id} quest={q} />

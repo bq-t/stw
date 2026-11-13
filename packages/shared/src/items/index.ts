@@ -3,7 +3,7 @@ import type { Rarity } from '../types';
 // Item catalog: Epic item ID → names and icon. Resources seen in the 2026-11-04 response
 // are listed here; the rest (heroes, survivors, schematics) comes from the FModel export.
 // Items missing from the catalog are shown with a readable form of their ID.
-// TODO: check RU names against the game's Russian localization.
+// RU names checked against the game's Russian localization (43.10, tools/game-export).
 
 export interface ItemInfo {
   name: { en: string; ru: string };
@@ -61,11 +61,11 @@ export const ITEMS: Record<string, ItemInfo> = {
     'В-баксы',
     undefined,
     'Fortnite premium currency. Mission alerts give V-Bucks only to Founders; other players get X-Ray Tickets.',
-    'Премиум-валюта Fortnite. За алерты В-баксы получают только фаундеры, остальные — рентгеновские билеты.',
+    'Премиум-валюта Fortnite. За алерты В-баксы получают только фаундеры, остальные — рентген-билеты.',
   ),
   'AccountResource:currency_xrayllama': res(
     'X-Ray Tickets',
-    'Рентгеновские билеты',
+    'Рентген-билеты',
     undefined,
     'Buys X-Ray Llamas in the Loot tab. Non-Founders get them instead of V-Bucks.',
     'Покупка рентгеновских лам во вкладке «Добыча». Не-фаундеры получают их вместо В-баксов.',
@@ -78,94 +78,85 @@ export const ITEMS: Record<string, ItemInfo> = {
     'Валюта текущего события, тратится в магазине события.',
   ),
   'AccountResource:eventcurrency_scaling': res(
-    'Event Tickets',
-    'Билеты события',
+    'Gold',
+    'Золото',
     'common',
-    'Buys Event Llamas in the Event Store.',
-    'Покупка лам события в магазине события.',
+    'Buys items in the weekly and event stores.',
+    'Покупки в недельном и ивентовом магазинах.',
   ),
   'AccountResource:heroxp': res(
     'Hero XP',
-    'Опыт героев',
+    'Опыт для героев',
     undefined,
     `${XP} for leveling up heroes and defenders.`,
     'Опыт для прокачки героев и защитников.',
   ),
   'AccountResource:schematicxp': res(
     'Schematic XP',
-    'Опыт чертежей',
+    'Опыт для чертежей',
     undefined,
     `${XP} for leveling up weapon and trap schematics.`,
     'Опыт для прокачки чертежей оружия и ловушек.',
   ),
   'AccountResource:personnelxp': res(
     'Survivor XP',
-    'Опыт выживших',
+    'Опыт для выживших',
     undefined,
     `${XP} for leveling up survivors.`,
     'Опыт для прокачки выживших.',
   ),
   'AccountResource:peoplexp': res(
     'Survivor XP',
-    'Опыт выживших',
+    'Опыт для выживших',
     undefined,
     `${XP} for leveling up survivors.`,
     'Опыт для прокачки выживших.',
   ),
-  'AccountResource:reagent_c_t01': evo('Pure Drop of Rain', 'Чистая капля дождя', 'uncommon', 2),
+  // Epic in game (owner checked 2026-11-11), not the uncommon the material ladder suggests.
+  'AccountResource:reagent_c_t01': evo('Pure Drop of Rain', 'Чистая дождевая капля', 'epic', 2),
   'AccountResource:reagent_c_t02': evo('Lightning in a Bottle', 'Молния в бутылке', 'rare', 3),
-  'AccountResource:reagent_c_t03': evo('Eye of the Storm', 'Глаз бури', 'epic', 4),
-  'AccountResource:reagent_c_t04': evo('Storm Shard', 'Осколок бури', 'legendary', 5),
+  'AccountResource:reagent_c_t03': evo('Eye of the Storm', 'Око Бури', 'epic', 4),
+  'AccountResource:reagent_c_t04': evo('Storm Shard', 'Осколок Бури', 'legendary', 5),
   'AccountResource:reagent_alteration_upgrade_uc': perkUp(
     'Uncommon PERK-UP!',
-    'Необычное улучшение перка',
+    'Необычный улучшарий',
     'uncommon',
     'uncommon',
     'необычной',
   ),
   'AccountResource:reagent_alteration_upgrade_r': perkUp(
     'Rare PERK-UP!',
-    'Редкое улучшение перка',
+    'Редкий улучшарий',
     'rare',
     'rare',
     'редкой',
   ),
   'AccountResource:reagent_alteration_upgrade_vr': perkUp(
     'Epic PERK-UP!',
-    'Эпическое улучшение перка',
+    'Эпический улучшарий',
     'epic',
     'epic',
     'эпической',
   ),
   'AccountResource:reagent_alteration_upgrade_sr': perkUp(
     'Legendary PERK-UP!',
-    'Легендарное улучшение перка',
+    'Легендарный улучшарий',
     'legendary',
     'legendary',
     'легендарной',
   ),
   'AccountResource:reagent_alteration_generic': res(
     'RE-PERK!',
-    'Смена перка',
+    'Заменярий',
     'rare',
     'Rerolls a perk on a schematic.',
     'Меняет перк чертежа на случайный.',
   ),
-  'AccountResource:reagent_alteration_ele_fire': element(
-    'Fire-UP!',
-    'Огненное улучшение',
-    'fire',
-    'огнём',
-  ),
-  'AccountResource:reagent_alteration_ele_water': element(
-    'Frost-UP!',
-    'Ледяное улучшение',
-    'water',
-    'водой',
-  ),
+  'AccountResource:reagent_alteration_ele_fire': element('FIRE-UP!', 'Огневик', 'fire', 'огнём'),
+  'AccountResource:reagent_alteration_ele_water': element('FROST-UP!', 'Ледовик', 'water', 'водой'),
   'AccountResource:reagent_alteration_ele_nature': element(
-    'Amp-UP!',
-    'Электрическое улучшение',
+    'AMP-UP!',
+    'Молневик',
     'nature',
     'природой',
   ),
@@ -184,10 +175,20 @@ const RARITY_BY_CODE: Record<string, Rarity> = {
   ur: 'mythic',
 };
 
+/**
+ * Mythic items carry the legendary code "sr" too. Heroes say "myth" in the ID
+ * ("Hero:hid_outlander_myth02_sr_t01" is Ragnarok); mythic lead survivors have a name after the
+ * code ("Worker:managerdoctor_sr_kingsly_t01"), plain legendary leads do not
+ * ("Worker:managerdoctor_sr_t01").
+ */
+const MYTHIC = [/^hero:hid_[a-z]+_myth/, /^worker:manager[a-z]+_sr_[a-z]+_t\d\d$/];
+
 /** Rarity from the ID's rarity code: "Hero:hid_commando_011_sr_t01" → legendary. */
 export function rarityOf(itemId: string): Rarity | undefined {
   const known = ITEMS[itemId]?.rarity;
   if (known) return known;
+  const id = itemId.toLowerCase();
+  if (MYTHIC.some((re) => re.test(id))) return 'mythic';
   const code = itemId
     .toLowerCase()
     .split(/[_:]/)
@@ -215,14 +216,159 @@ export function maxRarity(itemIds: string[]): Rarity | undefined {
   return best >= 0 ? RARITY_ORDER[best] : undefined;
 }
 
-/** Icon lookup names for an item: exact name, name without rarity/tier, then category. */
+/** "sid_assault_auto_halloween_sr_ore_t01" → "sid_assault_auto_halloween_sr" (tools/game-export/item-icons.mts). */
+export const midBase = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/_t\d\d$/, '')
+    .replace(/_(ore|crystal)$/, '');
+/** "sid_assault_auto_halloween_sr_ore_t01" → "sid_assault_auto_halloween". */
+export const deepBase = (name: string) => midBase(name).replace(/_(c|uc|r|vr|sr|ur|er)$/, '');
+
+/**
+ * Icon lookup names for an item: exact name, name without rarity/tier, then a shared icon for
+ * its kind (a hero's class "hero-ninja", a schematic's weapon "schematic-axe"), then category,
+ * then "misc": the "?" for anything that has no icon (yet).
+ */
 export function iconNames(itemId: string, category: string): string[] {
   const name = (itemId.split(':').pop() ?? itemId).toLowerCase();
   const base = name.replace(/_(c|uc|r|vr|sr|ur)(_t\d\d)?$/, '').replace(/_t\d\d$/, '');
-  return [name, base, `category-${category}`];
+  // Game item icons (public/icons/items/index.json) are keyed without tier and material,
+  // with rarity (hero portraits differ by rarity) and without it.
+  const mid = midBase(name);
+  const deep = deepBase(name);
+  const info = stwItemInfo(itemId);
+  const shared = [
+    ...(info.heroClass ? [`hero-${info.heroClass}`] : []),
+    ...(info.kind === 'schematic' && info.weapon ? [`schematic-${info.weapon}`] : []),
+  ];
+  return [...new Set([name, mid, base, deep]), ...shared, `category-${category}`, 'misc'];
+}
+
+export type StwItemKind =
+  | 'hero'
+  | 'schematic'
+  | 'survivor'
+  | 'lead'
+  | 'defender'
+  | 'schematicPack'
+  | 'cardPack'
+  | 'loadout'
+  | 'armorySlot'
+  | 'resource'
+  | 'other';
+export type StwHeroClass = 'soldier' | 'constructor' | 'ninja' | 'outlander';
+export type StwWeapon =
+  | 'assault'
+  | 'pistol'
+  | 'shotgun'
+  | 'sniper'
+  | 'explosive'
+  | 'sword'
+  | 'axe'
+  | 'scythe'
+  | 'hammer'
+  | 'club'
+  | 'spear'
+  | 'melee'
+  | 'trap';
+
+/** What an STW item is, read from its ID: kind, hero class, weapon, schematic material. */
+export interface StwItemInfo {
+  kind: StwItemKind;
+  heroClass?: StwHeroClass;
+  /** Schematic category or the defender's weapon. */
+  weapon?: StwWeapon;
+  material?: 'ore' | 'crystal';
+}
+
+// A Map: "constructor" as a plain object key would clash with Object.prototype.
+const HERO_CLASS = new Map<string, StwHeroClass>([
+  ['commando', 'soldier'],
+  ['constructor', 'constructor'],
+  ['ninja', 'ninja'],
+  ['outlander', 'outlander'],
+]);
+const SCHEMATIC_WEAPON: [RegExp, StwWeapon][] = [
+  [/^sid_(ceiling|floor|wall)_/, 'trap'],
+  [/^sid_assault_/, 'assault'],
+  [/^sid_pistol_/, 'pistol'],
+  [/^sid_shotgun_/, 'shotgun'],
+  [/^sid_sniper_/, 'sniper'],
+  [/^sid_(explosive|launcher)_/, 'explosive'],
+  [/^sid_edged_axe/, 'axe'],
+  [/^sid_edged_scythe/, 'scythe'],
+  [/^sid_edged_/, 'sword'],
+  [/^sid_blunt_hammer/, 'hammer'],
+  [/^sid_blunt_/, 'club'],
+  [/^sid_piercing_/, 'spear'],
+];
+const DEFENDER_WEAPONS = new Set<StwWeapon>(['pistol', 'assault', 'shotgun', 'sniper', 'melee']);
+
+/**
+ * "Hero:hid_ninja_018_sr_t01" → hero, ninja; "Schematic:sid_edged_axe_..._sr_ore_t01" →
+ * schematic, axe, ore; "Defender:did_defenderpistol_..." → defender, pistol. The catalog has
+ * no item types of its own, so this is all there is to say what an offer is.
+ */
+export function stwItemInfo(templateId: string): StwItemInfo {
+  const [type = '', id = ''] = templateId.toLowerCase().split(':');
+  switch (type) {
+    case 'hero': {
+      const c = HERO_CLASS.get(/^hid_([a-z]+)/.exec(id)?.[1] ?? '');
+      return c ? { kind: 'hero', heroClass: c } : { kind: 'hero' };
+    }
+    case 'schematic': {
+      const weapon = SCHEMATIC_WEAPON.find(([re]) => re.test(id))?.[1];
+      const material = /_(ore|crystal)(_t\d\d)?$/.exec(id)?.[1] as 'ore' | 'crystal' | undefined;
+      return {
+        kind: 'schematic',
+        ...(weapon ? { weapon } : {}),
+        ...(material ? { material } : {}),
+      };
+    }
+    case 'worker':
+      return { kind: id.startsWith('manager') ? 'lead' : 'survivor' };
+    case 'defender': {
+      const w = /^did_defender([a-z]+)/.exec(id)?.[1] as StwWeapon | undefined;
+      return w && DEFENDER_WEAPONS.has(w) ? { kind: 'defender', weapon: w } : { kind: 'defender' };
+    }
+    case 'cardpack':
+      return { kind: id.startsWith('cardpack_schematic') ? 'schematicPack' : 'cardPack' };
+    case 'campaignheroloadout':
+      return { kind: 'loadout' };
+    case 'token':
+      return { kind: id === 'accountinventorybonus' ? 'armorySlot' : 'other' };
+    case 'accountresource':
+      return { kind: 'resource' };
+    default:
+      return { kind: 'other' };
+  }
 }
 
 /** "Hero:hid_commando_011_sr_t01" → "Commando 011". */
+/** EN/RU names from the game (GAME_NAMES in ./game-names, or its JSON copy on the site). */
+export type GameNames = Record<string, readonly [en: string, ru: string]>;
+
+/** Game name of an item: key without tier and material, then without rarity (item-names.mts). */
+export function gameItemName(
+  itemId: string,
+  names: GameNames | null | undefined,
+): { en: string; ru: string } | undefined {
+  if (!names) return undefined;
+  const n = (itemId.split(':').pop() ?? itemId).toLowerCase().replace(/^(wid|tid)_/, 'sid_');
+  const hit = names[midBase(n)] ?? names[deepBase(n)];
+  return hit ? { en: hit[0], ru: hit[1] } : undefined;
+}
+
+/** Item name in a language: our catalog, then the game's name, then a readable form of the ID. */
+export function itemName(itemId: string, locale: 'en' | 'ru', names?: GameNames | null): string {
+  return (
+    itemInfo(itemId)?.name[locale] ??
+    gameItemName(itemId, names)?.[locale] ??
+    readableItemId(itemId)
+  );
+}
+
 export function readableItemId(itemId: string): string {
   const name = itemId.split(':').pop() ?? itemId;
   return name

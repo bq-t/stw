@@ -7,13 +7,16 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://stw.bq-t.p
 );
 
 export const PAGES = [
-  '/',
-  '/daily-quests',
-  '/questline',
-  '/side-quests',
-  '/shop',
-  '/events',
-  '/faq',
+  '/pve',
+  '/pve/daily-quests',
+  '/pve/questline',
+  '/pve/side-quests',
+  '/pve/shop',
+  '/pve/events',
+  '/pve/faq',
+  '/battle-royale/shop',
+  '/battle-royale/tournaments',
+  '/battle-royale/events',
   '/privacy',
 ] as const;
 

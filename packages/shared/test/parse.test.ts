@@ -113,6 +113,9 @@ describe('power level', () => {
     ['Theater_Nightmare_Zone10_Dudebro', 25, 140],
     ['Theater_Endgame_Group_Zone6', 26, 160],
     ['Theater_Hard_Outpost1', 0, 0],
+    // Rows outside the tier ladder take the game table value; tier stays 0.
+    ['Theater_Landmark_Normal_Zone3', 0, 28],
+    ['Theater_Phoenix_Zone21', 0, 108],
   ])('%s → tier %i, PL %i', (row, tier, pl) => {
     expect(tierOf(row)).toBe(tier);
     expect(powerLevelOf(row)).toBe(pl);
@@ -136,7 +139,9 @@ describe('missionTypeOf (real generator names)', () => {
     ['MissionGen_T3_R5_3Gates', 'fight-the-category-3-storm'],
     ['MissionGen_4Gates_Group', 'fight-the-category-4-storm'],
     ['MissionGen_LtR_Twine', 'launch-the-rocket'],
-    ['MissionGen_T1_HT_LtB', 'launch-the-balloon'],
+    ['MissionGen_T1_HT_LtB', 'ride-the-lightning'],
+    ['MissionGen_T2_R5_PtS', 'vindertech-research-lab'],
+    ['MissionGen_PowerTheStormShield', 'repair-the-shelter'],
     ['MissionGen_EliminateAndCollect_WR', 'eliminate-and-collect'],
     ['MissionGen_Resupply_WithRift', 'resupply'],
     ['MissionGen_RefuelTheBase', 'refuel-the-homebase'],

@@ -11,7 +11,8 @@ import {
   type Mission,
   type VbucksHistory,
 } from '@stw/shared';
-import { itemInfo, readableItemId } from '@stw/shared/items';
+import { GAME_NAMES } from '@stw/shared/game-names';
+import { itemName } from '@stw/shared/items';
 import { fmt, label, messages, plural, sitePath, type Locale, type Messages } from '../i18n';
 import iconsManifest from '../../../web/lib/icons-manifest.json';
 
@@ -131,7 +132,7 @@ function missionIconUrl(m: Mission, siteUrl: string): string | null {
 }
 
 function rewardLabel(itemId: string, quantity: number, locale: Locale): string {
-  const name = itemInfo(itemId)?.name[locale] ?? readableItemId(itemId);
+  const name = itemName(itemId, locale, GAME_NAMES);
   return quantity > 1 ? `${name} ×${quantity}` : name;
 }
 
@@ -297,7 +298,7 @@ export function buildDiscordMessage(
         type: BUTTON,
         style: BUTTON_LINK,
         label: c.openTracker,
-        url: sitePath(site, locale, has ? '/?alert=vbucks' : '/'),
+        url: sitePath(site, locale, has ? '/pve?alert=vbucks' : '/pve'),
       },
       { type: BUTTON, style: BUTTON_LINK, label: c.howToFarm, url: sitePath(site, locale, '/faq') },
     ],

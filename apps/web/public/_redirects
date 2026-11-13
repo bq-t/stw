@@ -11,14 +11,34 @@
 /sitemap.xml  /sitemap.xml     200
 /robots.txt   /robots.txt      200
 
+# Pages moved under /pve (Save the World) and /battle-royale; old links (Discord, search) follow.
+# The query string is kept, so /shop?tab=br lands on /pve/shop?tab=br, which sends it on to BR.
+/daily-quests        /pve/daily-quests        301
+/questline           /pve/questline           301
+/side-quests         /pve/side-quests         301
+/faq                 /pve/faq                 301
+/shop                /pve/shop                301
+/events              /pve/events              301
+/br/*                /battle-royale/:splat    301
+/ru/daily-quests     /ru/pve/daily-quests     301
+/ru/questline        /ru/pve/questline        301
+/ru/side-quests      /ru/pve/side-quests      301
+/ru/faq              /ru/pve/faq              301
+/ru/shop             /ru/pve/shop             301
+/ru/events           /ru/pve/events           301
+/ru/br/*             /ru/battle-royale/:splat 301
+
+# The front page is the tracker for now; a temporary redirect keeps / free for a page of its own.
+/                    /pve                     302
+/ru                  /ru/pve                  302
+/ru/                 /ru/pve                  302
+
 # No duplicate /en URLs for search engines.
 /en           /                301
 /en/*         /:splat          301
 
 # Russian lives under /ru.
-/ru           /ru              200
 /ru/*         /ru/:splat       200
 
 # Everything else is English.
-/             /en              200
 /*            /en/:splat       200

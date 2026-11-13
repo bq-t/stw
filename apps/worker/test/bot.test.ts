@@ -120,7 +120,7 @@ describe('/missions', () => {
     expect(msg).toContain('1 миссия');
     expect(msg).toContain('**101**');
     expect(msg).not.toContain('**5**');
-    expect(msg).toContain('https://stw.bq-t.pro/ru?zone=twine-peaks&alert=alerts');
+    expect(msg).toContain('https://stw.bq-t.pro/ru/pve?zone=twine-peaks&alert=alerts');
   });
 });
 
@@ -144,7 +144,7 @@ describe('localized V-Bucks card', () => {
     );
     expect(msg).toContain('50 V-Bucks сегодня');
     expect(msg).toContain('1 миссия');
-    expect(msg).toContain('https://stw.bq-t.pro/ru?alert=vbucks');
+    expect(msg).toContain('https://stw.bq-t.pro/ru/pve?alert=vbucks');
     expect(msg).toContain('https://stw.bq-t.pro/ru/faq');
   });
 });
@@ -208,7 +208,7 @@ describe('subscriptions', () => {
     ]);
     expect(f).toMatchObject({ item: DROP, minQty: 30, zones: ['twine-peaks'], plMin: 100 });
     expect(describeFilter(f, 'en')).toBe('Pure Drop of Rain ≥ 30 · Twine Peaks · PL 100–160');
-    expect(describeFilter(f, 'ru')).toContain('Чистая капля дождя ≥ 30');
+    expect(describeFilter(f, 'ru')).toContain('Чистая дождевая капля ≥ 30');
     expect(subscriptionFilter([{ name: 'item', type: 3, value: 'Hack:x' }])).not.toHaveProperty(
       'item',
     );

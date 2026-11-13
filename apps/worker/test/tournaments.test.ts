@@ -46,7 +46,7 @@ describe('tournament messages', () => {
     expect(page).toContain('<t:1794333600:F>');
     expect(page).not.toContain('Event4'); // two weeks away
     expect(page).toContain('"custom_id":"tr:pick:EU"');
-    expect(page).toContain('/ru/events?tab=tournaments&region=EU');
+    expect(page).toContain('/ru/battle-royale/tournaments?region=EU');
   });
 
   it('picker offers upcoming sessions; offsets carry everything in custom_ids', () => {

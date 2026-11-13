@@ -70,7 +70,7 @@ describe('shop pages', () => {
     const pages = brShopPages(bigBrShop(), 'ru', 'https://stw.bq-t.pro', NOW);
     const gallery = JSON.stringify(pages[0]).match(/"media"/g) ?? [];
     expect(gallery).toHaveLength(10);
-    expect(JSON.stringify(pages.at(-1))).toContain('/ru/shop?tab=br');
+    expect(JSON.stringify(pages.at(-1))).toContain('/ru/battle-royale/shop');
     expect(JSON.stringify(pages[0])).not.toContain('·  ');
   });
 
@@ -148,8 +148,8 @@ describe('shop pages', () => {
     );
     const text = JSON.stringify(msg);
     expect(text).toContain('Survivor (Uncommon)');
-    expect(text).toContain('Choice of one (Legendary), one of:');
-    expect(text).toContain('Edged Sword Light (Legendary)');
+    expect(text).toContain('Legendary Melee Schematic (Legendary), one of:');
+    expect(text).toContain('Stabsworth the III (Legendary)');
   });
 
   it('next reset is the coming 00:00 UTC', () => {

@@ -15,7 +15,8 @@ export interface EpicClient {
 /**
  * Known game clients. Epic disables clients from time to time: on 2026-11-04 a local
  * run got `errors.com.epicgames.account.client_disabled` for fortniteIOSGameClient.
- * Pick another one with the EPIC_CLIENT env var (stage 2: check which one works).
+ * Pick another one with the EPIC_CLIENT env var. fortniteAndroidGameClient (the default) works:
+ * the production Worker fetches world/info with it every day (checked 2026-11-13).
  */
 export const EPIC_CLIENTS = {
   fortniteAndroidGameClient: {

@@ -41,7 +41,7 @@ export function QuestTips({ tips, className }: { tips: QuestTip[]; className?: s
                   {tip.missions.map((m) => (
                     <li
                       key={m}
-                      className="skew-tab inline-flex items-center gap-1 bg-surface-2 px-2 py-0.5 text-xs"
+                      className="skew-tab inline-flex items-center gap-1 bg-white px-2 py-0.5 text-xs font-semibold text-on-brand [&_img]:brightness-0"
                     >
                       <GameIcon
                         group="missions"

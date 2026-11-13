@@ -7,10 +7,11 @@ import {
   type TournamentRegion,
   type UpcomingSession,
 } from '@stw/shared';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocale, useTranslations } from 'next-intl';
-import { useState } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
+import { CardOverlay } from '@/components/layout/CardOverlay';
+import { CardSkeletons } from '@/components/ui/skeleton';
 import {
   ApiError,
   addReminder,
@@ -36,7 +37,11 @@ function RegionChips({
 }) {
   const t = useTranslations();
   return (
-    <div className="flex flex-wrap items-center gap-2" role="group" aria-label={t('Events.region')}>
+    <div
+      className="fn-panel flex flex-wrap items-center gap-2 py-2"
+      role="group"
+      aria-label={t('Events.region')}
+    >
       {TOURNAMENT_REGIONS.map((r) => (
         <button
           key={r}
@@ -121,59 +126,187 @@ function RemindControl({
   );
 }
 
-function SessionRow({
-  session,
-  name,
+type Card = { session: UpcomingSession; name: TournamentName | undefined; live: boolean };
+
+const noSubscribe = () => () => {};
+
+/** What a card shows (also the copy that flies into the detail view). */
+function CardFace({ card }: { card: Card }) {
+  const t = useTranslations('Events');
+  const when = useSessionTime();
+  const begin = Date.parse(card.session.window.begin);
+  return (
+    <>
+      <span className="tour-card-art">
+        {card.name?.poster && (
+          // Epic CDN, static export: plain <img>.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={card.name.poster} alt="" loading="lazy" />
+        )}
+        <span className="tour-card-text">
+          <span className="fn-title block text-lg leading-tight">
+            {card.name?.title ?? card.session.tournament.displayId}
+          </span>
+          <span className="mt-0.5 block text-xs text-white/85">
+            {card.live ? t('live') : when(begin)}
+          </span>
+        </span>
+      </span>
+      {card.live && (
+        <span className="tour-card-badge">
+          <span className="intro-card-badge">{t('liveBadge')}</span>
+        </span>
+      )}
+    </>
+  );
+}
+
+/** The open tournament: details on the left, the card on the right (CardOverlay). */
+function TournamentDetail({
+  card,
+  from,
   region,
   reminders,
+  onClosed,
 }: {
-  session: UpcomingSession;
-  name: TournamentName | undefined;
+  card: Card;
+  /** Where the card sits in the row, to fly from and back to. */
+  from: () => DOMRect | null;
   region: TournamentRegion;
   reminders: RemindersResponse | null;
+  onClosed: () => void;
 }) {
   const t = useTranslations('Events');
   const rel = useRelativeTime();
   const when = useSessionTime();
   const now = useNow();
-  const begin = Date.parse(session.window.begin);
-  const live = begin <= now;
-  const tr = session.tournament;
+  const tr = card.session.tournament;
+  const begin = Date.parse(card.session.window.begin);
+  const title = card.name?.title ?? tr.displayId;
+
   return (
-    <li className="fn-block flex gap-3 p-3">
-      {name?.poster && (
-        // Epic CDN, static export: plain <img>.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={name.poster} alt="" loading="lazy" className="size-16 shrink-0 object-cover" />
-      )}
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-          <h3 className="font-semibold">
-            {name?.title ?? tr.displayId}
-            {name?.subtitle && (
-              <span className="font-normal text-muted-foreground"> · {name.subtitle}</span>
-            )}
-          </h3>
-          <span className="text-sm">
-            {live ? (
+    <CardOverlay
+      label={title}
+      from={from}
+      slotClassName="tour-slot"
+      flyerClassName="tour-card"
+      flyer={<CardFace card={card} />}
+      onClosed={onClosed}
+      info={(close) => (
+        <>
+          <h2 className="font-display text-2xl font-extrabold text-white uppercase">{title}</h2>
+          {card.name?.subtitle && <p className="text-white/80">{card.name.subtitle}</p>}
+          <p className="text-sm">
+            {card.live ? (
               <span className="font-semibold text-[var(--brand)]">{t('live')}</span>
             ) : (
-              <time dateTime={session.window.begin}>
+              <time dateTime={card.session.window.begin}>
                 {when(begin)} · {rel(begin, now)}
               </time>
             )}
-          </span>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          {[tr.mobile && t('mobile'), tr.minLevel && t('minLevel', { level: tr.minLevel })]
-            .filter(Boolean)
-            .join(' · ')}
-        </p>
-        {!live && reminders && (
-          <RemindControl session={session} region={region} reminders={reminders} />
-        )}
-      </div>
-    </li>
+          </p>
+          {(tr.mobile || tr.minLevel) && (
+            <p className="text-sm text-muted-foreground">
+              {[tr.mobile && t('mobile'), tr.minLevel && t('minLevel', { level: tr.minLevel })]
+                .filter(Boolean)
+                .join(' · ')}
+            </p>
+          )}
+          <p className="text-xs text-muted-foreground">{t('localTime')}</p>
+          {!card.live && reminders && (
+            <RemindControl session={card.session} region={region} reminders={reminders} />
+          )}
+          <button type="button" onClick={close} className="fn-tab mt-2 self-start px-4 py-1">
+            <span>{t('close')}</span>
+          </button>
+        </>
+      )}
+    />
+  );
+}
+
+/** Upcoming sessions as upright poster cards in one scrolling row; a card opens its details. */
+function TournamentCards({
+  cards,
+  region,
+  reminders,
+  stale,
+}: {
+  cards: Card[];
+  region: TournamentRegion;
+  reminders: RemindersResponse | null;
+  /** The previous region's cards, kept while the new region loads. */
+  stale: boolean;
+}) {
+  const [open, setOpen] = useState<string | null>(null);
+  const row = useRef<HTMLUListElement | null>(null);
+  // The new region's cards start from the first one, not where the old row was scrolled to.
+  useEffect(() => {
+    if (!stale) row.current?.scrollTo({ left: 0 });
+  }, [region, stale]);
+  // Flags for the edge fades: more cards hidden to the left / right of the scroll.
+  const fades = (el: HTMLUListElement | null) => {
+    row.current = el;
+    if (!el) return;
+    const update = () => {
+      const max = el.scrollWidth - el.clientWidth;
+      el.toggleAttribute('data-more-left', el.scrollLeft > 8);
+      el.toggleAttribute('data-more-right', el.scrollLeft < max - 8);
+    };
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener('scroll', update);
+      ro.disconnect();
+    };
+  };
+  const mounted = useSyncExternalStore(
+    noSubscribe,
+    () => true,
+    () => false,
+  );
+  const card = cards.find((c) => c.session.window.id === open);
+  // Looked up when the flight starts and ends, not during render.
+  const rectOf = (id: string) => () =>
+    document
+      .querySelector(`.tour-row [data-window="${CSS.escape(id)}"]`)
+      ?.getBoundingClientRect() ?? null;
+
+  return (
+    <>
+      <ul className="tour-row" ref={fades} data-stale={stale || undefined}>
+        {cards.map((c, i) => (
+          // A new card (another region's) fades in, one after another.
+          <li
+            key={c.session.window.id}
+            className="tour-card-in"
+            style={{ '--i': Math.min(i, 8) } as CSSProperties}
+          >
+            <button
+              type="button"
+              data-window={c.session.window.id}
+              className="tour-card"
+              style={open === c.session.window.id ? { visibility: 'hidden' } : undefined}
+              onClick={() => setOpen(c.session.window.id)}
+            >
+              <CardFace card={c} />
+            </button>
+          </li>
+        ))}
+      </ul>
+      {mounted && card && (
+        <TournamentDetail
+          key={card.session.window.id}
+          card={card}
+          from={rectOf(card.session.window.id)}
+          region={region}
+          reminders={reminders}
+          onClosed={() => setOpen(null)}
+        />
+      )}
+    </>
   );
 }
 
@@ -239,6 +372,8 @@ export function TournamentsView({
     queryKey: ['tournaments', region, locale],
     queryFn: () => fetchTournaments(region, locale),
     staleTime: 5 * 60 * 1000,
+    // Another region: the old cards stay (dimmed) until the new ones come, no skeleton jump.
+    placeholderData: keepPreviousData,
   });
   const me = useQuery({ queryKey: ['me'], queryFn: fetchMe, staleTime: 10 * 60 * 1000 });
   const user = me.data?.user;
@@ -256,8 +391,9 @@ export function TournamentsView({
       <RegionChips region={region} onRegion={onRegion} />
       {me.data && !user && me.data.loginEnabled && (
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <span className="text-muted-foreground">{t('loginToRemind')}</span>
+          <span className="text-white/80">{t('loginToRemind')}</span>
           <button
+            data-fish-smile
             type="button"
             onClick={() => window.location.assign(loginUrl(window.location.href))}
             className="fn-tab fn-tab-active px-3 py-1"
@@ -270,24 +406,25 @@ export function TournamentsView({
       {list.isError ? (
         <p className="text-destructive">{t('error')}</p>
       ) : !list.data ? (
-        <Skeleton className="h-96 w-full" />
+        <CardSkeletons count={6} listClassName="tour-row" cardClassName="tour-card" />
       ) : sessions.length ? (
         <>
-          <p className="text-sm text-muted-foreground">{t('localTime')}</p>
-          <ul className="flex flex-col gap-2">
-            {sessions.map((s) => (
-              <SessionRow
-                key={s.window.id}
-                session={s}
-                name={list.data.names[s.tournament.displayId]}
-                region={region}
-                reminders={reminders.data ?? null}
-              />
-            ))}
-          </ul>
+          <p className="text-sm text-white/80">{t('localTime')}</p>
+          <TournamentCards
+            cards={sessions.map((s) => ({
+              session: s,
+              name: list.data.names[s.tournament.displayId],
+              live: Date.parse(s.window.begin) <= now,
+            }))}
+            region={region}
+            reminders={reminders.data ?? null}
+            stale={list.isPlaceholderData}
+          />
         </>
       ) : (
-        <p className="text-muted-foreground">{t('none')}</p>
+        <p key={region} className="results-in text-white/80">
+          {t('none')}
+        </p>
       )}
     </div>
   );

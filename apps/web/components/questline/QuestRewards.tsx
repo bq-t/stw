@@ -12,6 +12,7 @@ import {
   WEAPONS,
   type QReward,
 } from '@/data/questline';
+import { GAME_ITEMS } from '@/data/game-items';
 import { GameIcon } from '@/components/missions/GameIcon';
 import { VbucksIcon } from '@/components/missions/VbucksIcon';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -68,7 +69,32 @@ function RewardChip({ reward }: { reward: Exclude<QReward, { t: 'choice' | 'unlo
   let rarity: Rarity | undefined;
   let icon: React.ReactNode;
 
-  if (reward.t === 'res') {
+  if (reward.t === 'game') {
+    const info = GAME_ITEMS[reward.id];
+    const kind = info?.kind ?? 'resource';
+    rarity = info?.rarity;
+    const name = info?.name[locale] ?? reward.id;
+    if (kind === 'resource') {
+      label = `${formatAmount(reward.n, locale)} ${name}`;
+    } else {
+      label = name;
+      if (reward.n > 1) label += ` ${t('Questline.quantity', { n: reward.n })}`;
+      detail = [rarity && t(`Rarity.${rarity}`), ITEM_KINDS[kind][locale]]
+        .filter(Boolean)
+        .join(' · ');
+    }
+    icon = (
+      <GameIcon
+        group="rewards"
+        names={[
+          ...(info?.icon ? [info.icon] : []),
+          ...(kind === 'resource' ? [] : (ITEM_ICON_NAMES[kind] ?? [])),
+        ]}
+        fallback={kind === 'resource' ? RESOURCE_FALLBACK.default! : ITEM_ICONS[kind]}
+        className="size-4"
+      />
+    );
+  } else if (reward.t === 'res') {
     const info = RESOURCES[reward.id];
     const catalog =
       reward.id === 'perk-up' && reward.rarity
@@ -142,7 +168,12 @@ export function QuestRewards({ rewards, className }: { rewards: QReward[]; class
   if (rewards.length === 0) {
     return <p className="text-xs text-muted-foreground italic">{t('noRewards')}</p>;
   }
-  const order = (r: QReward) => (r.t === 'vbucks' ? 0 : r.t === 'item' ? 1 : 2);
+  const order = (r: QReward) =>
+    r.t === 'vbucks'
+      ? 0
+      : r.t === 'item' || (r.t === 'game' && GAME_ITEMS[r.id]?.kind !== 'resource')
+        ? 1
+        : 2;
   const chips = rewards
     .filter(
       (r): r is Exclude<QReward, { t: 'choice' | 'unlock' }> =>

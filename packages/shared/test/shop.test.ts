@@ -4,6 +4,7 @@ import {
   parseBrShop,
   parsePrerolls,
   parseStwCatalog,
+  stwItemInfo,
   stwItemName,
   uniqueLlamas,
 } from '../src/shop';
@@ -23,7 +24,7 @@ const brRaw = {
         inDate: '2026-11-01T00:00:00Z',
         outDate: '2026-11-30T23:59:59.999Z',
         sortPriority: -27,
-        layout: { name: 'Jam Tracks', index: 26 },
+        layout: { name: 'Jam Tracks', index: 26, rank: 183 },
         colors: { color1: '3a306cff' },
         tracks: [{ title: 'Therefore I Am', albumArt: 'https://cdn/track.jpg' }],
       },
@@ -34,23 +35,38 @@ const brRaw = {
         inDate: '2026-11-09T00:00:00Z',
         outDate: '2026-11-12T23:59:59.999Z',
         sortPriority: -1,
+        layout: { name: 'Star Wars', index: 20, rank: 188 },
         colors: { color1: 'c01b1cff', color2: 'ff4c56ff' },
-        newDisplayAsset: { renderImages: [{ image: 'https://cdn/katana-render.png' }] },
+        newDisplayAsset: {
+          renderImages: [
+            { productTag: 'Product.BR', image: 'https://cdn/katana-render.png' },
+            { productTag: 'Product.BR', image: 'https://cdn/katana-style.png' },
+            { productTag: 'Product.Juno', image: 'https://cdn/katana-lego.png' },
+          ],
+        },
+        offerTag: { id: 'promodesc94', text: 'Reactive to eliminations! ' },
         brItems: [
           {
             name: "Vader's Katana",
             type: { displayValue: 'Pickaxe' },
             rarity: { value: 'starwars' },
             images: { featured: 'https://cdn/katana.png' },
+            added: '2026-11-08T10:00:00Z',
+            showcaseVideo: 'SN56kT2VVJQ',
           },
-          { name: "Vader's Katana", type: { displayValue: 'Back Bling' } },
+          {
+            name: "Vader's Katana",
+            type: { displayValue: 'Back Bling' },
+            variants: [{ channel: 'Parts', type: 'reactivity' }],
+            builtInEmoteIds: ['EID_X'],
+          },
         ],
       },
       {
         regularPrice: 2000,
         finalPrice: 1800,
         offerId: 'v2:/ben',
-        layout: { name: 'Ben 10 ', index: 3 },
+        layout: { name: 'Ben 10 ', index: 3, rank: 184 },
         sortPriority: 5,
         bundle: { name: 'Ben Tennyson', info: 'Bundle', image: 'https://cdn/ben.png' },
         brItems: [{ name: 'Ben', type: { displayValue: 'Outfit' }, rarity: { value: 'epic' } }],
@@ -61,15 +77,44 @@ const brRaw = {
 };
 
 describe('parseBrShop', () => {
+  it('orders sections by rank, a category together where its highest section stands', () => {
+    const offer = (name: string, layout: object) => ({
+      offerId: `v2:/${name}`,
+      finalPrice: 500,
+      regularPrice: 500,
+      brItems: [{ name, type: { displayValue: 'Outfit' }, rarity: { value: 'epic' } }],
+      layout,
+    });
+    const shop = parseBrShop({
+      data: {
+        date: '2026-11-11T00:00:00Z',
+        entries: [
+          offer('Car B', { name: 'Car B', category: 'Start Your Engines', rank: 170 }),
+          offer('Skin', { name: 'Peak Style', rank: 190 }),
+          offer('Car A', { name: 'Car A', category: 'Start Your Engines', rank: 180 }),
+          offer('Pants', { name: 'One Piece', rank: 175 }),
+          // Single item of a bundle: no layout, not shown.
+          offer('Loose', {}),
+        ],
+      },
+    });
+    expect(shop.sections.map((x) => [x.name, x.category])).toEqual([
+      ['Peak Style', null],
+      ['Car A', 'Start Your Engines'],
+      ['Car B', 'Start Your Engines'],
+      ['One Piece', null],
+    ]);
+  });
+
   const shop = parseBrShop(brRaw);
 
-  it('keeps the shop day and orders sections by layout index', () => {
+  it('keeps the shop day and orders sections by layout rank', () => {
     expect(shop.date).toBe('2026-11-10');
-    expect(shop.sections.map((s) => s.name)).toEqual(['Ben 10', 'Jam Tracks', 'Other']);
+    expect(shop.sections.map((s) => s.name)).toEqual(['Star Wars', 'Ben 10', 'Jam Tracks']);
   });
 
   it('reduces entries to name, type, image and price', () => {
-    const [ben] = shop.sections[0]!.items;
+    const [ben] = shop.sections[1]!.items;
     expect(ben).toMatchObject({
       name: 'Ben Tennyson',
       kind: 'bundle',
@@ -77,9 +122,9 @@ describe('parseBrShop', () => {
       price: 1800,
       image: 'https://cdn/ben.png',
     });
-    const [track] = shop.sections[1]!.items;
+    const [track] = shop.sections[2]!.items;
     expect(track).toMatchObject({ kind: 'track', image: 'https://cdn/track.jpg', count: 1 });
-    const [katana] = shop.sections[2]!.items;
+    const [katana] = shop.sections[0]!.items;
     expect(katana).toMatchObject({
       type: 'Pickaxe',
       rarity: 'starwars',
@@ -87,11 +132,18 @@ describe('parseBrShop', () => {
       regularPrice: 1000,
       count: 2,
       colors: ['c01b1cff', 'ff4c56ff'],
+      extras: ['emote'],
+      tile: { base: 'c01b1c', light: 'ff4c56' },
+      firstRelease: true,
+      offerTag: 'Reactive to eliminations!',
+      video: 'SN56kT2VVJQ',
+      looks: ['https://cdn/katana-style.png', 'https://cdn/katana-lego.png'],
     });
   });
 
   it('skips entries without a name or price and fails without entries', () => {
-    expect(shop.sections[0]!.items).toHaveLength(1);
+    expect(shop.sections[1]!.items).toHaveLength(1);
+    expect(shop.sections[1]!.category).toBeNull();
     expect(() => parseBrShop({ data: {} })).toThrow();
   });
 });
@@ -264,5 +316,34 @@ describe('fingerprintOf', () => {
   it('is stable and changes with the data', () => {
     expect(fingerprintOf({ a: 1 })).toBe(fingerprintOf({ a: 1 }));
     expect(fingerprintOf({ a: 1 })).not.toBe(fingerprintOf({ a: 2 }));
+  });
+});
+
+describe('stwItemInfo', () => {
+  it('reads kind, hero class, weapon and material from real catalog IDs', () => {
+    expect(stwItemInfo('Hero:hid_ninja_018_sr_t01')).toEqual({ kind: 'hero', heroClass: 'ninja' });
+    expect(stwItemInfo('Hero:hid_commando_032_halloweensoldier_sr_t01').heroClass).toBe('soldier');
+    expect(stwItemInfo('Hero:hid_outlander_myth02_sr_t01').heroClass).toBe('outlander');
+    expect(stwItemInfo('Schematic:sid_edged_axe_blackmetal_sr_ore_t01')).toEqual({
+      kind: 'schematic',
+      weapon: 'axe',
+      material: 'ore',
+    });
+    expect(stwItemInfo('Schematic:sid_blunt_hammer_rocket_vr_ore_t01').weapon).toBe('hammer');
+    expect(stwItemInfo('Schematic:sid_blunt_medium_ratrod_sr_ore_t01').weapon).toBe('club');
+    expect(stwItemInfo('Schematic:sid_explosive_invasion_plasmacannon_sr_ore_t01').weapon).toBe(
+      'explosive',
+    );
+    expect(stwItemInfo('Schematic:sid_floor_spikes_r_t01').weapon).toBe('trap');
+    expect(stwItemInfo('Defender:did_defenderpistol_basic_f_sr_t01')).toEqual({
+      kind: 'defender',
+      weapon: 'pistol',
+    });
+    expect(stwItemInfo('Worker:workerbasic_sr_t01').kind).toBe('survivor');
+    expect(stwItemInfo('Worker:managerdoctor_sr_t01').kind).toBe('lead');
+    expect(stwItemInfo('CardPack:cardpack_schematic_vr').kind).toBe('schematicPack');
+    expect(stwItemInfo('CampaignHeroLoadout:purchaseabledefaultloadout').kind).toBe('loadout');
+    expect(stwItemInfo('Token:accountinventorybonus').kind).toBe('armorySlot');
+    expect(stwItemInfo('AccountResource:reagent_c_t02').kind).toBe('resource');
   });
 });

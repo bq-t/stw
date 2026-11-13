@@ -1,7 +1,9 @@
 'use client';
 
 import { stwItemName } from '@stw/shared';
+import type { GameNames } from '@stw/shared/items';
 import { useLocale, useTranslations } from 'next-intl';
+import { useLazyJson } from './lazyJson';
 
 function titleCase(key: string): string {
   return key
@@ -28,5 +30,11 @@ export function useBiomeLabel() {
  */
 export function useItemName() {
   const locale = useLocale();
-  return (itemId: string) => stwItemName(itemId)[locale === 'ru' ? 'ru' : 'en'];
+  const names = useGameNames();
+  return (itemId: string) => stwItemName(itemId, names)[locale === 'ru' ? 'ru' : 'en'];
+}
+
+/** EN/RU item names from the game (tools/game-export/item-names.mts), loaded on first use. */
+export function useGameNames() {
+  return useLazyJson<GameNames>('/icons/items/names.json');
 }

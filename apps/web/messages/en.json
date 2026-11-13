@@ -11,7 +11,13 @@
     "faq": "FAQ",
     "language": "Language",
     "shop": "Shop",
-    "events": "Events"
+    "events": "Events",
+    "br": "Battle Royale",
+    "stw": "Save the World",
+    "brShop": "Item Shop",
+    "tournaments": "Tournaments",
+    "toTop": "Back to top",
+    "brEvents": "Events"
   },
   "Tracker": {
     "title": "Today's missions",
@@ -57,25 +63,26 @@
     "build-the-radar-grid": "Build the Radar Grid",
     "launch-the-rocket": "Launch the Rocket",
     "destroy-the-encampments": "Destroy the Encampments",
-    "fight-the-category-2-storm": "Fight the Category 2 Storm",
-    "fight-the-category-3-storm": "Fight the Category 3 Storm",
-    "fight-the-category-4-storm": "Fight the Category 4 Storm",
+    "fight-the-category-2-storm": "Fight Category 2 Storm",
+    "fight-the-category-3-storm": "Fight Category 3 Storm",
+    "fight-the-category-4-storm": "Fight Category 4 Storm",
     "resupply": "Resupply",
     "survive-the-storm": "Survive the Storm",
     "hit-the-road": "Hit the Road",
     "refuel-the-homebase": "Refuel the Homebase",
     "data-retrieval": "Data Retrieval",
-    "evacuate-the-survivors": "Evacuate the Survivors",
-    "launch-the-balloon": "Launch the Balloon",
+    "evacuate-the-survivors": "Rescue the Survivors",
+    "launch-the-balloon": "Ride the Lightning",
     "deploy-the-probe": "Deploy the Probe",
-    "build-off": "Build Off",
+    "build-off": "Constructor Build Off",
     "build-the-memorial": "Build the Memorial",
     "stabilize-the-rift": "Stabilize the Rift",
     "fight-the-gunslinger": "Fight the Gunslinger",
     "vinderman-mansion": "Vinderman's Mansion",
-    "dudebro": "Dudebro",
+    "dudebro": "The Portal",
     "storm-shield-defense": "Storm Shield Defense",
-    "hunt-the-titan": "Hunt the Titan"
+    "hunt-the-titan": "Hunt the Titan",
+    "vindertech-research-lab": "Vindertech Research Lab"
   },
   "AlertKind": {
     "mini-boss": "Mini-boss",
@@ -99,7 +106,8 @@
     "defender": "Defenders",
     "other": "Other",
     "event": "Event Tickets",
-    "xp": "Experience"
+    "xp": "Experience",
+    "gold": "Gold"
   },
   "Filters": {
     "zone": "Zone",
@@ -181,7 +189,8 @@
     "lead": "Lead survivor: heads a survivor squad and boosts it when the personality matches.",
     "defender": "Defender: an AI ally you place at the base during missions.",
     "schematic": "Schematic: a weapon or trap you can craft.",
-    "xp": "Experience for leveling up."
+    "xp": "Experience for leveling up.",
+    "gold": "Currency of the weekly and event stores."
   },
   "DailyQuests": {
     "title": "Daily Quests",
@@ -200,7 +209,8 @@
       "where": "Where to look",
       "mission": "Suitable missions",
       "tip": "Tip"
-    }
+    },
+    "goldAmount": "{count} gold"
   },
   "Questline": {
     "title": "Questline",
@@ -208,7 +218,6 @@
     "intro": "Main quests of all four zones, in the order the game gives them.\nEach zone has 6 Storm Shield Defenses that pay {amount} V-Bucks each: {total} V-Bucks for the whole questline.\nStorm Shield Defenses 7–10 are side quests.",
     "founders": "Only Founders get V-Bucks; other players get the same amount of X-Ray Tickets.",
     "checked": "Checked {date}",
-    "namesNote": "Quest names are shown in English.",
     "zones": "Zones",
     "questsCount": "{count, plural, one {# quest} other {# quests}}",
     "iAmHere": "I’m here",
@@ -553,11 +562,8 @@
   },
   "Shop": {
     "title": "Item Shop",
-    "metaDescription": "Today's Fortnite item shop, the Save the World gold shops and your X-ray llama contents. Updated after every reset at 00:00 UTC.",
-    "intro": "Today's Battle Royale item shop and the Save the World shops. Everything resets at 00:00 UTC.",
-    "tabBr": "Battle Royale",
-    "tabStw": "Save the World",
-    "resets": "Resets at 00:00 UTC",
+    "metaDescription": "Today's Fortnite Battle Royale item shop. Updated after every reset at 00:00 UTC.",
+    "intro": "Today's Battle Royale item shop.",
     "error": "Could not load the shop. Try again later.",
     "noData": "The shop is not loaded yet. Try again in a few minutes.",
     "demo": "The shop needs the live API: it is not shown on demo data.",
@@ -583,14 +589,74 @@
     "perEvent": "{n} per event",
     "gold": "gold",
     "xray": "X-ray tickets",
-    "other": "voucher"
+    "other": "voucher",
+    "stwTitle": "Save the World Shop",
+    "stwMetaDescription": "The Fortnite Save the World weekly and event gold shops and your X-ray llama contents. Updated after every reset at 00:00 UTC.",
+    "stwIntro": "The weekly and event gold shops and your X-ray llamas. Everything resets at 00:00 UTC.",
+    "nextShop": "Next shop in",
+    "extra": {
+      "styles": "Selectable styles",
+      "emote": "Built-in emote"
+    },
+    "newContent": "First release",
+    "leavingToday": "Leaving today",
+    "timeLeft": "{h}h {m}m",
+    "watchVideo": "Watch on YouTube",
+    "close": "Close",
+    "inShopUntil": "In the shop until {date}",
+    "hasVideo": "Has a showcase video",
+    "itemKind": {
+      "hero": "Hero",
+      "schematic": "Schematic",
+      "survivor": "Survivor",
+      "lead": "Lead Survivor",
+      "defender": "Defender",
+      "schematicPack": "Schematic pack",
+      "cardPack": "Llama",
+      "loadout": "Hero loadout",
+      "armorySlot": "Storage",
+      "resource": "Resource",
+      "other": "Item"
+    },
+    "heroClass": {
+      "soldier": "Soldier",
+      "constructor": "Constructor",
+      "ninja": "Ninja",
+      "outlander": "Outlander"
+    },
+    "weapon": {
+      "assault": "Assault rifle",
+      "pistol": "Pistol",
+      "shotgun": "Shotgun",
+      "sniper": "Sniper rifle",
+      "explosive": "Explosive",
+      "sword": "Sword",
+      "axe": "Axe",
+      "scythe": "Scythe",
+      "hammer": "Hammer",
+      "club": "Club",
+      "spear": "Spear",
+      "melee": "Melee",
+      "trap": "Trap"
+    },
+    "material": {
+      "ore": "Ore",
+      "crystal": "Crystal"
+    },
+    "detail": {
+      "type": "Type",
+      "heroClass": "Class",
+      "weapon": "Weapon",
+      "defenderWeapon": "Weapon",
+      "material": "Material",
+      "rarity": "Rarity",
+      "limit": "Limit",
+      "price": "Price"
+    },
+    "llamaContents": "Contents",
+    "choiceOfOne": "Choice of one"
   },
   "Events": {
-    "title": "Events and tournaments",
-    "metaDescription": "Upcoming Fortnite Battle Royale tournaments by region with reminders in Discord, and the events running in Battle Royale and Save the World.",
-    "intro": "Upcoming Battle Royale tournaments with Discord reminders, and what is running in both modes right now.",
-    "tabTournaments": "Tournaments",
-    "tabEvents": "Events",
     "demo": "This page needs the live API: it is not shown on demo data.",
     "error": "Could not load the data. Try again later.",
     "noData": "Not loaded yet. Try again in a few minutes.",
@@ -627,6 +693,29 @@
     "resets": "Resets {time}",
     "started": "Started {date}",
     "noEvents": "No events running right now.",
-    "eventsNote": "Events and their dates come from the game calendar."
+    "eventsNote": "Events and their dates come from the game calendar.",
+    "tournamentsTitle": "Tournaments",
+    "tournamentsMetaDescription": "Upcoming Fortnite Battle Royale tournaments by region, with reminders in Discord.",
+    "tournamentsIntro": "Upcoming Battle Royale tournaments by region. Set a reminder and Fishstick will message you in Discord.",
+    "brTitle": "Battle Royale events",
+    "brMetaDescription": "What is running in Fortnite Battle Royale right now: the season and current events.",
+    "brIntro": "What is running in Battle Royale right now.",
+    "stwTitle": "Save the World events",
+    "stwMetaDescription": "What is running in Fortnite Save the World right now: the event, the weekly shop and more.",
+    "stwIntro": "What is running in Save the World right now.",
+    "liveBadge": "Live",
+    "endsSoonBadge": "Ends soon!",
+    "until": "Until {date}",
+    "close": "Close",
+    "resetsOn": "Resets {date}"
+  },
+  "Intro": {
+    "title": "Choose your mode",
+    "br": "Battle Royale",
+    "brText": "Item shop and tournaments",
+    "pve": "Save the World",
+    "pveText": "Missions, V-Bucks and more",
+    "new": "New",
+    "close": "Close"
   }
 }

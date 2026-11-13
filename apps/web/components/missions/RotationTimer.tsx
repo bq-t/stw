@@ -12,8 +12,11 @@ function format(ms: number): string {
   return [h, m, s].map((n) => String(n).padStart(2, '0')).join(':');
 }
 
-/** Countdown to the daily rotation at 00:00 UTC. Renders nothing on the server. */
-export function RotationTimer() {
+/**
+ * Countdown to the daily rotation at 00:00 UTC (missions and the item shop reset together).
+ * `label`: the text before it, the tracker's "Next rotation in" by default.
+ */
+export function RotationTimer({ label }: { label?: string }) {
   const t = useTranslations('Tracker');
   const formatter = useFormatter();
   const [ms, setMs] = useState<number | null>(null);
@@ -29,8 +32,8 @@ export function RotationTimer() {
 
   return (
     <div title={t('rotationAt', { time: localTime })} className="flex items-baseline gap-2">
-      <span className="text-sm text-muted-foreground">{t('nextRotation')}</span>
-      <span className="font-display text-xl font-extrabold tabular-nums">
+      <span className="text-sm text-white/80">{label ?? t('nextRotation')}</span>
+      <span className="font-display text-xl font-extrabold text-white tabular-nums">
         {ms === null ? '--:--:--' : format(ms)}
       </span>
     </div>

@@ -1,5 +1,10 @@
 # Game icons
 
+Most icons come from the game files (`tools/game-export`, see its README). Shop and reward items
+(heroes, schematics, survivors, defenders, llamas, resources) use `public/icons/items/`: one WebP per
+game texture plus `index.json` (item key → file), loaded by the browser on first use
+(`components/missions/ItemIcon.tsx`). Files in `rewards/` win over `items/` for the same name.
+
 Drop PNG/WebP/SVG files into `public/icons/<group>/` with these names (lowercase). A file that exists replaces the
 placeholder icon automatically after `pnpm dev:web` / `pnpm --filter web build` restarts
 (the list is rebuilt by `scripts/icons-manifest.mjs`). Square, transparent background,

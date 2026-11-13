@@ -8,7 +8,8 @@ import {
   type DaySnapshot,
   type SubscriptionFilter,
 } from '@stw/shared';
-import { itemInfo, readableItemId } from '@stw/shared/items';
+import { GAME_NAMES } from '@stw/shared/game-names';
+import { itemName } from '@stw/shared/items';
 import type { Db, SubscriptionRow } from '../db';
 import { fmt, label, localeOf, messages, type Locale } from '../i18n';
 import { discordApi, isCannotDm } from './api';
@@ -23,7 +24,7 @@ export function describeFilter(f: SubscriptionFilter, locale: Locale): string {
   const m = messages(locale);
   const min = f.minQty && f.minQty > 1 ? ` ≥ ${f.minQty}` : '';
   const parts: string[] = [];
-  if (f.item) parts.push((itemInfo(f.item)?.name[locale] ?? readableItemId(f.item)) + min);
+  if (f.item) parts.push(itemName(f.item, locale, GAME_NAMES) + min);
   else if (f.rewards.length)
     parts.push(f.rewards.map((r) => label(m.RewardCategory, r)).join(', ') + min);
   if (f.alert === 'vbucks') parts.push(m.Filters.alertVbucks);

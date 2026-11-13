@@ -3,7 +3,17 @@
 // reduced here to the small types below; nothing else reads them.
 // Checked 2026-11-10 against fixtures/br-shop.json, catalog.json, profile-campaign-preroll.json.
 
-import { itemInfo, rarityOf, readableItemId } from './items';
+import { itemInfo, rarityOf, readableItemId, gameItemName, type GameNames } from './items';
+
+// What an item is (kind, hero class, weapon) lives with the item catalog, which picks icons by
+// it; the shop code and its users import it from here as before.
+export {
+  stwItemInfo,
+  type StwHeroClass,
+  type StwItemInfo,
+  type StwItemKind,
+  type StwWeapon,
+} from './items';
 import type { Rarity } from './types';
 
 // ---------- BR ----------
@@ -22,14 +32,36 @@ export interface BrShopItem {
   regularPrice: number;
   /** Shop tile colours (hex without #), for the site's tile background. */
   colors: string[];
+  /** The game's tile colours by role (hex without #): background, its light, the name's band. */
+  tile?: { base?: string; light?: string; text?: string };
+  /** A cosmetic in it is new to the game (added in the last week), not a return. */
+  firstRelease?: boolean;
   /** Number of cosmetics in the offer (bundles have several). */
   count: number;
   inDate: string;
   outDate: string;
+  /** What else the cosmetics in it have: selectable styles, a built-in emote. */
+  extras?: BrExtra[];
+  /** The game's note on the offer ("Backbling is reactive to eliminations!"). */
+  offerTag?: string;
+  /** YouTube id of the cosmetic's showcase video. */
+  video?: string;
+  /**
+   * More looks of it, shown in turn after the main image: its other styles (the game's extra
+   * Battle Royale renders), then the LEGO one.
+   */
+  looks?: string[];
 }
+
+export type BrExtra = 'styles' | 'emote';
 
 export interface BrShopSection {
   name: string;
+  /**
+   * The game's group of sections ("Start Your Engines" holds one section per car), or null for a
+   * section of its own. Sections of a group come one after another.
+   */
+  category?: string | null;
   items: BrShopItem[];
 }
 
@@ -43,7 +75,36 @@ export interface BrShop {
 /* eslint-disable @typescript-eslint/no-explicit-any -- raw third-party JSON, read defensively */
 const str = (v: unknown): string | undefined => (typeof v === 'string' && v ? v : undefined);
 
-function brItem(e: any): BrShopItem | null {
+function brExtras(e: any): BrExtra[] {
+  const found = new Set<BrExtra>();
+  for (const c of e.brItems ?? []) {
+    // "Reactivity" variants are not styles to pick; the offer tag tells what reacts.
+    if ((c.variants ?? []).some((v: any) => !/reactiv/i.test(String(v?.type ?? ''))))
+      found.add('styles');
+    if (Array.isArray(c.builtInEmoteIds) && c.builtInEmoteIds.length) found.add('emote');
+  }
+  return (['styles', 'emote'] as const).filter((x) => found.has(x));
+}
+
+/** Styles (extra BR renders, in the game's order), then the LEGO look; without the main image. */
+function brLooks(e: any, cosmetic: any, main: string | null): string[] {
+  const renders: any[] = e.newDisplayAsset?.renderImages ?? [];
+  const styles = renders
+    .filter((r) => r?.productTag === 'Product.BR')
+    .map((r) => str(r?.image))
+    .filter((u): u is string => u !== undefined);
+  const lego =
+    str(renders.find((r) => r?.productTag === 'Product.Juno')?.image) ??
+    (e.bundle ? undefined : str(cosmetic?.images?.lego?.large));
+  return [...new Set([...styles, ...(lego ? [lego] : [])])].filter((u) => u !== main);
+}
+
+/** Cosmetics added to the game this long before the shop day count as new content. */
+const NEW_CONTENT_MS = 7 * 24 * 60 * 60 * 1000;
+
+const hex = (v: unknown) => (typeof v === 'string' && v ? v.slice(0, 6) : undefined);
+
+function brItem(e: any, day?: string): BrShopItem | null {
   const cosmetic = e.brItems?.[0] ?? e.cars?.[0] ?? e.instruments?.[0] ?? e.legoKits?.[0];
   const track = e.tracks?.[0];
   const name = str(e.bundle?.name) ?? str(cosmetic?.name) ?? str(track?.title);
@@ -79,33 +140,75 @@ function brItem(e: any): BrShopItem | null {
     count: Math.max(count, 1),
     inDate: String(e.inDate ?? ''),
     outDate: String(e.outDate ?? ''),
+    extras: brExtras(e),
+    offerTag: str(e.offerTag?.text)?.trim(),
+    video: (e.brItems ?? []).map((c: any) => str(c?.showcaseVideo)).find(Boolean),
+    looks: brLooks(e, cosmetic, image),
+    tile: {
+      base: hex(e.colors?.color1),
+      light: hex(e.colors?.color2) ?? hex(e.colors?.color3),
+      text: hex(e.colors?.textBackgroundColor),
+    },
+    firstRelease:
+      day !== undefined &&
+      (e.brItems ?? []).some((c: any) => {
+        const added = Date.parse(String(c?.added ?? ''));
+        const shop = Date.parse(day);
+        return Number.isFinite(added) && shop - added >= 0 && shop - added < NEW_CONTENT_MS;
+      }),
   };
 }
 
-/** fortnite-api.com /v2/shop → sections in the game's order. */
+/**
+ * fortnite-api.com /v2/shop → sections in the game's order: by the layout rank, highest first
+ * (the layout index does not follow the game), sections of one category kept together where the
+ * highest of them stands, offers by their sort priority (the API's order breaks ties). Offers
+ * without a layout are left out: single items of a bundle that the game does not show on their own.
+ */
 export function parseBrShop(raw: unknown): BrShop {
   const data = (raw as any)?.data;
   if (!data || !Array.isArray(data.entries)) throw new Error('BR shop: no data.entries');
-  type Group = { index: number; items: { item: BrShopItem; p: number }[] };
+  type Group = {
+    rank: number;
+    category: string | null;
+    items: { item: BrShopItem; p: number }[];
+  };
   const sections = new Map<string, Group>();
+  const day = String(data.date ?? '').slice(0, 10) || undefined;
   for (const e of data.entries) {
-    const item = brItem(e);
+    const name = str(e.layout?.name)?.trim();
+    if (!name) continue;
+    const item = brItem(e, day);
     if (!item) continue;
-    const name = str(e.layout?.name)?.trim() ?? 'Other';
-    const index = typeof e.layout?.index === 'number' ? e.layout.index : 1000;
-    const s: Group = sections.get(name) ?? { index, items: [] };
-    s.index = Math.min(s.index, index);
+    const rank = typeof e.layout.rank === 'number' ? e.layout.rank : 0;
+    const category = str(e.layout.category)?.trim() ?? null;
+    const s: Group = sections.get(name) ?? { rank, category, items: [] };
+    s.rank = Math.max(s.rank, rank);
+    s.category ??= category;
     s.items.push({ item, p: typeof e.sortPriority === 'number' ? e.sortPriority : 0 });
     sections.set(name, s);
   }
+  // A category stands where its highest section does.
+  const categoryRank = new Map<string, number>();
+  for (const s of sections.values())
+    if (s.category)
+      categoryRank.set(s.category, Math.max(categoryRank.get(s.category) ?? s.rank, s.rank));
+  const place = (s: Group) => (s.category ? categoryRank.get(s.category)! : s.rank);
   return {
     date: String(data.date ?? '').slice(0, 10),
     hash: String(data.hash ?? ''),
     sections: [...sections.entries()]
-      .sort((a, b) => a[1].index - b[1].index)
+      .sort((a, b) => place(b[1]) - place(a[1]) || b[1].rank - a[1].rank)
       .map(([name, s]) => ({
         name,
-        items: s.items.sort((a, b) => b.p - a.p).map((x) => x.item),
+        category: s.category,
+        // Bundles first (wide tiles on the site), then the game's sort priority.
+        items: s.items
+          .sort(
+            (a, b) =>
+              Number(b.item.kind === 'bundle') - Number(a.item.kind === 'bundle') || b.p - a.p,
+          )
+          .map((x) => x.item),
       })),
   };
 }
@@ -168,10 +271,18 @@ const DEFENDER_WEAPON: Record<string, { en: string; ru: string }> = {
  * the rest a readable form of the ID (heroes and schematics are named in the catalog
  * offers themselves).
  */
-export function stwItemName(templateId: string): { en: string; ru: string } {
+export function stwItemName(
+  templateId: string,
+  names?: GameNames | null,
+): { en: string; ru: string } {
   const known = itemInfo(templateId)?.name;
   if (known) return known;
   const [type = '', id = ''] = templateId.toLowerCase().split(':');
+  // Survivors and defenders keep the generic name below ("Epic Survivor"), as the game shows them.
+  if (type !== 'worker' && type !== 'defender') {
+    const game = gameItemName(templateId, names);
+    if (game) return game;
+  }
   if (type === 'worker')
     return id.startsWith('manager')
       ? { en: 'Lead Survivor', ru: 'Лидер выживших' }

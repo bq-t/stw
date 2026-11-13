@@ -8,10 +8,26 @@ const isDev = process.env.NODE_ENV === 'development';
 const nextConfig: NextConfig = {
   // Static HTML on Cloudflare Pages. Mission data comes from the Worker at runtime.
   // In production, EN without a prefix is served by public/_redirects; `next dev`
-  // does not read that file, so it gets the same rewrites here (dev only:
-  // rewrites are not allowed together with a static export).
+  // does not read that file, so it gets the same rewrites and redirects here (dev
+  // only: they are not allowed together with a static export).
   ...(isDev
     ? {
+        // A phone on the home Wi-Fi opening the dev server by the PC's address (192.168.x.x):
+        // Next blocks its dev assets for any other host than localhost unless listed.
+        allowedDevOrigins: ['192.168.*.*', '10.*.*.*'],
+        async redirects() {
+          const moved = ['daily-quests', 'questline', 'side-quests', 'faq', 'shop', 'events'];
+          return [
+            { source: '/', destination: '/pve', permanent: false },
+            { source: '/ru', destination: '/ru/pve', permanent: false },
+            ...moved.flatMap((p) => [
+              { source: `/${p}`, destination: `/pve/${p}`, permanent: false },
+              { source: `/ru/${p}`, destination: `/ru/pve/${p}`, permanent: false },
+            ]),
+            { source: '/br/:path*', destination: '/battle-royale/:path*', permanent: false },
+            { source: '/ru/br/:path*', destination: '/ru/battle-royale/:path*', permanent: false },
+          ];
+        },
         async rewrites() {
           return [
             { source: '/', destination: '/en' },

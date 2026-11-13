@@ -171,7 +171,7 @@ export function MissionRow({ mission }: { mission: Mission }) {
         </span>
       </div>
 
-      <ul className="flex flex-wrap items-center gap-x-2 gap-y-1 self-end">
+      <ul className="flex flex-wrap items-center gap-1.5 self-end">
         {vbucks > 0 && (
           <li>
             <Tooltip>
@@ -179,10 +179,10 @@ export function MissionRow({ mission }: { mission: Mission }) {
                 <span
                   tabIndex={0}
                   data-rarity="legendary"
-                  className="reward-tile inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs font-extrabold text-white ring-1 ring-[var(--rarity-legendary-hi)] [text-shadow:0_1px_1px_rgb(0_0_0/0.6)]"
+                  className="reward-tile fn-badge inline-flex h-6 items-center gap-1 px-2 text-xs font-extrabold text-white [text-shadow:0_1px_1px_rgb(0_0_0/0.6)]"
                 >
                   <VbucksIcon className="text-white" />
-                  {vbucks}
+                  <span>{vbucks}</span>
                 </span>
               </TooltipTrigger>
               <TooltipContent className="max-w-64">

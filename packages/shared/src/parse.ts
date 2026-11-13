@@ -6,6 +6,7 @@ import {
   type RawTheater,
   type RawWorldInfo,
 } from './schema';
+import { POWER_LEVEL_BY_ROW } from './difficulty';
 import { nextRotation, rotationDay } from './time';
 import type { AlertKind, DaySnapshot, Mission, Reward, Zone } from './types';
 
@@ -34,8 +35,8 @@ export function zoneOfTheater(theaterId: string): Zone | null {
 /**
  * Difficulty rows map 1:1 to reward tiers T01…T26 (verified on the real response:
  * Start_Zone1..5 → T01..05, Normal → T06..10, Hard → T11..15, Nightmare → T16..20,
- * Endgame_Zone1..6 → T21..26). Power level per tier is the in-game ladder.
- * TODO: confirm a few values in game (one mission per zone).
+ * Endgame_Zone1..6 → T21..26). Power level per tier is the in-game ladder; it matches
+ * RecommendedRating in the game table GameDifficultyGrowthBounds (checked on 43.10).
  */
 const POWER_LEVEL_BY_TIER = [
   1, 3, 5, 9, 15, 19, 23, 28, 34, 40, 46, 52, 58, 64, 70, 76, 82, 88, 94, 100, 108, 116, 124, 132,
@@ -62,7 +63,9 @@ export function tierOf(row: string | undefined): number {
   return Math.min(tier, POWER_LEVEL_BY_TIER.length);
 }
 
+/** The game's own value for the row first (landmarks, Ventures, Horde...), then the tier ladder. */
 export function powerLevelOf(row: string | undefined): number {
+  if (row && POWER_LEVEL_BY_ROW[row]) return POWER_LEVEL_BY_ROW[row];
   const tier = tierOf(row);
   return tier > 0 ? (POWER_LEVEL_BY_TIER[tier - 1] ?? 0) : 0;
 }
@@ -86,6 +89,7 @@ const MISSION_ABBR: Record<string, string> = {
   ridethelightning: 'ride-the-lightning',
   rtlstormquest2018landmark: 'ride-the-lightning',
   rts: 'repair-the-shelter',
+  powerthestormshield: 'repair-the-shelter',
   etshelter: 'evacuate-the-shelter',
   ets: 'evacuate-the-shelter',
   etsurvivors: 'evacuate-the-survivors',
@@ -94,8 +98,9 @@ const MISSION_ABBR: Record<string, string> = {
   dte: 'destroy-the-encampments',
   destroytheencampments: 'destroy-the-encampments',
   ltr: 'launch-the-rocket',
-  ltb: 'launch-the-balloon',
-  launchtheballoon: 'launch-the-balloon',
+  // Stonewood's "Launch the Balloon" generator is shown in game as Ride the Lightning.
+  ltb: 'ride-the-lightning',
+  launchtheballoon: 'ride-the-lightning',
   buildtheradargrid: 'build-the-radar-grid',
   eliminateandcollect: 'eliminate-and-collect',
   refuelthebase: 'refuel-the-homebase',
@@ -108,6 +113,7 @@ const MISSION_ABBR: Record<string, string> = {
   fightthegunslinger: 'fight-the-gunslinger',
   vindermanmansion: 'vinderman-mansion',
   dudebro: 'dudebro',
+  pts: 'vindertech-research-lab',
   htm: 'hunt-the-titan',
   huntthetitan: 'hunt-the-titan',
   theoutpost: 'storm-shield-defense',

@@ -2,9 +2,9 @@
 
 import { ZONES, type Zone } from '@stw/shared';
 import { Check, LocateFixed, RotateCcw } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Fragment, useSyncExternalStore } from 'react';
-import { questVbucks, type QuestlineQuest } from '@/data/questline';
+import { questName, questVbucks, type QuestlineQuest } from '@/data/questline';
 import { QUESTS } from '@/data/questline-quests';
 import { VbucksIcon } from '@/components/missions/VbucksIcon';
 import { cn } from '@/lib/utils';
@@ -107,6 +107,7 @@ function QuestNode({
   onMark: () => void;
 }) {
   const t = useTranslations('Questline');
+  const locale = useLocale();
   const { quest } = entry;
   const vbucks = questVbucks(quest);
 
@@ -115,7 +116,7 @@ function QuestNode({
       id={entry.key.replace('/', '-')}
       className="relative grid grid-cols-[2.75rem_minmax(0,1fr)] gap-x-3"
     >
-      <div className="relative flex justify-center pt-2">
+      <div className="ql-track flex justify-center pt-2">
         <span
           className={cn(
             'relative z-1 flex items-center justify-center rounded-full bg-surface-2 ring-2',
@@ -149,7 +150,9 @@ function QuestNode({
       >
         <header className="flex flex-wrap items-start gap-x-2 gap-y-1">
           <span className="pt-px text-xs text-muted-foreground tabular-nums">{n}.</span>
-          <h3 className="min-w-0 flex-1 text-sm leading-tight font-semibold">{quest.name}</h3>
+          <h3 className="min-w-0 flex-1 text-sm leading-tight font-semibold">
+            {questName(quest, locale)}
+          </h3>
           {state === 'current' ? (
             <span className="skew-tab bg-accent-ui/15 px-2 py-0.5 text-xs font-semibold text-accent-ui">
               <span>{t('youAreHere')}</span>
@@ -224,7 +227,7 @@ function ZoneTimeline({
         </span>
       </header>
 
-      <ol className="relative before:absolute before:top-2 before:bottom-2 before:left-5.5 before:w-0.5 before:-translate-x-1/2 before:bg-border">
+      <ol className="ql-timeline">
         {entries.map((e, i) => {
           const pl = e.quest.pl;
           const divider = dividers.has(e.key);
@@ -235,10 +238,12 @@ function ZoneTimeline({
                   aria-hidden
                   className="relative grid grid-cols-[2.75rem_minmax(0,1fr)] gap-x-3 py-1"
                 >
-                  <span className="relative z-1 mx-auto rounded-sm bg-background px-1 font-display text-[10px] font-extrabold text-muted-foreground">
-                    {pl}+
+                  <span className="ql-track flex justify-center">
+                    <span className="relative z-1 rounded-sm bg-surface px-1 font-display text-[10px] font-extrabold text-white">
+                      {pl}+
+                    </span>
                   </span>
-                  <span className="self-center text-xs text-muted-foreground">
+                  <span className="self-center text-xs text-white/80">
                     {t('Questline.plDivider', { pl: pl ?? '' })}
                   </span>
                 </li>
@@ -260,6 +265,7 @@ function ZoneTimeline({
 
 function ProgressPanel({ progress }: { progress: ReturnType<typeof progressOf> }) {
   const t = useTranslations();
+  const locale = useLocale();
   if (!progress) {
     return (
       <p className="fn-panel py-2.5 text-sm text-muted-foreground">{t('Questline.progressHint')}</p>
@@ -273,7 +279,7 @@ function ProgressPanel({ progress }: { progress: ReturnType<typeof progressOf> }
         <p className="text-xs text-muted-foreground">
           {t(`Zone.${current.zone}`)} ·{' '}
           <a href={anchor(current)} className="text-accent-ui underline-offset-2 hover:underline">
-            {t('Questline.progressAt', { quest: current.quest.name })}
+            {t('Questline.progressAt', { quest: questName(current.quest, locale) })}
           </a>
         </p>
         {next ? (
@@ -281,7 +287,7 @@ function ProgressPanel({ progress }: { progress: ReturnType<typeof progressOf> }
             <a href={anchor(next)} className="hover:underline">
               {t('Questline.nextVbucks', {
                 amount: questVbucks(next.quest),
-                quest: next.quest.name,
+                quest: questName(next.quest, locale),
               })}
             </a>{' '}
             <span className="font-normal text-muted-foreground">

@@ -13,7 +13,8 @@ import {
   type StwOffer,
   type StwShop,
 } from '@stw/shared';
-import { itemInfo } from '@stw/shared/items';
+import { GAME_NAMES } from '@stw/shared/game-names';
+import { gameItemName, itemInfo } from '@stw/shared/items';
 import { fmt, messages, sitePath, type Locale } from '../i18n';
 import type { BoardPage } from './boards';
 import { FLAG_COMPONENTS_V2 } from './status';
@@ -61,7 +62,7 @@ function siteButton(siteUrl: string, locale: Locale, tab: 'br' | 'stw') {
         type: BUTTON,
         style: BUTTON_LINK,
         label: messages(locale).Bot.shop.open,
-        url: sitePath(siteUrl, locale, `/shop?tab=${tab}`),
+        url: sitePath(siteUrl, locale, tab === 'br' ? '/battle-royale/shop' : '/pve/shop'),
       },
     ],
   };
@@ -146,7 +147,11 @@ function currency(c: StwCurrency | undefined, locale: Locale) {
 
 /** Item name in the user's language when we know it (resources), else the catalog name. */
 export function offerName(o: Pick<StwOffer, 'name' | 'templateId'>, locale: Locale) {
-  return itemInfo(o.templateId)?.name[locale] ?? o.name;
+  return (
+    itemInfo(o.templateId)?.name[locale] ??
+    gameItemName(o.templateId, GAME_NAMES)?.[locale] ??
+    o.name
+  );
 }
 
 function offerLine(o: StwOffer, locale: Locale) {
@@ -190,7 +195,7 @@ function llamaItemLine(i: LlamaItem, locale: Locale): string {
   const t = messages(locale).Bot.shop;
   const rarity = i.rarity ? ` (${messages(locale).Rarity[i.rarity]})` : '';
   const qty = i.quantity > 1 ? `${num(i.quantity, locale)}× ` : '';
-  const line = `${qty}${stwItemName(i.templateId)[locale]}${rarity}`;
+  const line = `${qty}${stwItemName(i.templateId, GAME_NAMES)[locale]}${rarity}`;
   if (!i.options?.length) return `- ${line}`;
   return `- ${line}, ${t.choice}\n${i.options.map((o) => `  ${llamaItemLine(o, locale)}`).join('\n')}`;
 }

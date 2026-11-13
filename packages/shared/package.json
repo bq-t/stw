@@ -7,6 +7,7 @@
     ".": "./src/index.ts",
     "./epic": "./src/epic/index.ts",
     "./items": "./src/items/index.ts",
+    "./game-names": "./src/items/game-names.ts",
     "./demo": "./src/demo.ts"
   },
   "scripts": {

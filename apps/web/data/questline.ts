@@ -2,17 +2,19 @@
  * Main questline (project plan: "4 зоны, каждый квест с наградами; отметка SSD с V-Bucks;
  * счётчик «квестов до следующих V-Bucks»"). Quests are in questline-quests.ts.
  *
- * Source: Fortnite wiki "Main Quests" and each quest's page, checked 2026-11-04.
- * Quest names stay in English in both languages until we have the game's Russian names;
+ * Source: quest list and order from the Fortnite wiki; rewards, objectives and RU names from the
+ * game files (checked 2026-11-13, see tools/game-export).
+ * Quest names: EN here, RU from the game files in quest-names-ru.ts (questName());
  * objectives and rewards are translated.
  */
 import type { Rarity, Zone } from '@stw/shared';
 import type { L } from './daily-quests';
+import { QUESTLINE_RU } from './quest-names-ru';
 
 export type { L };
 export type ZoneId = Zone;
 
-export const QUESTLINE_CHECKED = '2026-11-04';
+export const QUESTLINE_CHECKED = '2026-11-13';
 
 // Objectives ----------------------------------------------------------------------------------
 
@@ -94,6 +96,8 @@ export type QReward =
       rarity?: Rarity;
       n?: number;
     }
+  /** A reward from the game files: names, rarity and icon in game-items.ts. */
+  | { t: 'game'; id: string; n: number }
   /** Feature or slot the quest unlocks (squad slot, expedition, defender...). */
   | { t: 'unlock'; text: L }
   /** Pick one option; an option can hold several rewards. */
@@ -110,6 +114,7 @@ export const item = (
   kind: ItemKind,
   o: Omit<Extract<QReward, { t: 'item' }>, 't' | 'kind'> = {},
 ): QReward => ({ t: 'item', kind, ...o });
+export const game = (id: string, n = 1): QReward => ({ t: 'game', id, n });
 export const unlock = (en: string, ru: string): QReward => ({ t: 'unlock', text: { en, ru } });
 export const choice = (...of: (QReward | QReward[])[]): QReward => ({
   t: 'choice',
@@ -134,27 +139,27 @@ export const PERK_UP_BY_RARITY: Partial<Record<Rarity, string>> = {
 };
 
 export const RESOURCES: Record<ResourceId, ResourceInfo> = {
-  'hero-xp': { name: { en: 'Hero XP', ru: 'Опыт героев' }, catalog: 'AccountResource:heroxp' },
+  'hero-xp': { name: { en: 'Hero XP', ru: 'Опыт для героев' }, catalog: 'AccountResource:heroxp' },
   'schematic-xp': {
-    name: { en: 'Schematic XP', ru: 'Опыт чертежей' },
+    name: { en: 'Schematic XP', ru: 'Опыт для чертежей' },
     catalog: 'AccountResource:schematicxp',
   },
   'survivor-xp': {
-    name: { en: 'Survivor XP', ru: 'Опыт выживших' },
+    name: { en: 'Survivor XP', ru: 'Опыт для выживших' },
     catalog: 'AccountResource:personnelxp',
   },
   gold: { name: { en: 'Gold', ru: 'Золото' }, icon: 'gold', rarity: 'rare' },
   're-perk': {
-    name: { en: 'RE-PERK!', ru: 'Смена перка' },
+    name: { en: 'RE-PERK!', ru: 'Заменярий' },
     catalog: 'AccountResource:reagent_alteration_generic',
   },
   'perk-up': {
-    name: { en: 'PERK-UP!', ru: 'Улучшение перка' },
+    name: { en: 'PERK-UP!', ru: 'Улучшарий' },
     catalog: 'AccountResource:reagent_alteration_upgrade_uc',
   },
   flux: { name: { en: 'Flux', ru: 'Флюс' }, icon: 'flux', rarity: 'rare' },
   'pure-drop-of-rain': {
-    name: { en: 'Pure Drop of Rain', ru: 'Чистая капля дождя' },
+    name: { en: 'Pure Drop of Rain', ru: 'Чистая дождевая капля' },
     catalog: 'AccountResource:reagent_c_t01',
   },
   'lightning-in-a-bottle': {
@@ -162,11 +167,11 @@ export const RESOURCES: Record<ResourceId, ResourceInfo> = {
     catalog: 'AccountResource:reagent_c_t02',
   },
   'eye-of-the-storm': {
-    name: { en: 'Eye of the Storm', ru: 'Глаз бури' },
+    name: { en: 'Eye of the Storm', ru: 'Око Бури' },
     catalog: 'AccountResource:reagent_c_t03',
   },
   'storm-shard': {
-    name: { en: 'Storm Shard', ru: 'Осколок бури' },
+    name: { en: 'Storm Shard', ru: 'Осколок Бури' },
     catalog: 'AccountResource:reagent_c_t04',
   },
   'active-powercell': {
@@ -253,7 +258,7 @@ export const ITEM_KINDS: Record<ItemKind, L> = {
 export const HERO_CLASSES: Record<HeroClass, L> = {
   constructor: { en: 'Constructor', ru: 'Конструктор' },
   ninja: { en: 'Ninja', ru: 'Ниндзя' },
-  outlander: { en: 'Outlander', ru: 'Исследователь' },
+  outlander: { en: 'Outlander', ru: 'Путешественник' },
   soldier: { en: 'Soldier', ru: 'Солдат' },
 };
 
@@ -295,3 +300,7 @@ export interface QuestlineQuest {
 export function questVbucks(q: QuestlineQuest): number {
   return q.rewards.reduce((s, r) => s + (r.t === 'vbucks' ? r.n : 0), 0);
 }
+
+/** Quest name in the page language: the game's Russian name when we have it. */
+export const questName = (q: { id: string; name: string }, locale: string): string =>
+  (locale === 'ru' && QUESTLINE_RU[q.id]) || q.name;

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Fira_Sans_Extra_Condensed, Onest, Unbounded } from 'next/font/google';
 import en from '@/messages/en.json';
 import { NextIntlClientProvider } from 'next-intl';
@@ -36,6 +36,12 @@ const onest = Onest({
   subsets: ['latin', 'cyrillic'],
 });
 
+// Its own document: the same viewport as app/[locale]/layout.tsx.
+export const viewport: Viewport = {
+  themeColor: '#db5814',
+  viewportFit: 'cover',
+};
+
 export const metadata: Metadata = {
   title: `${en.NotFound.title} · ${en.Meta.siteName}`,
   robots: { index: false },
@@ -46,6 +52,7 @@ export default function GlobalNotFound() {
   setRequestLocale(routing.defaultLocale);
   return (
     <html
+      data-scroll-behavior="smooth"
       lang="en"
       className={`${unbounded.variable} ${onest.variable} ${fnFont.variable} h-full antialiased`}
     >

@@ -13,7 +13,7 @@ function formatQty(n: number): string {
   return n >= 1000 ? `${Math.round(n / 100) / 10}k` : String(n);
 }
 
-/** Small rarity tile with the reward icon, used in rows (16px) and tooltips (64px). */
+/** Rarity tile with the reward icon: square in a chip (20px, as in QuestRewards), 64px in tooltips. */
 function RewardTile({
   reward,
   category,
@@ -30,7 +30,7 @@ function RewardTile({
       data-rarity={rarity}
       className={cn(
         'reward-tile inline-flex shrink-0 items-center justify-center overflow-hidden',
-        size === 'sm' ? 'size-4 rounded-[2px]' : 'size-16 rounded-[4px]',
+        size === 'sm' ? 'fn-tile size-5' : 'size-16 rounded-[4px]',
       )}
     >
       <GameIcon
@@ -39,14 +39,17 @@ function RewardTile({
         fallback={REWARD_ICONS[category]}
         className={cn(
           'fill-current',
-          size === 'sm' ? 'size-3.5' : 'size-14 drop-shadow-[0_1px_2px_rgb(0_0_0/0.6)]',
+          size === 'sm' ? 'size-4' : 'size-14 drop-shadow-[0_1px_2px_rgb(0_0_0/0.6)]',
         )}
       />
     </span>
   );
 }
 
-/** Reward in a row: 16px rarity tile + amount; tooltip with a big icon and a description. */
+/**
+ * Reward on a mission card: a skewed chip with the rarity tile and the amount, as the questline
+ * and side quest rewards (no name: the card has no room; it is in the tooltip with a big icon).
+ */
 export function RewardChip({ reward }: { reward: Reward }) {
   const t = useTranslations();
   const locale = useLocale();
@@ -67,7 +70,10 @@ export function RewardChip({ reward }: { reward: Reward }) {
       <TooltipTrigger asChild>
         <span
           tabIndex={0}
-          className="inline-flex items-center gap-1 rounded-sm text-xs font-semibold tabular-nums"
+          className={cn(
+            'skew-tab inline-flex h-6 items-center gap-1.5 bg-surface-2 pl-1.5 text-xs font-semibold tabular-nums',
+            reward.quantity > 1 ? 'pr-2' : 'pr-1.5',
+          )}
         >
           <RewardTile reward={reward} category={category} rarity={rarity} size="sm" />
           <span className="sr-only">{name}</span>

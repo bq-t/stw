@@ -34,15 +34,15 @@ export default async function PrivacyPage({ params }: PageProps<'/[locale]/priva
   return (
     <article className="flex max-w-2xl flex-col gap-6">
       <header className="flex flex-col gap-2">
-        <h1 className="font-display text-2xl font-extrabold uppercase">{t('title')}</h1>
-        <p className="text-sm text-muted-foreground">{t('updated', { date })}</p>
+        <h1 className="font-display text-2xl font-extrabold text-white uppercase">{t('title')}</h1>
+        <p className="text-sm text-white/80">{t('updated', { date })}</p>
         <p>{t('intro')}</p>
       </header>
       {sections.map((s) => (
         <section key={s.title} className="flex flex-col gap-2">
           <h2 className="font-display text-lg font-extrabold uppercase">{s.title}</h2>
           {s.items.map((text) => (
-            <p key={text} className="text-muted-foreground">
+            <p key={text} className="text-white/80">
               {text}
             </p>
           ))}
