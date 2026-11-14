@@ -21,6 +21,11 @@ export interface SubscriptionFilter extends MissionFilters {
   item?: string;
   /** Minimum quantity of the item, or of a reward in `rewards` (any reward if none). */
   minQty?: number;
+  /**
+   * "vbucks": not a mission filter but the day's V-Bucks card (as the channel webhook),
+   * posted after every rotation, with or without V-Bucks (/setup vbucks).
+   */
+  card?: 'vbucks';
 }
 
 /** Rewards that come with almost every alert: never a reason to notify. */
@@ -73,6 +78,7 @@ export function parseSubscriptionFilter(raw: unknown): SubscriptionFilter | null
   if (typeof o.item === 'string' && /^[A-Za-z]+:[\w.-]{1,120}$/.test(o.item)) f.item = o.item;
   const min = intIn(o.minQty, 1, MIN_QTY_MAX);
   if (min && min > 1) f.minQty = min;
+  if (o.card === 'vbucks') f.card = 'vbucks';
   return f;
 }
 

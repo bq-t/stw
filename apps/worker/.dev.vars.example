@@ -4,8 +4,6 @@ EPIC_CLIENT=fortniteAndroidGameClient
 EPIC_ACCOUNT_ID=
 EPIC_DEVICE_ID=
 EPIC_DEVICE_SECRET=
-# Optional: Discord channel webhook for V-Bucks notifications
-DISCORD_WEBHOOK_URL=
 # Discord application "Fishstick": OAuth2 → Client Secret (Application ID goes to wrangler.toml)
 DISCORD_CLIENT_SECRET=
 # Local dev only: OAuth callback origin (wrangler dev reports the route host otherwise)
@@ -14,3 +12,7 @@ AUTH_ORIGIN=http://localhost:8787
 DISCORD_BOT_TOKEN=
 # AES-GCM key for linked Epic accounts: node -e "console.log(require(\"crypto\").randomBytes(32).toString(\"base64\"))"
 EPIC_LINK_KEY=
+# Local dev only: where `pnpm bot:preview` posts (test channel id, or a webhook URL)
+DEV_PREVIEW_TARGET=
+# Local dev only: your Discord user id (/subscriptions, /llamas in the preview)
+DEV_PREVIEW_USER=

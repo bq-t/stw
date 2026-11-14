@@ -29,6 +29,7 @@ function bigBrShop(): BrShop {
     kind: section === 99 ? ('track' as const) : ('item' as const),
     name: `A rather long cosmetic name ${section}-${n}`,
     type: 'Outfit',
+    typeKey: 'outfit',
     rarity: 'epic',
     image: `https://cdn/${section}-${n}.png`,
     price: 1500,

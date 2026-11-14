@@ -13,7 +13,6 @@ Daily snapshot of StW missions in KV + JSON API for the site.
    pnpm wrangler secret put EPIC_ACCOUNT_ID
    pnpm wrangler secret put EPIC_DEVICE_ID
    pnpm wrangler secret put EPIC_DEVICE_SECRET
-   pnpm wrangler secret put DISCORD_WEBHOOK_URL   # optional
    ```
 5. Set `ALLOWED_ORIGINS` and `SITE_URL` in `wrangler.toml` to the real site domain.
 6. `pnpm run deploy` (in CI: on push to `main`, needs `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repo secrets)
@@ -29,10 +28,9 @@ curl http://localhost:8787/api/health
 
 ## Discord
 
-One message per rotation (about 03:00 MSK), with the V-Bucks missions or a "no V-Bucks today" card, stats and links to the site.
-Webhook: Server Settings → Integrations → Webhooks → New Webhook → pick the channel → Copy URL, then
-`pnpm wrangler secret put DISCORD_WEBHOOK_URL`. Optional custom emoji: `DISCORD_VBUCKS_EMOJI` in `wrangler.toml`.
-Check the look without waiting for the rotation: `pnpm discord:preview` in the repo root (webhook from root `.env`).
+The bot Fishstick posts everything (`src/bot/`). The V-Bucks card (V-Bucks missions or "no V-Bucks today", stats,
+links to the site) goes to a channel after each rotation (about 03:00 MSK) once an admin runs `/setup vbucks`.
+Check the look without a deploy: `pnpm bot:preview notify vbucks` in the repo root (see `scripts/bot-preview.ts`).
 
 ## Behaviour
 

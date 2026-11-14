@@ -87,11 +87,12 @@ export async function eventsSource(
   };
 }
 
-/** Sources of every board kind the cron keeps up to date (status aside). */
+/**
+ * Sources of every board kind the cron keeps up to date (status aside). Shop boards are off
+ * for now (the shops are the site's): boards posted earlier stay as they are.
+ */
 export async function scheduledSources(db: Db, siteUrl: string, now: number) {
   const list = await Promise.all([
-    brShopSource(db, siteUrl, now),
-    stwShopSource(db, siteUrl),
     eventsSource(db, siteUrl, now),
     ...TOURNAMENT_REGIONS.map((r) => tournamentsSource(db, r, siteUrl, now)),
   ]);

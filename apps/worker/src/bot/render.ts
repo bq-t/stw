@@ -1,9 +1,8 @@
 // Mission list card shared by /missions and subscription notifications.
 
 import { compareMissions, type Mission } from '@stw/shared';
-import { GAME_NAMES } from '@stw/shared/game-names';
-import { itemName } from '@stw/shared/items';
 import { fmt, label, messages, sitePath, type Locale } from '../i18n';
+import { rewardName } from '../notify/discord';
 import { FLAG_COMPONENTS_V2 } from './status';
 
 const MAX_LISTED = 12;
@@ -14,7 +13,7 @@ export function rewardText(m: Mission, locale: Locale): string {
   return m.alertRewards
     .filter((r) => !HIDDEN_REWARDS.has(r.itemId))
     .map((r) => {
-      const name = r.isVbucks ? 'V-Bucks' : itemName(r.itemId, locale, GAME_NAMES);
+      const name = r.isVbucks ? 'V-Bucks' : rewardName(r.itemId, locale);
       return r.quantity > 1 ? `${name} ×${r.quantity}` : name;
     })
     .join(', ');

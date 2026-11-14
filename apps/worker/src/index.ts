@@ -34,9 +34,9 @@ import {
 import { isTournamentRegion } from '@stw/shared';
 import { deliverSubscriptions } from './bot/subscriptions';
 import { handleInteraction } from './bot/interactions';
+import { handlePreview, isPreviewEnabled } from './dev/preview';
 import { Db } from './db';
 import type { Env } from './env';
-import { buildDiscordMessage, postDiscord } from './notify/discord';
 import { Store } from './store';
 
 // ---------- scheduled: daily mission snapshot ----------
@@ -81,20 +81,6 @@ async function runDaily(env: Env, now: Date = new Date()): Promise<RunResult> {
     lastSuccessAt: now.toISOString(),
     lastSnapshotDate: snapshot.date,
   });
-
-  // Every day, with or without V-Bucks: the channel gets one message per rotation.
-  if (env.DISCORD_WEBHOOK_URL) {
-    try {
-      const message = buildDiscordMessage(snapshot, history, {
-        siteUrl: env.SITE_URL,
-        vbucksEmoji: env.DISCORD_VBUCKS_EMOJI,
-      });
-      await postDiscord(env.DISCORD_WEBHOOK_URL, message);
-    } catch (err) {
-      // A failed notification must not fail the day: the snapshot is already saved.
-      console.error('discord', err);
-    }
-  }
   return 'saved';
 }
 
@@ -183,6 +169,8 @@ async function handleFetch(request: Request, env: Env, ctx: ExecutionContext): P
 
   if (request.method === 'POST') {
     if (url.pathname === '/api/discord/interactions') return handleInteraction(request, env, ctx);
+    if (url.pathname === '/__dev/bot' && isPreviewEnabled(env))
+      return handlePreview(request, env, () => runDaily(env));
     if (url.pathname === '/api/auth/logout') {
       // CSRF: only from the site (SameSite=Lax already keeps the cookie off cross-site POSTs).
       if (!origin && request.headers.get('Origin') !== url.origin)
@@ -326,9 +314,19 @@ async function runCron(env: Env): Promise<void> {
 
   // 4. Subscriptions for today's rotation, in batches.
   try {
-    const snapshot = await new Store(env.MISSIONS).getCurrent();
+    const store = new Store(env.MISSIONS);
+    const snapshot = await store.getCurrent();
     if (token && snapshot && snapshot.date === rotationDay(new Date(now))) {
-      const sent = await deliverSubscriptions(token, db, snapshot, env.SITE_URL, now, budget);
+      const history = await store.getHistory();
+      const sent = await deliverSubscriptions(
+        token,
+        db,
+        snapshot,
+        history,
+        env.SITE_URL,
+        now,
+        budget,
+      );
       budget -= sent;
       if (sent) console.log('subscriptions: requests', sent);
     }

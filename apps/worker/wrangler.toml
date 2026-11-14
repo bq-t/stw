@@ -30,8 +30,6 @@ migrations_dir = "migrations"
 ALLOWED_ORIGINS = "https://stw.bq-t.pro,https://stw-vbucks.pages.dev"
 # Links and images in the Discord message.
 SITE_URL = "https://stw.bq-t.pro"
-# Optional custom server emoji next to V-Bucks amounts in Discord, e.g. "<:vbucks:123456789012345678>".
-DISCORD_VBUCKS_EMOJI = "<:vbucks:1568138713823838388>"
 # Discord application "Fishstick" (login on the site, later the bot). Empty → login is off.
 DISCORD_CLIENT_ID = "1569345926382755981"
 # Bot: checks the signature of /api/discord/interactions. Empty → the bot endpoint is off.
@@ -41,4 +39,4 @@ DISCORD_PUBLIC_KEY = "6b9b9005bb63e547ebf0f9229717881576a83f9e62db928fc5b86def27
 enabled = true
 
 # Secrets (wrangler secret put <NAME>), see .dev.vars.example:
-# EPIC_CLIENT, EPIC_ACCOUNT_ID, EPIC_DEVICE_ID, EPIC_DEVICE_SECRET, DISCORD_CLIENT_SECRET, DISCORD_BOT_TOKEN, DISCORD_WEBHOOK_URL (optional)
+# EPIC_CLIENT, EPIC_ACCOUNT_ID, EPIC_DEVICE_ID, EPIC_DEVICE_SECRET, DISCORD_CLIENT_SECRET, DISCORD_BOT_TOKEN

@@ -23,7 +23,7 @@ import { ITEMS } from '@stw/shared/items';
 import { Db, type OwnerType, type SubscriptionRow } from '../db';
 import type { Env } from '../env';
 import { fmt, localeOf, messages, plural, type Locale } from '../i18n';
-import { buildDiscordMessage } from '../notify/discord';
+import { buildDiscordMessages } from '../notify/discord';
 import { Store } from '../store';
 import {
   DiscordApiError,
@@ -35,9 +35,7 @@ import {
 import APP_EMOJIS from './app-emojis.json';
 import { boardLocale, boardMessageIds, postBoard, type BoardSource } from './boards';
 import { currentStatus, readEvents, readTournamentNames, readTournaments } from '../feeds';
-import { fetchLlamas } from '../llamas';
-import { llamasMessage } from './shop';
-import { eventsSource, shopSource, statusSource, tournamentsSource } from './sources';
+import { eventsSource, statusSource, tournamentsSource } from './sources';
 import {
   eventsPage,
   findSession,
@@ -55,7 +53,6 @@ import { missionListMessage } from './render';
 import { buildStatusMessage, STATUS_REFRESH_ID } from './status';
 import { describeFilter, MAX_SUBSCRIPTIONS, parseRowFilter } from './subscriptions';
 import { verifyDiscordRequest } from './verify';
-import { EpicLinks, isEpicLinkConfigured } from '../epic-link';
 
 // Interaction and response types
 const PING = 1;
@@ -71,10 +68,6 @@ const STATUS_MAX_AGE = 2 * 60 * 1000;
 const ADMINISTRATOR = 1n << 3n;
 const MANAGE_GUILD = 1n << 5n;
 const DELETE_PREFIX = 'sub:del:';
-const EPIC_POLL_ID = 'epic:poll';
-// Deferred responses: "thinking…" now, the message follows (Epic takes a few seconds).
-const DEFERRED_CHANNEL_MESSAGE = 5;
-const DEFERRED_UPDATE_MESSAGE = 6;
 
 interface CommandOption {
   name: string;
@@ -96,6 +89,11 @@ export interface Interaction {
   user?: { id: string };
   data?: { name?: string; options?: CommandOption[]; custom_id?: string; values?: string[] };
   message?: { id: string; channel_id: string };
+  /**
+   * Dev preview only (src/dev/preview.ts): deferred replies and extra pages go here
+   * instead of the interaction webhook. Never set for a real Discord request.
+   */
+  deliver?: (data: Record<string, unknown>) => Promise<void>;
 }
 
 type Data = Record<string, unknown>;
@@ -192,77 +190,13 @@ export function subscriptionList(rows: SubscriptionRow[], owner: OwnerType, loca
   return { content: `### ${title}\n${lines.join('\n')}`, components };
 }
 
-// ---------- Epic link ----------
-
-function epicPrompt(verificationUrl: string, locale: Locale) {
-  const t = messages(locale).Bot.epic;
-  return {
-    content: `${t.warning}
-
-${t.start}`,
-    components: [
-      {
-        type: 1,
-        components: [
-          { type: 2, style: 5, label: t.open, url: verificationUrl },
-          { type: 2, style: 1, label: t.done, custom_id: EPIC_POLL_ID },
-        ],
-      },
-    ],
-    allowed_mentions: { parse: [] },
-  };
-}
-
-/** Text + buttons after a check of the link in progress. */
-async function epicPoll(env: Env, userId: string, locale: Locale, now: number) {
-  const t = messages(locale).Bot.epic;
-  if (!isEpicLinkConfigured(env))
-    return { content: messages(locale).Bot.error.generic, components: [] };
-  const r = await new EpicLinks(env).poll(userId, now);
-  if (r.status === 'linked')
-    return { content: fmt(t.linked, { name: r.displayName }), components: [] };
-  if (r.status === 'pending')
-    return {
-      ...epicPrompt(r.verificationUrl, locale),
-      content: `${t.pending}
-
-${t.start}`,
-    };
-  return { content: t.expired, components: [] };
-}
-
-/** Edits the deferred reply once the work is done (or shows the generic error). */
-function followUp(
-  i: Interaction,
-  ctx: ExecutionContext,
-  locale: Locale,
-  work: () => Promise<Record<string, unknown>>,
-) {
-  ctx.waitUntil(
-    work()
-      .catch((err: unknown) => {
-        console.error('deferred', i.data?.name ?? i.data?.custom_id, err);
-        return { content: messages(locale).Bot.error.generic, components: [] };
-      })
-      .then((data) =>
-        fetch(
-          `https://discord.com/api/v10/webhooks/${i.application_id}/${i.token}/messages/@original`,
-          {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ allowed_mentions: { parse: [] }, ...data }),
-          },
-        ),
-      )
-      .then((res) => {
-        if (!res.ok) console.error('follow-up', res.status);
-      }),
-  );
-}
-
 /** Extra messages after a reply (multi-page /shop). */
 async function postFollowUps(i: Interaction, pages: Record<string, unknown>[]) {
   for (const page of pages) {
+    if (i.deliver) {
+      await i.deliver(page);
+      continue;
+    }
     const res = await fetch(`https://discord.com/api/v10/webhooks/${i.application_id}/${i.token}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -277,7 +211,7 @@ async function postFollowUps(i: Interaction, pages: Record<string, unknown>[]) {
 
 // ---------- commands ----------
 
-async function command(i: Interaction, env: Env, now: number, ctx: ExecutionContext) {
+export async function command(i: Interaction, env: Env, now: number, ctx: ExecutionContext) {
   const locale = localeOf(i.locale);
   const t = messages(locale).Bot;
   const store = new Store(env.MISSIONS);
@@ -286,13 +220,15 @@ async function command(i: Interaction, env: Env, now: number, ctx: ExecutionCont
     case 'vbucks': {
       const snapshot = await store.getCurrent();
       if (!snapshot) return ephemeral(t.error.noData);
-      return reply({
-        ...buildDiscordMessage(snapshot, await store.getHistory(), {
-          siteUrl: env.SITE_URL,
-          emojis: APP_EMOJIS,
-          locale,
-        }),
+      const [first, ...rest] = buildDiscordMessages(snapshot, await store.getHistory(), {
+        siteUrl: env.SITE_URL,
+        emojis: APP_EMOJIS,
+        locale,
       });
+      // A busy day adds a second message (link to the rest on the site) as a follow-up.
+      if (rest.length)
+        ctx.waitUntil(postFollowUps(i, rest as unknown as Record<string, unknown>[]));
+      return reply({ ...first! });
     }
     case 'missions': {
       const snapshot = await store.getCurrent();
@@ -305,33 +241,6 @@ async function command(i: Interaction, env: Env, now: number, ctx: ExecutionCont
       if (!env.DB) return ephemeral(t.error.generic);
       const known = await currentStatus(new Db(env.DB), now, STATUS_MAX_AGE);
       return reply(buildStatusMessage(known.data, known.changedAt, locale));
-    }
-    case 'shop': {
-      if (!env.DB) return ephemeral(t.error.generic);
-      const kind = option(i.data.options, 'kind') === 'stw' ? 'shop_stw' : 'shop_br';
-      const source = await shopSource(new Db(env.DB), kind, env.SITE_URL, now);
-      if (!source) return ephemeral(t.shop.noData);
-      const [first, ...rest] = source.pages(locale);
-      // A BR shop takes several messages: the first is the reply, the rest follow-ups.
-      if (rest.length) ctx.waitUntil(postFollowUps(i, rest));
-      return reply(first!);
-    }
-    case 'llamas': {
-      const uid = userId(i);
-      if (!uid) return ephemeral(t.error.generic);
-      followUp(i, ctx, locale, async () => {
-        const r = await fetchLlamas(env, uid, now);
-        if (r.status === 'ok') return llamasMessage(r.llamas, locale, env.SITE_URL, now);
-        return {
-          content:
-            r.status === 'not linked'
-              ? t.shop.notLinked
-              : r.status === 'gone'
-                ? t.shop.gone
-                : t.error.generic,
-        };
-      });
-      return { type: DEFERRED_CHANNEL_MESSAGE, data: { flags: EPHEMERAL } };
     }
     case 'subscribe': {
       const uid = userId(i);
@@ -365,27 +274,6 @@ async function command(i: Interaction, env: Env, now: number, ctx: ExecutionCont
       const rows = await new Db(env.DB).listSubscriptions('user', uid);
       return reply({ ...subscriptionList(rows, 'user', locale), flags: EPHEMERAL });
     }
-    case 'link': {
-      const uid = userId(i);
-      if (!isEpicLinkConfigured(env) || !uid) return ephemeral(t.error.generic);
-      const links = new EpicLinks(env);
-      const current = await links.status(uid, now);
-      if (current.status === 'linked')
-        return ephemeral(fmt(t.epic.already, { name: current.displayName }));
-      followUp(i, ctx, locale, async () => {
-        const { verificationUrl } = await links.start(uid, now);
-        return epicPrompt(verificationUrl, locale);
-      });
-      return { type: DEFERRED_CHANNEL_MESSAGE, data: { flags: EPHEMERAL } };
-    }
-    case 'unlink': {
-      const uid = userId(i);
-      if (!isEpicLinkConfigured(env) || !uid) return ephemeral(t.error.generic);
-      followUp(i, ctx, locale, async () => ({
-        content: (await new EpicLinks(env).unlink(uid)) ? t.epic.unlinked : t.epic.notLinked,
-      }));
-      return { type: DEFERRED_CHANNEL_MESSAGE, data: { flags: EPHEMERAL } };
-    }
     case 'tournaments': {
       if (!env.DB) return ephemeral(t.error.generic);
       const db = new Db(env.DB);
@@ -414,14 +302,10 @@ async function command(i: Interaction, env: Env, now: number, ctx: ExecutionCont
     }
     case 'setup': {
       const sub = i.data.options?.[0];
-      if (
-        sub?.name === 'status' ||
-        sub?.name === 'shop' ||
-        sub?.name === 'tournaments' ||
-        sub?.name === 'events'
-      )
+      if (sub?.name === 'status' || sub?.name === 'tournaments' || sub?.name === 'events')
         return setupBoard(i, sub.name, sub.options, env, now);
       if (sub?.name === 'alerts') return setupAlerts(i, sub.options, env, now);
+      if (sub?.name === 'vbucks') return setupAlerts(i, sub.options, env, now, 'vbucks');
       if (sub?.name === 'list') {
         if (!env.DB || !i.guild_id) return ephemeral(t.error.generic);
         const rows = await new Db(env.DB).listSubscriptions('guild', i.guild_id);
@@ -479,10 +363,10 @@ function noAccessReply(err: unknown, channelId: string, locale: Locale) {
   return null;
 }
 
-/** /setup status and /setup shop: posts a board that the cron keeps up to date. */
+/** /setup status|tournaments|events: posts a board that the cron keeps up to date. */
 async function setupBoard(
   i: Interaction,
-  name: 'status' | 'shop' | 'tournaments' | 'events',
+  name: 'status' | 'tournaments' | 'events',
   opts: CommandOption[] | undefined,
   env: Env,
   now: number,
@@ -497,10 +381,7 @@ async function setupBoard(
 
   let source: BoardSource | null;
   if (name === 'status') source = statusSource(await currentStatus(db, now, STATUS_MAX_AGE));
-  else if (name === 'shop') {
-    const kind = option(opts, 'kind') === 'stw' ? 'shop_stw' : 'shop_br';
-    source = await shopSource(db, kind, env.SITE_URL, now);
-  } else if (name === 'tournaments')
+  else if (name === 'tournaments')
     source = await tournamentsSource(db, regionOption(opts), env.SITE_URL, now);
   else source = await eventsSource(db, env.SITE_URL, now);
   if (!source) return ephemeral(t.error.notLoaded);
@@ -513,18 +394,22 @@ async function setupBoard(
   }
   const done = {
     status: t.setup.statusDone,
-    shop: t.setup.shopDone,
     tournaments: t.setup.tournamentsDone,
     events: t.setup.eventsDone,
   }[name];
   return ephemeral(fmt(done, { channel: `<#${channelId}>` }));
 }
 
+/**
+ * /setup alerts (missions matching the filter) and /setup vbucks (the day's V-Bucks card,
+ * as the channel webhook): a channel subscription the cron serves after each rotation.
+ */
 async function setupAlerts(
   i: Interaction,
   opts: CommandOption[] | undefined,
   env: Env,
   now: number,
+  card?: 'vbucks',
 ) {
   const locale = localeOf(i.locale);
   const t = messages(locale).Bot;
@@ -537,7 +422,22 @@ async function setupAlerts(
   if ((await db.countSubscriptions('guild', guildId)) >= MAX_SUBSCRIPTIONS)
     return ephemeral(fmt(t.subs.guildLimit, { max: MAX_SUBSCRIPTIONS }));
   const lang = (option(opts, 'language') as Locale | undefined) ?? localeOf(i.guild_locale);
-  const f = subscriptionFilter(opts);
+  const f: SubscriptionFilter = card
+    ? { ...subscriptionFilter(undefined), card }
+    : subscriptionFilter(opts);
+  if (card) {
+    // One V-Bucks card per channel: a second one would only post the same card twice.
+    const same = (await db.listSubscriptions('guild', guildId)).some(
+      (r) => r.target_id === channelId && parseRowFilter(r)?.card === card,
+    );
+    if (same)
+      return ephemeral(
+        fmt(t.subs.channelSaved, {
+          summary: `**${describeFilter(f, locale)}**`,
+          channel: `<#${channelId}>`,
+        }),
+      );
+  }
   // The intro message also checks that the bot can post there.
   const posted = await postToChannel(
     env.DISCORD_BOT_TOKEN!,
@@ -573,7 +473,7 @@ async function setupAlerts(
 
 // ---------- buttons ----------
 
-async function component(i: Interaction, env: Env, now: number, ctx: ExecutionContext) {
+async function component(i: Interaction, env: Env, now: number) {
   const locale = localeOf(i.locale);
   const t = messages(locale).Bot;
   const id = i.data?.custom_id ?? '';
@@ -587,13 +487,6 @@ async function component(i: Interaction, env: Env, now: number, ctx: ExecutionCo
     const lang = onBoard ? boardLocale(board) : locale;
     const known = await currentStatus(db, now, 60 * 1000);
     return { type: UPDATE_MESSAGE, data: buildStatusMessage(known.data, known.changedAt, lang) };
-  }
-
-  if (id === EPIC_POLL_ID) {
-    const uid = userId(i);
-    if (!uid) return ephemeral(t.error.generic);
-    followUp(i, ctx, locale, () => epicPoll(env, uid, locale, now));
-    return { type: DEFERRED_UPDATE_MESSAGE };
   }
 
   if (id.startsWith('tr:') || id.startsWith(REM_DELETE))
@@ -714,7 +607,7 @@ export async function handleInteraction(
   try {
     if (i.type === PING) response = { type: PONG };
     else if (i.type === APPLICATION_COMMAND) response = await command(i, env, now, ctx);
-    else if (i.type === MESSAGE_COMPONENT) response = await component(i, env, now, ctx);
+    else if (i.type === MESSAGE_COMPONENT) response = await component(i, env, now);
     else response = ephemeral(messages(localeOf(i.locale)).Bot.error.unknown);
   } catch (err) {
     console.error('interaction', i.data?.name ?? i.data?.custom_id, err);

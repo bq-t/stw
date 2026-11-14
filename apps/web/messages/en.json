@@ -4,6 +4,7 @@
     "description": "Today's Fortnite Save the World missions, V-Bucks alerts, quests and every way to earn V-Bucks."
   },
   "Nav": {
+    "cardDetails": "Details",
     "tracker": "Today's Missions",
     "dailyQuests": "Daily Quests",
     "questline": "Questline",
@@ -321,7 +322,8 @@
       "noHistory": "No V-Bucks alerts in the history yet",
       "group": "Group",
       "openTracker": "Open tracker",
-      "howToFarm": "How to farm V-Bucks"
+      "howToFarm": "How to farm V-Bucks",
+      "moreOnSite": "The rest is in the tracker on the site."
     },
     "missions": {
       "title": "Missions",
@@ -385,6 +387,7 @@
       "subscribe": "Get a DM when today's missions match your filters",
       "subscriptions": "Your subscriptions",
       "setupAlerts": "Post matching missions in a channel after each rotation",
+      "setupVbucks": "Post the V-Bucks card in a channel after each rotation",
       "setupList": "Subscriptions of this server",
       "item": "Exact reward item",
       "min": "Minimum amount of the reward",
@@ -415,7 +418,9 @@
       "delete": "Delete {n}",
       "notOwner": "You cannot change this subscription.",
       "notifTitle": "Missions for your subscription",
+      "notifEmptyTitle": "No missions for your subscription",
       "anyMission": "Any alert",
+      "vbucksCard": "V-Bucks card after each rotation",
       "pl": "PL {min}–{max}"
     },
     "epic": {
@@ -605,6 +610,8 @@
     "close": "Close",
     "inShopUntil": "In the shop until {date}",
     "hasVideo": "Has a showcase video",
+    "looks": "Looks",
+    "look": "Look {n} of {count}",
     "itemKind": {
       "hero": "Hero",
       "schematic": "Schematic",
@@ -654,7 +661,20 @@
       "price": "Price"
     },
     "llamaContents": "Contents",
-    "choiceOfOne": "Choice of one"
+    "choiceOfOne": "Choice of one",
+    "filters": {
+      "lego": "LEGO",
+      "legoHint": "Show the LEGO look among the looks of a tile",
+      "only": "Show",
+      "new": "New today",
+      "first": "First release",
+      "leaving": "Leaving today",
+      "type": "Type",
+      "bundle": "Bundles",
+      "track": "Jam Tracks",
+      "reset": "Reset filters",
+      "empty": "Nothing in today's shop matches these filters."
+    }
   },
   "Events": {
     "demo": "This page needs the live API: it is not shown on demo data.",

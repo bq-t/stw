@@ -114,16 +114,6 @@ const languageOption = {
   ],
 };
 
-const shopKindOption = {
-  type: STRING,
-  name: 'kind',
-  ...desc('shopKind'),
-  choices: [
-    { name: en.Bot.shop.kindBr, name_localizations: { ru: ru.Bot.shop.kindBr }, value: 'br' },
-    { name: en.Bot.shop.kindStw, name_localizations: { ru: ru.Bot.shop.kindStw }, value: 'stw' },
-  ],
-};
-
 const regionOption = {
   type: STRING,
   name: 'region',
@@ -139,20 +129,11 @@ export const COMMANDS = [
   { name: 'vbucks', ...desc('vbucks'), ...everywhere },
   { name: 'missions', ...desc('missions'), ...everywhere, options: missionOptions },
   { name: 'status', ...desc('status'), ...everywhere },
-  {
-    name: 'shop',
-    ...desc('shop'),
-    ...everywhere,
-    options: [{ ...shopKindOption, required: true }],
-  },
-  { name: 'llamas', ...desc('llamas'), ...everywhere },
   { name: 'tournaments', ...desc('tournaments'), ...everywhere, options: [regionOption] },
   { name: 'events', ...desc('events'), ...everywhere },
   { name: 'reminders', ...desc('reminders'), ...everywhere },
   { name: 'subscribe', ...desc('subscribe'), ...everywhere, options: subscriptionOptions },
   { name: 'subscriptions', ...desc('subscriptions'), ...everywhere },
-  { name: 'link', ...desc('link'), ...everywhere },
-  { name: 'unlink', ...desc('unlink'), ...everywhere },
   {
     name: 'setup',
     ...desc('setup'),
@@ -165,12 +146,6 @@ export const COMMANDS = [
         name: 'status',
         ...desc('setupStatus'),
         options: [channelOption, languageOption],
-      },
-      {
-        type: SUB_COMMAND,
-        name: 'shop',
-        ...desc('setupShop'),
-        options: [{ ...shopKindOption, required: true }, channelOption, languageOption],
       },
       {
         type: SUB_COMMAND,
@@ -189,6 +164,12 @@ export const COMMANDS = [
         name: 'alerts',
         ...desc('setupAlerts'),
         options: [channelOption, ...subscriptionOptions, languageOption],
+      },
+      {
+        type: SUB_COMMAND,
+        name: 'vbucks',
+        ...desc('setupVbucks'),
+        options: [channelOption, languageOption],
       },
       { type: SUB_COMMAND, name: 'list', ...desc('setupList') },
     ],

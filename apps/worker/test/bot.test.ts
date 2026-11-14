@@ -9,7 +9,7 @@ import {
 } from '../src/bot/status';
 import { verifyDiscordRequest } from '../src/bot/verify';
 import { COMMANDS } from '../src/bot/commands';
-import { buildDiscordMessage } from '../src/notify/discord';
+import { buildDiscordMessages } from '../src/notify/discord';
 import summary from './statuspage-summary.json';
 
 const hex = (b: ArrayBuffer) => Buffer.from(b).toString('hex');
@@ -140,7 +140,7 @@ describe('localized V-Bucks card', () => {
       vbucksTotal: 50,
     };
     const msg = JSON.stringify(
-      buildDiscordMessage(snapshot, null, { siteUrl: 'https://stw.bq-t.pro', locale: 'ru' }),
+      buildDiscordMessages(snapshot, null, { siteUrl: 'https://stw.bq-t.pro', locale: 'ru' })[0]!,
     );
     expect(msg).toContain('50 V-Bucks сегодня');
     expect(msg).toContain('1 миссия');
@@ -169,7 +169,7 @@ describe('command definitions', () => {
 });
 
 describe('emoji sets', () => {
-  it('the channel post keeps server emoji, the bot uses application emoji', async () => {
+  it('uses the application emoji', async () => {
     const app = (await import('../src/bot/app-emojis.json')).default;
     const snapshot: DaySnapshot = {
       date: '2026-11-09',
@@ -185,9 +185,7 @@ describe('emoji sets', () => {
       vbucksTotal: 50,
     };
     const site = { siteUrl: 'https://stw.bq-t.pro' };
-    const channel = JSON.stringify(buildDiscordMessage(snapshot, null, site));
-    const bot = JSON.stringify(buildDiscordMessage(snapshot, null, { ...site, emojis: app }));
-    expect(channel).toContain('<:powerlevel:1569264880299802724>');
+    const bot = JSON.stringify(buildDiscordMessages(snapshot, null, site)[0]!);
     expect(bot).toContain(app.power);
     expect(bot).toContain(app.vbucks);
     expect(bot).not.toContain('1569264880299802724');
@@ -229,9 +227,9 @@ describe('subscriptions', () => {
       vbucksTotal: 0,
     };
     const f = parseSubscriptionFilter({ item: DROP, minQty: 30 })!;
-    const { found, message } = notificationMessage(f, snapshot, 'en', 'https://stw.bq-t.pro');
+    const { found, messages } = notificationMessage(f, snapshot, 'en', 'https://stw.bq-t.pro');
     expect(found).toBe(1);
-    const json = JSON.stringify(message);
+    const json = JSON.stringify(messages);
     expect(json).toContain('Pure Drop of Rain ×35');
     expect(json).not.toContain('×10');
   });

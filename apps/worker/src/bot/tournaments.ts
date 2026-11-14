@@ -17,7 +17,8 @@ import type { BoardPage } from './boards';
 import { FLAG_COMPONENTS_V2 } from './status';
 
 const TEXT = 10;
-const SEPARATOR = 14;
+const SECTION = 9;
+const THUMBNAIL = 11;
 const CONTAINER = 17;
 const ACTION_ROW = 1;
 const BUTTON = 2;
@@ -27,7 +28,6 @@ const SECONDARY = 2;
 const SUCCESS = 3;
 const DANGER = 4;
 const LINK = 5;
-const PURPLE = 0x8a5cf6;
 const ORANGE = 0xf06c1e;
 
 /** Board and /tournaments: sessions starting within this window. */
@@ -64,6 +64,52 @@ export function boardSessions(tournaments: Tournament[], now: number): UpcomingS
     .slice(0, BOARD_MAX);
 }
 
+/** Discord counts every component of a message, nested ones too, up to 40. */
+const MAX_COMPONENTS = 40;
+/** Tournaments (cups) in /tournaments and its board: 4 components each with a poster. */
+const MAX_CUPS = 8;
+/** Session lines per cup. */
+const MAX_CUP_SESSIONS = 3;
+
+/** "6 Nov" / "6 нояб." in UTC: event dates are whole days. */
+const shortDate = (at: number, locale: Locale) =>
+  new Date(at).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-GB', {
+    day: 'numeric',
+    month: 'short',
+    timeZone: 'UTC',
+  });
+
+/** Absolute URL of a picture: site paths ("/images/events/…") get the site origin. */
+const absolute = (url: string, siteUrl: string) =>
+  url.startsWith('/') ? `${siteUrl.replace(/\/$/, '')}${url}` : url;
+
+/** A block as on the site's cards: title and lines on the left, the picture on the right. */
+function pictureBlock(lines: string[], image: string | undefined, alt: string) {
+  if (!image) return [{ type: TEXT, content: lines.join('\n') }];
+  return [
+    {
+      type: SECTION,
+      components: lines.map((content) => ({ type: TEXT, content })),
+      accessory: { type: THUMBNAIL, media: { url: image }, description: alt.slice(0, 1024) },
+    },
+  ];
+}
+
+const linkRow = (label: string, url: string) => ({
+  type: ACTION_ROW,
+  components: [{ type: BUTTON, style: LINK, label, url }],
+});
+
+const countComponents = (list: unknown[]): number =>
+  list.reduce<number>((n, c) => {
+    const o = c as { components?: unknown[]; accessory?: unknown };
+    return n + 1 + (o.components ? countComponents(o.components) : 0) + (o.accessory ? 1 : 0);
+  }, 0);
+
+/**
+ * /tournaments and its board: one block per cup (poster on the right, name, subtitle, the
+ * next sessions in local time), soonest first, then the region and the buttons.
+ */
 export function tournamentsPage(
   region: TournamentRegion,
   tournaments: Tournament[],
@@ -74,49 +120,47 @@ export function tournamentsPage(
 ): BoardPage {
   const t = messages(locale).Bot.tournaments;
   const sessions = boardSessions(tournaments, now);
-  const lines = sessions.map(({ tournament: tr, window: w }) => {
+  // Sessions of one cup together, cups in the order of their first session.
+  const cups = new Map<string, UpcomingSession[]>();
+  for (const s of sessions) {
+    const list = cups.get(s.tournament.eventId) ?? [];
+    list.push(s);
+    cups.set(s.tournament.eventId, list);
+  }
+  const blocks = [...cups.values()].slice(0, MAX_CUPS).map((list) => {
+    const tr = list[0]!.tournament;
     const n = tournamentName(names, tr.displayId, locale);
-    const live = Date.parse(w.begin) <= now;
-    const mobile = tr.mobile ? ` · *${t.mobile}*` : '';
-    return `**${n.title}**${n.subtitle ? ` · ${n.subtitle}` : ''}${mobile}\n-# <t:${unix(w.begin)}:F> · ${
-      live ? `<t:${unix(w.end)}:R>` : `<t:${unix(w.begin)}:R>`
-    }`;
+    const about = [n.subtitle, tr.mobile ? t.mobile : ''].filter(Boolean).join(' · ');
+    const when = list.slice(0, MAX_CUP_SESSIONS).map(({ window: w }) => {
+      const live = Date.parse(w.begin) <= now;
+      return `-# <t:${unix(w.begin)}:F> · ${live ? `<t:${unix(w.end)}:R>` : `<t:${unix(w.begin)}:R>`}`;
+    });
+    if (list.length > MAX_CUP_SESSIONS) when.push(`-# + ${list.length - MAX_CUP_SESSIONS}`);
+    return pictureBlock(
+      [`### ${n.title}`, [about, ...when].filter(Boolean).join('\n')],
+      n.poster,
+      n.title,
+    );
   });
-  return {
-    flags: FLAG_COMPONENTS_V2,
+  const buttons = {
+    type: ACTION_ROW,
     components: [
+      ...(sessions.length
+        ? [{ type: BUTTON, style: PRIMARY, label: t.remind, custom_id: `${TR_PICK}${region}` }]
+        : []),
       {
-        type: CONTAINER,
-        accent_color: PURPLE,
-        components: [
-          { type: TEXT, content: `## ${fmt(t.title, { region })}` },
-          { type: SEPARATOR, divider: true, spacing: 1 },
-          { type: TEXT, content: (lines.join('\n') || t.none).slice(0, 3800) },
-          { type: TEXT, content: `-# ${t.source}` },
-          {
-            type: ACTION_ROW,
-            components: [
-              ...(sessions.length
-                ? [
-                    {
-                      type: BUTTON,
-                      style: PRIMARY,
-                      label: t.remind,
-                      custom_id: `${TR_PICK}${region}`,
-                    },
-                  ]
-                : []),
-              {
-                type: BUTTON,
-                style: LINK,
-                label: t.site,
-                url: sitePath(siteUrl, locale, `/battle-royale/tournaments?region=${region}`),
-              },
-            ],
-          },
-        ],
+        type: BUTTON,
+        style: LINK,
+        label: t.site,
+        url: sitePath(siteUrl, locale, `/battle-royale/tournaments?region=${region}`),
       },
     ],
+  };
+  const body: unknown[] = blocks.length ? blocks.flat() : [{ type: TEXT, content: t.none }];
+  body.push({ type: TEXT, content: `-# ${region} · ${t.source}` }, buttons);
+  return {
+    flags: FLAG_COMPONENTS_V2,
+    components: [{ type: CONTAINER, accent_color: ORANGE, components: body }],
     allowed_mentions: { parse: [] },
   };
 }
@@ -133,52 +177,51 @@ export function tournamentsShown(
     Date.parse(s.window.begin) <= now,
     names?.en[s.tournament.displayId]?.title ?? '',
     names?.ru[s.tournament.displayId]?.title ?? '',
+    names?.en[s.tournament.displayId]?.poster ?? '',
   ]);
 }
 
 // ---------- events ----------
 
+/**
+ * /events and its board: one block per event as on the site's cards (name, dates, the
+ * event art on the right), Battle Royale first, then Save the World.
+ */
 export function eventsPage(events: GameEvent[], locale: Locale, siteUrl: string): BoardPage {
   const t = messages(locale).Bot.events;
-  const line = (e: GameEvent) => {
-    const end = unix(e.end);
-    const when =
+  const block = (e: GameEvent) => {
+    const end = Date.parse(e.end);
+    const relative =
       e.kind === 'season'
-        ? fmt(t.season, { end })
+        ? fmt(t.season, { end: unix(end) })
         : e.kind === 'stw-weekly'
-          ? fmt(t.weekly, { end })
-          : fmt(t.ends, { end });
-    return `**${e.name[locale]}** · ${when}`;
+          ? fmt(t.weekly, { end: unix(end) })
+          : fmt(t.ends, { end: unix(end) });
+    const dates = e.start
+      ? `${shortDate(Date.parse(e.start), locale)} – ${shortDate(end, locale)}`
+      : '';
+    return pictureBlock(
+      [`### ${e.name[locale]}`, [dates, relative].filter(Boolean).join(' · ')],
+      e.image ? absolute(e.image, siteUrl) : undefined,
+      e.name[locale],
+    );
   };
-  const block = (mode: 'br' | 'stw', title: string) => {
-    const list = events.filter((e) => e.mode === mode);
-    return list.length ? `### ${title}\n${list.map(line).join('\n')}` : '';
-  };
-  const text = [block('br', t.br), block('stw', t.stw)].filter(Boolean).join('\n\n');
+  const sorted = [
+    ...events.filter((e) => e.mode === 'br'),
+    ...events.filter((e) => e.mode === 'stw'),
+  ];
+  const footer = linkRow(t.site, sitePath(siteUrl, locale, '/pve/events'));
+  const body: unknown[] = [];
+  for (const e of sorted) {
+    const b = block(e);
+    if (countComponents([...body, ...b, footer]) + 1 > MAX_COMPONENTS) break;
+    body.push(...b);
+  }
+  if (!body.length) body.push({ type: TEXT, content: t.none });
+  body.push(footer);
   return {
     flags: FLAG_COMPONENTS_V2,
-    components: [
-      {
-        type: CONTAINER,
-        accent_color: ORANGE,
-        components: [
-          { type: TEXT, content: `## ${t.title}` },
-          { type: SEPARATOR, divider: true, spacing: 1 },
-          { type: TEXT, content: text || t.none },
-          {
-            type: ACTION_ROW,
-            components: [
-              {
-                type: BUTTON,
-                style: LINK,
-                label: t.site,
-                url: sitePath(siteUrl, locale, '/pve/events'),
-              },
-            ],
-          },
-        ],
-      },
-    ],
+    components: [{ type: CONTAINER, accent_color: ORANGE, components: body }],
     allowed_mentions: { parse: [] },
   };
 }

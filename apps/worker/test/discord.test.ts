@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { DaySnapshot, Mission, VbucksHistory } from '@stw/shared';
-import { buildDiscordMessage } from '../src/notify/discord';
+import { buildDiscordMessages } from '../src/notify/discord';
 
 const VBUCKS = 'AccountResource:currency_mtxswap';
 
@@ -71,21 +71,21 @@ function texts(components: unknown[]): string {
 
 describe('buildDiscordMessage', () => {
   it('lists V-Bucks missions in an orange card with stats and buttons', () => {
-    const msg = buildDiscordMessage(day(2), history, opts);
+    const msg = buildDiscordMessages(day(2), history, opts)[0]!;
     expect(msg.flags).toBe(1 << 15);
     const card = msg.components[0] as { accent_color: number; components: unknown[] };
     expect(card.accent_color).toBe(0xee8a2c);
     const t = texts(msg.components);
     expect(t).toContain('100 V-Bucks today');
-    expect(t).toContain('Yesterday **80**');
-    expect(t).toContain('7 days **230**');
+    expect(t).toMatch(/Yesterday <:vbucks:\d+> \*\*80\*\*/);
+    expect(t).toMatch(/7 days <:vbucks:\d+> \*\*230\*\*/);
     expect(t).toContain('Fight the Storm');
     expect(JSON.stringify(msg)).toContain('https://stw.example/pve?alert=vbucks');
     expect(JSON.stringify(msg)).not.toContain('example//');
   });
 
   it('says there are no V-Bucks and when they were last seen', () => {
-    const msg = buildDiscordMessage(day(0), history, opts);
+    const msg = buildDiscordMessages(day(0), history, opts)[0]!;
     const card = msg.components[0] as { accent_color: number };
     expect(card.accent_color).toBe(0x3fa9ff);
     const t = texts(msg.components);
@@ -103,7 +103,7 @@ describe('buildDiscordMessage', () => {
     });
     snapshot.missions = [m(1, 'twine-peaks', 100), m(2, 'plankerton', 30), m(3, 'plankerton', 20)];
     snapshot.vbucksTotal = 150;
-    const msg = buildDiscordMessage(snapshot, history, opts);
+    const msg = buildDiscordMessages(snapshot, history, opts)[0]!;
     const t = texts(msg.components);
     expect(t).toContain('3 missions  ·  Plankerton  ·  Twine Peaks');
     expect(t.indexOf(' 20  ·')).toBeLessThan(t.indexOf(' 30  ·'));
@@ -111,11 +111,20 @@ describe('buildDiscordMessage', () => {
     expect(JSON.stringify(msg)).toContain('/images/discord/zones/plankerton.webp');
   });
 
-  it('stays within Discord limits on a day with many V-Bucks missions', () => {
-    const msg = buildDiscordMessage(day(20), history, opts);
-    expect(count(msg.components)).toBeLessThanOrEqual(40);
-    expect(texts(msg.components)).toContain('more on the site');
-    const textLength = texts(msg.components).length;
-    expect(textLength).toBeLessThan(4000);
+  it('splits a busy day: one message of missions, then a card with the rest', () => {
+    const list = buildDiscordMessages(day(20), history, opts);
+    expect(list).toHaveLength(2);
+    for (const msg of list) {
+      expect(count(msg.components)).toBeLessThanOrEqual(40);
+      expect(texts(msg.components).length).toBeLessThan(4000);
+    }
+    expect(texts(list[0]!.components)).toContain('V-Bucks today');
+    const shown = (JSON.stringify(list[0]).match(/### /g) ?? []).length;
+    expect(texts(list[1]!.components)).toContain(`+ ${20 - shown} missions`);
+    expect(texts(list[1]!.components)).toContain('tracker on the site');
+  });
+
+  it('keeps a day that fits in one message', () => {
+    expect(buildDiscordMessages(day(2), history, opts)).toHaveLength(1);
   });
 });

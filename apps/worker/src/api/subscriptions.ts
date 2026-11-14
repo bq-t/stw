@@ -109,10 +109,12 @@ export async function handleSubscriptionsApi(
     const filter = body && parseSubscriptionFilter(body.filter);
     if (!body || !filter) return err(400, 'bad filter');
     if (!env.DISCORD_BOT_TOKEN) return err(503, 'not configured');
-    const snapshot = await new Store(env.MISSIONS).getCurrent();
+    const store = new Store(env.MISSIONS);
+    const snapshot = await store.getCurrent();
     if (!snapshot) return err(503, 'no data');
     if (!(await db.claimTestDm(user.id, now, TEST_INTERVAL_MS))) return err(429, 'too soon');
-    const note = notificationMessage(filter, snapshot, body.locale, env.SITE_URL);
+    const history = filter.card ? await store.getHistory() : null;
+    const note = notificationMessage(filter, snapshot, body.locale, env.SITE_URL, history);
     try {
       const dm = await discordApi<{ id: string }>(
         env.DISCORD_BOT_TOKEN,
@@ -122,7 +124,8 @@ export async function handleSubscriptionsApi(
           recipient_id: user.id,
         },
       );
-      await discordApi(env.DISCORD_BOT_TOKEN, 'POST', `/channels/${dm.id}/messages`, note.message);
+      for (const message of note.messages)
+        await discordApi(env.DISCORD_BOT_TOKEN, 'POST', `/channels/${dm.id}/messages`, message);
     } catch (e) {
       if (isCannotDm(e)) {
         console.log('test dm refused', e instanceof DiscordApiError ? e.code : '');
