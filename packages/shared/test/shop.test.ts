@@ -48,7 +48,7 @@ const brRaw = {
         brItems: [
           {
             name: "Vader's Katana",
-            type: { displayValue: 'Pickaxe' },
+            type: { value: 'pickaxe', displayValue: 'Pickaxe' },
             rarity: { value: 'starwars' },
             images: { featured: 'https://cdn/katana.png' },
             added: '2026-11-08T10:00:00Z',
@@ -106,7 +106,7 @@ describe('parseBrShop', () => {
     ]);
   });
 
-  it('puts bundles first in a section, then the game sort priority; format 2', () => {
+  it('puts bundles first in a section, then the game sort priority; format 3', () => {
     const tile = (name: string, p: number, bundle = false) => ({
       offerId: `v2:/${name}`,
       finalPrice: 500,
@@ -127,7 +127,7 @@ describe('parseBrShop', () => {
         ],
       },
     });
-    expect(s.format).toBe(2);
+    expect(s.format).toBe(3);
     expect(s.sections[0]!.items.map((i) => i.name)).toEqual([
       'Small bundle',
       'Big bundle',
@@ -149,6 +149,7 @@ describe('parseBrShop', () => {
       name: 'Ben Tennyson',
       kind: 'bundle',
       type: 'Bundle',
+      typeKey: 'bundle',
       price: 1800,
       image: 'https://cdn/ben.png',
     });
@@ -157,6 +158,7 @@ describe('parseBrShop', () => {
     const [katana] = shop.sections[0]!.items;
     expect(katana).toMatchObject({
       type: 'Pickaxe',
+      typeKey: 'pickaxe',
       rarity: 'starwars',
       image: 'https://cdn/katana-render.png',
       regularPrice: 1000,
@@ -167,7 +169,8 @@ describe('parseBrShop', () => {
       firstRelease: true,
       offerTag: 'Reactive to eliminations!',
       video: 'SN56kT2VVJQ',
-      looks: ['https://cdn/katana-style.png', 'https://cdn/katana-lego.png'],
+      looks: ['https://cdn/katana-style.png'],
+      lego: 'https://cdn/katana-lego.png',
     });
   });
 

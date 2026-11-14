@@ -1,20 +1,49 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import {
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+  type HTMLAttributes,
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
 
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/** Phones: the details are a sheet over the bottom of the card (`.tour-info` in globals.css). */
+const SHEET_QUERY = '(max-width: 767px)';
+const subscribeSheet = (cb: () => void) => {
+  const mq = window.matchMedia(SHEET_QUERY);
+  mq.addEventListener('change', cb);
+  return () => mq.removeEventListener('change', cb);
+};
+const useSheet = () =>
+  useSyncExternalStore(
+    subscribeSheet,
+    () => window.matchMedia(SHEET_QUERY).matches,
+    () => false,
+  );
+
+/** The sheet's offset now (its CSS `translate`), in px. */
+const sheetOffset = (el: HTMLElement) =>
+  parseFloat(getComputedStyle(el).translate.split(' ')[1] ?? '0') || 0;
+
+/** How much of the folded sheet shows (`--peek`, rem), in px. */
+const peekPx = (el: HTMLElement) =>
+  (parseFloat(getComputedStyle(el).getPropertyValue('--peek')) || 0) *
+  parseFloat(getComputedStyle(document.documentElement).fontSize);
+
 /**
  * An opened card (tournaments, shop items): the page blurs, a copy of the card flies from its
- * place to the right and the details appear on the left; closing runs it back. The flying copy
+ * place to the right and the details appear on the left; closing runs it back. On phones the
+ * card sits on top, sized to the screen, and the details are a sheet over its bottom: its top
+ * peeks out, a drag on the handle (or a tap on the sheet) pulls it up over the card. The flying copy
  * is laid over the original's spot (FLIP), the caller hides the original meanwhile. Styles:
  * `.tour-overlay`, `.tour-detail`, `.tour-info`, `.tour-flyer` in globals.css.
  */
@@ -26,6 +55,8 @@ export function CardOverlay({
   flyerClassName,
   flyerStyle,
   flyer,
+  below,
+  slotProps,
   info,
   onClosed,
   wide = false,
@@ -42,13 +73,55 @@ export function CardOverlay({
   flyerStyle?: CSSProperties;
   /** What the flying card shows. */
   flyer: ReactNode;
+  /** Under the card in the open view (the shop's look steps). */
+  below?: ReactNode;
+  /**
+   * Pointer handlers for the card in the open view: they go on its slot, since the flying
+   * card itself lets the pointer through.
+   */
+  slotProps?: Pick<HTMLAttributes<HTMLDivElement>, 'onMouseEnter' | 'onMouseLeave'>;
   /** The details panel; `close` runs the closing animation. */
   info: (close: () => void) => ReactNode;
   onClosed: () => void;
 }) {
   const slot = useRef<HTMLDivElement>(null);
   const card = useRef<HTMLDivElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
   const [closing, setClosing] = useState(false);
+  const sheet = useSheet();
+  const [expanded, setExpanded] = useState(false);
+  const drag = useRef<{ y: number; from: number; max: number; moved: boolean } | null>(null);
+  const t = useTranslations('Nav');
+
+  // Sheet drag: the offset follows the finger (inline --sheet-y), then snaps open or closed.
+  const onHandleDown = (e: ReactPointerEvent<HTMLElement>) => {
+    const el = infoRef.current;
+    if (!el) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const folded = el.offsetHeight - peekPx(el);
+    drag.current = { y: e.clientY, from: sheetOffset(el), max: Math.max(0, folded), moved: false };
+    el.dataset.dragging = '';
+  };
+  const onHandleMove = (e: ReactPointerEvent<HTMLElement>) => {
+    const d = drag.current;
+    const el = infoRef.current;
+    if (!d || !el) return;
+    const dy = e.clientY - d.y;
+    if (Math.abs(dy) > 6) d.moved = true;
+    const y = Math.min(d.max, Math.max(0, d.from + dy));
+    el.style.setProperty('--sheet-y', `${y}px`);
+  };
+  const onHandleUp = () => {
+    const d = drag.current;
+    const el = infoRef.current;
+    drag.current = null;
+    if (!d || !el) return;
+    const y = sheetOffset(el);
+    delete el.dataset.dragging;
+    el.style.removeProperty('--sheet-y');
+    // A tap toggles; a drag snaps to the nearer end.
+    setExpanded(d.moved ? y < d.max / 2 : !expanded);
+  };
 
   const place = () => {
     const f = card.current;
@@ -129,14 +202,59 @@ export function CardOverlay({
           className={wide ? 'tour-detail tour-detail-wide' : 'tour-detail'}
           onClick={(e) => e.target === e.currentTarget && close()}
         >
-          <div className="tour-info fn-block flex flex-col gap-3 p-5">{info(close)}</div>
-          <div ref={slot} className={slotClassName} style={slotStyle} />
+          {!sheet && (
+            <div className="tour-info fn-block flex flex-col gap-3 p-5">{info(close)}</div>
+          )}
+          {below ? (
+            <div className="tour-slot-col">
+              <div ref={slot} className={slotClassName} style={slotStyle} {...slotProps} />
+              {below}
+            </div>
+          ) : (
+            <div ref={slot} className={slotClassName} style={slotStyle} {...slotProps} />
+          )}
         </div>
       </div>
       {/* Outside the overlay (it fades as it closes): the card stays solid all the way back. */}
       <div ref={card} className={`tour-flyer ${flyerClassName}`} style={flyerStyle} aria-hidden>
         {flyer}
       </div>
+      {/*
+        Phones: the details as a sheet over the card. Outside the overlay, like the card: inside,
+        the overlay's stacking context would keep it under the flying card.
+      */}
+      {sheet && (
+        <div
+          ref={infoRef}
+          className="tour-info tour-sheet fn-block flex flex-col gap-3 p-5"
+          role="region"
+          aria-label={label}
+          data-expanded={expanded ? '' : undefined}
+          data-closing={closing ? '' : undefined}
+          onClickCapture={(e) => {
+            // A tap on the folded sheet (not on its buttons) pulls it up.
+            if (expanded) return;
+            if ((e.target as Element).closest('a, button')) return;
+            setExpanded(true);
+          }}
+        >
+          <button
+            type="button"
+            className="tour-sheet-handle"
+            aria-label={t('cardDetails')}
+            aria-expanded={expanded}
+            onPointerDown={onHandleDown}
+            onPointerMove={onHandleMove}
+            onPointerUp={onHandleUp}
+            onPointerCancel={onHandleUp}
+            onClick={(e) => {
+              // Keyboard: Enter/Space. A pointer tap is handled on pointerup.
+              if (e.detail === 0) setExpanded(!expanded);
+            }}
+          />
+          {info(close)}
+        </div>
+      )}
     </>,
     document.body,
   );

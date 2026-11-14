@@ -80,7 +80,14 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
           <QueryProvider>
             <TooltipProvider delayDuration={150} skipDelayDuration={400} disableHoverableContent>
               <Header />
-              <main className="mx-auto w-full max-w-7xl flex-1 px-4 pt-9 pb-12">{children}</main>
+              {/*
+                Full-width wrapper that clips sideways: tile badges stick out past the tiles on
+                purpose, and at the screen's edge they widened the page (phones zoomed out).
+                `clip`, not `hidden`: the sticky section nav keeps working.
+              */}
+              <div className="flex w-full flex-1 flex-col overflow-x-clip">
+                <main className="mx-auto w-full max-w-7xl flex-1 px-4 pt-9 pb-12">{children}</main>
+              </div>
               <Footer />
               <DiscordButton />
               <ScrollTopButton />

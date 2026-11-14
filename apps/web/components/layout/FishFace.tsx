@@ -27,6 +27,8 @@ const BLINK_MS = 170;
 const BLINK_MIN_MS = 2500;
 const BLINK_MAX_MS = 6000;
 const DOUBLE_BLINK = 0.2;
+/** A mouse or a pen: the eyes follow it and the mouth reacts. Not on touch screens. */
+const followsPointer = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 /** The fish itself: the header link, or its spot on the mode screen (the flying layer under it lets the pointer through). */
 const isLogo = (target: EventTarget | null) =>
   target instanceof Element && target.closest('[data-header-logo], .intro-logo') !== null;
@@ -196,6 +198,8 @@ export function FishFace({ className, ref }: { className?: string; ref?: Ref<SVG
   const shine = useRef<SVGEllipseElement>(null);
 
   useEffect(() => {
+    // Touch screens: no pointer to follow, and a tap would set the mouth off. Blinking stays.
+    if (!followsPointer()) return;
     let mood: Mood = 'rest';
     let shown: Pose = POSES.rest;
     let frame = 0;
@@ -256,6 +260,7 @@ export function FishFace({ className, ref }: { className?: string; ref?: Ref<SVG
   }, []);
 
   useEffect(() => {
+    if (!followsPointer()) return;
     let frame = 0;
     let timer = 0;
     let onLogo = false;

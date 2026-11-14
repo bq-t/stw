@@ -4,15 +4,21 @@ import type { BrShopItem, BrShopSection } from '@stw/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Play } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useRef, useState, useSyncExternalStore, type RefObject } from 'react';
+import { Suspense, useEffect, useRef, useState, useSyncExternalStore, type RefObject } from 'react';
 import { CardSkeletons } from '@/components/ui/skeleton';
 import { VbucksIcon } from '@/components/missions/VbucksIcon';
 import { CardOverlay } from '@/components/layout/CardOverlay';
 import { useNow } from '@/components/events/time';
 import { fetchBrShop } from '@/lib/api';
-
-/** Offers whose end falls before the next reset (the shop day's end) leave today. */
-const DAY_MS = 24 * 60 * 60 * 1000;
+import {
+  isDefaultBrFilters,
+  isLeaving,
+  looksOf,
+  matchesBrFilters,
+  NO_BR_FILTERS,
+  useBrFilters,
+  useShowLego,
+} from './brFilters';
 
 const isTracks = (s: BrShopSection) => s.items.every((i) => i.kind === 'track');
 
@@ -55,6 +61,10 @@ const subscribeClock = (tick: () => void) => {
   return () => window.clearInterval(id);
 };
 
+/** The look due now on the clock that drives the tiles. */
+const lookIndexNow = (count: number, delay: number) =>
+  count < 2 ? 0 : Math.floor((Date.now() + delay * 1000) / LOOK_MS) % count;
+
 /** Which look to show now: steps every LOOK_MS, shifted by `delay` seconds. */
 function useLookIndex(count: number, delay: number): number {
   return useSyncExternalStore(
@@ -76,29 +86,45 @@ function Art({
   item,
   delay = 0,
   glare,
+  index: picked,
 }: {
   item: BrShopItem;
   delay?: number;
   glare?: RefObject<HTMLSpanElement | null>;
+  /** The look to show (the open card steps it itself); the clock's look when omitted. */
+  index?: number;
 }) {
-  const looks = item.image ? [item.image, ...(item.looks ?? [])] : [];
-  const index = useLookIndex(looks.length, delay);
+  const looks = looksOf(item, useShowLego());
+  const clock = useLookIndex(looks.length, delay);
+  const index = picked !== undefined && picked < looks.length ? picked : clock;
   const imgs = useRef<(HTMLImageElement | null)[]>([]);
   // Mount on the look that is due now (the open card copies a tile mid-cycle), not on the first.
   const [first] = useState(index);
   const shown = useRef(first);
 
   useEffect(() => {
-    const prev = imgs.current[shown.current];
     const next = imgs.current[index];
     if (!next || shown.current === index) return;
     const from = shown.current;
+    const prev = imgs.current[from];
     shown.current = index;
+    // A switch that is still running (a square clicked mid-wipe) is cut short: its animations
+    // are cancelled (their `finished` rejects, so they do not settle), and every look but the
+    // outgoing and the incoming one is hidden.
+    imgs.current.forEach((img, k) => {
+      if (!img) return;
+      img.getAnimations().forEach((a) => a.cancel());
+      if (k === index || k === from) return;
+      img.style.visibility = 'hidden';
+      img.style.removeProperty('mask-image');
+    });
+    glare?.current?.getAnimations().forEach((a) => a.cancel());
     const wipe = { duration: WIPE_MS, easing: 'ease-in-out', fill: 'forwards' } as const;
     next.style.visibility = 'visible';
     next.style.zIndex = '1';
     next.style.maskImage = MASK_IN;
     if (prev) {
+      prev.style.visibility = 'visible';
       prev.style.zIndex = '0';
       prev.style.maskImage = MASK_OUT;
     }
@@ -117,14 +143,15 @@ function Art({
     run.finished.then(
       () => {
         // Settled: only the new look stays, unmasked.
+        if (shown.current !== index) return;
         imgs.current.forEach((img, k) => {
           if (!img || k === index) return;
           img.getAnimations().forEach((a) => a.cancel());
           img.style.visibility = 'hidden';
+          img.style.removeProperty('mask-image');
         });
         next.getAnimations().forEach((a) => a.cancel());
         next.style.maskImage = 'none';
-        imgs.current[from]?.style.removeProperty('mask-image');
       },
       () => {},
     );
@@ -151,14 +178,13 @@ function Art({
 }
 
 /** The render with its frame glare, for the open card. */
-function LooksArt({ item, delay }: { item: BrShopItem; delay: number }) {
+function LooksArt({ item, delay, index }: { item: BrShopItem; delay: number; index: number }) {
   const glare = useRef<HTMLSpanElement>(null);
+  const many = looksOf(item, useShowLego()).length > 1;
   return (
     <>
-      <Art item={item} delay={delay} glare={glare} />
-      {(item.looks ?? []).length > 0 && (
-        <span ref={glare} aria-hidden className="shop-card-glare" />
-      )}
+      <Art item={item} delay={delay} glare={glare} index={index} />
+      {many && <span ref={glare} aria-hidden className="shop-card-glare" />}
     </>
   );
 }
@@ -218,6 +244,7 @@ function Tile({
   const t = useTranslations('Shop');
   const extras = extrasLine(item, t);
   const glare = useRef<HTMLSpanElement>(null);
+  const many = looksOf(item, useShowLego()).length > 1;
   return (
     <li
       className="shop-card"
@@ -233,9 +260,7 @@ function Tile({
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), onOpen())}
     >
       <Art item={item} delay={delay} glare={glare} />
-      {(item.looks ?? []).length > 0 && (
-        <span ref={glare} aria-hidden className="shop-card-glare" />
-      )}
+      {many && <span ref={glare} aria-hidden className="shop-card-glare" />}
       <div className="shop-card-text">
         <p className="fn-title text-xl leading-tight">{item.name}</p>
         <p className="shop-card-type">
@@ -268,6 +293,55 @@ function Tile({
   );
 }
 
+/**
+ * The looks of the open card as a row of squares under it, like a timeline: the ones shown
+ * are full, the current one fills up over LOOK_MS and then steps to the next (a CSS
+ * animation: paused while the pointer is on the card). A click shows that look.
+ */
+function LookSteps({
+  count,
+  index,
+  paused,
+  onPick,
+  onDone,
+}: {
+  count: number;
+  index: number;
+  paused: boolean;
+  onPick: (index: number) => void;
+  onDone: () => void;
+}) {
+  const t = useTranslations('Shop');
+  return (
+    <div className="shop-looks" role="group" aria-label={t('looks')}>
+      {Array.from({ length: count }, (_, k) => (
+        <button
+          key={k}
+          type="button"
+          className="shop-look"
+          data-state={k < index ? 'done' : k === index ? 'current' : undefined}
+          aria-label={t('look', { n: k + 1, count })}
+          aria-current={k === index ? 'true' : undefined}
+          onClick={() => onPick(k)}
+        >
+          {k === index && (
+            // Re-keyed per look so the fill starts over on every step.
+            <span
+              key={index}
+              className="shop-look-fill"
+              style={{
+                animationDuration: `${LOOK_MS}ms`,
+                animationPlayState: paused ? 'paused' : 'running',
+              }}
+              onAnimationEnd={onDone}
+            />
+          )}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /** The open offer: its render alone on the right, everything about it on the left. */
 function ItemDetail({
   item,
@@ -294,18 +368,41 @@ function ItemDetail({
       ?.getBoundingClientRect() ?? null;
   const rect = from();
   const ratio = rect ? `${rect.width} / ${rect.height}` : '3 / 4';
+  const count = looksOf(item, useShowLego()).length;
+  // Starts on the look the tile shows now, then steps on its own.
+  const [index, setIndex] = useState(() => lookIndexNow(count, delay));
+  const [hover, setHover] = useState(false);
+  const shown = index < count ? index : 0;
   return (
     <CardOverlay
       label={item.name}
       from={from}
       slotClassName="tour-slot shop-slot"
-      slotStyle={{
-        aspectRatio: ratio,
-        width: item.kind === 'bundle' ? '36rem' : '22rem',
-      }}
+      slotStyle={
+        {
+          aspectRatio: ratio,
+          '--slot-w': item.kind === 'bundle' ? '36rem' : '22rem',
+          '--slot-ratio': rect ? rect.width / rect.height : 0.75,
+        } as React.CSSProperties
+      }
       flyerClassName="shop-card shop-card-plain"
       flyerStyle={tileLook(item)}
-      flyer={<LooksArt item={item} delay={delay} />}
+      flyer={<LooksArt item={item} delay={delay} index={shown} />}
+      slotProps={{
+        onMouseEnter: () => setHover(true),
+        onMouseLeave: () => setHover(false),
+      }}
+      below={
+        count > 1 && (
+          <LookSteps
+            count={count}
+            index={shown}
+            paused={hover}
+            onPick={setIndex}
+            onDone={() => setIndex((shown + 1) % count)}
+          />
+        )
+      }
       onClosed={onClosed}
       wide={item.kind === 'bundle'}
       info={(close) => (
@@ -431,9 +528,33 @@ function SectionNav({ entries }: { entries: NavEntry[] }) {
   );
 }
 
+/** Loading: the loaded page's shape, a section title and a grid of tiles (the nav column kept free). */
+function ShopSkeleton() {
+  return (
+    <div className="shop-layout">
+      <div className="hidden lg:block" />
+      <div className="flex flex-col gap-4">
+        <span aria-hidden className="block h-8 w-56 -skew-x-8 bg-white/25" />
+        <CardSkeletons count={8} listClassName="shop-grid" cardClassName="shop-card" />
+      </div>
+    </div>
+  );
+}
+
+/** The BR shop under its filters (BrShopFilters in the page header shares the URL state). */
 export function BrShopView() {
+  // useSearchParams needs a Suspense boundary in a static export.
+  return (
+    <Suspense fallback={<ShopSkeleton />}>
+      <Shop />
+    </Suspense>
+  );
+}
+
+function Shop() {
   const t = useTranslations('Shop');
   const locale = useLocale();
+  const [filters, setFilters] = useBrFilters();
   const [open, setOpen] = useState<string | null>(null);
   const shop = useQuery({
     queryKey: ['shop', 'br', locale],
@@ -442,23 +563,17 @@ export function BrShopView() {
   });
 
   if (shop.isError) return <p className="text-destructive">{t('error')}</p>;
-  if (!shop.data)
-    return (
-      // The loaded page's shape: a section title and a grid of tiles (the nav column kept free).
-      <div className="shop-layout">
-        <div className="hidden lg:block" />
-        <div className="flex flex-col gap-4">
-          <span aria-hidden className="block h-8 w-56 -skew-x-8 bg-white/25" />
-          <CardSkeletons count={8} listClassName="shop-grid" cardClassName="shop-card" />
-        </div>
-      </div>
-    );
-  const { date, sections } = shop.data;
-  const all = sections.flatMap((x) => x.items);
+  if (!shop.data) return <ShopSkeleton />;
+  const { date } = shop.data;
+  // Delays and the open offer count over the whole shop, so filtering does not reshuffle them.
+  const all = shop.data.sections.flatMap((x) => x.items);
+  const sections = shop.data.sections
+    .map((s) => ({ ...s, items: s.items.filter((i) => matchesBrFilters(i, filters, date)) }))
+    .filter((s) => s.items.length > 0);
   const opened = all.find((x) => x.offerId === open);
   // Each tile switches looks at its own moment, so they do not all switch at once.
   const delayOf = (item: BrShopItem) => (all.indexOf(item) % 9) * 1.3;
-  const leavingOf = (item: BrShopItem) => Date.parse(item.outDate) < Date.parse(date) + DAY_MS;
+  const leavingOf = (item: BrShopItem) => isLeaving(item, date);
   const tile = (item: BrShopItem) => (
     <Tile
       key={item.offerId}
@@ -480,9 +595,26 @@ export function BrShopView() {
     })),
   ];
 
+  if (!sections.length)
+    return (
+      <div className="fn-panel flex flex-wrap items-center gap-3 py-3 text-sm text-muted-foreground">
+        <span>{t('filters.empty')}</span>
+        <button
+          type="button"
+          className="fn-chip h-7 px-3"
+          onClick={() => setFilters(NO_BR_FILTERS)}
+        >
+          <span>{t('filters.reset')}</span>
+        </button>
+      </div>
+    );
+
   return (
     <div className="shop-layout">
-      <SectionNav entries={nav} />
+      <SectionNav
+        key={isDefaultBrFilters(filters) ? 'all' : nav.map((e) => e.id).join()}
+        entries={nav}
+      />
       <div className="flex min-w-0 flex-col gap-12">
         {items.map((s) => (
           <section key={s.name} id={sectionId(s.name)} className="flex flex-col gap-4">

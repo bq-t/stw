@@ -4,6 +4,7 @@ import type { Locale } from '@/i18n/routing';
 import { alternatesFor } from '@/lib/site';
 import { RotationTimer } from '@/components/missions/RotationTimer';
 import { BrShop } from '@/components/shop/ShopView';
+import { BrShopFilters } from '@/components/shop/BrShopFilters';
 
 export async function generateMetadata({
   params,
@@ -30,7 +31,10 @@ export default async function BrShopPage({ params }: PageProps<'/[locale]/battle
           </h1>
           <RotationTimer label={t('nextShop')} />
         </div>
-        <p className="text-white/80">{t('intro')}</p>
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+          <p className="text-white/80">{t('intro')}</p>
+          <BrShopFilters />
+        </div>
       </header>
       <BrShop />
     </article>

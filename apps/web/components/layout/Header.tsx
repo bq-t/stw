@@ -12,22 +12,23 @@ export function Header() {
       <div className="brand-shadow-down">
         <header className="site-header brand-fill slant-bottom">
           {/*
-            md+: three columns: language on the left, the fish in the exact middle, mode tabs and
-            the account on the right. Phones: the fish, language and account in the first row,
-            the mode tabs in a row of their own (the right group is `contents` there).
+            Three columns: language on the left, the fish in the exact middle, the account on the
+            right. lg+: the mode tabs sit on the right next to the account. Phones and tablets: the mode tabs
+            get a centred row of their own under the fish (the right group is `contents` there,
+            so its two parts take their own grid cells).
           */}
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 md:grid md:grid-cols-[1fr_auto_1fr]">
-            <div className="order-2 md:order-none md:justify-self-start">
+          <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-x-4 gap-y-2 px-4 py-3 lg:gap-x-6">
+            <div className="justify-self-start">
               <LocaleSwitch />
             </div>
-            <div className="order-1 md:order-none">
+            <div className="col-start-2 row-start-1">
               <HeaderLogo label={t('Meta.siteName')} />
             </div>
-            <div className="contents md:flex md:items-center md:gap-3 md:justify-self-end">
-              <nav className="order-last -mx-4 flex w-full gap-2 overflow-x-auto px-4 py-1 text-base whitespace-nowrap md:order-none md:mx-0 md:w-auto md:px-1.5">
+            <div className="contents lg:col-start-3 lg:row-start-1 lg:flex lg:items-center lg:gap-3 lg:justify-self-end">
+              <nav className="col-span-3 row-start-2 flex justify-center gap-2 py-1 text-base whitespace-nowrap lg:col-auto lg:row-auto lg:px-1.5">
                 <ModeMenu />
               </nav>
-              <div className="order-3 md:order-none">
+              <div className="col-start-3 row-start-1 justify-self-end lg:col-auto lg:row-auto">
                 <AccountButton />
               </div>
             </div>

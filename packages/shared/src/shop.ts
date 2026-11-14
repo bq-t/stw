@@ -25,6 +25,11 @@ export interface BrShopItem {
   name: string;
   /** "Outfit", "Bundle"… in the language the shop was fetched in (from fortnite-api). */
   type: string;
+  /**
+   * The same in any language, for filters: fortnite-api's type value ("outfit", "backpack",
+   * "pickaxe"…), "bundle" or "track".
+   */
+  typeKey: string;
   /** fortnite-api rarity or series value: "epic", "marvel", "icon"… */
   rarity: string;
   image: string | null;
@@ -48,9 +53,11 @@ export interface BrShopItem {
   video?: string;
   /**
    * More looks of it, shown in turn after the main image: its other styles (the game's extra
-   * Battle Royale renders), then the LEGO one.
+   * Battle Royale renders).
    */
   looks?: string[];
+  /** The LEGO look (shown after the styles; the site can turn it off). */
+  lego?: string;
 }
 
 export type BrExtra = 'styles' | 'emote';
@@ -68,8 +75,9 @@ export interface BrShopSection {
 /**
  * Bumped when the stored BR shop changes shape or order: the Worker fetches today's shop again.
  * 2: bundles first, sections without a layout left out, categories (shops saved before had "Other").
+ * 3: `typeKey`, the LEGO look apart from the styles (`lego`).
  */
-export const BR_SHOP_FORMAT = 2;
+export const BR_SHOP_FORMAT = 3;
 
 export interface BrShop {
   /** Shop day, YYYY-MM-DD (resets at 00:00 UTC). Stays the first field (see refreshShops). */
@@ -94,17 +102,20 @@ function brExtras(e: any): BrExtra[] {
   return (['styles', 'emote'] as const).filter((x) => found.has(x));
 }
 
-/** Styles (extra BR renders, in the game's order), then the LEGO look; without the main image. */
-function brLooks(e: any, cosmetic: any, main: string | null): string[] {
+/**
+ * Styles (extra Battle Royale renders, `Product.BR`, in the game's order) without the main
+ * image, and the LEGO look (`Product.Juno`, or the cosmetic's LEGO image).
+ */
+function brLooks(e: any, cosmetic: any, main: string | null) {
   const renders: any[] = e.newDisplayAsset?.renderImages ?? [];
   const styles = renders
     .filter((r) => r?.productTag === 'Product.BR')
     .map((r) => str(r?.image))
-    .filter((u): u is string => u !== undefined);
+    .filter((u): u is string => u !== undefined && u !== main);
   const lego =
     str(renders.find((r) => r?.productTag === 'Product.Juno')?.image) ??
     (e.bundle ? undefined : str(cosmetic?.images?.lego?.large));
-  return [...new Set([...styles, ...(lego ? [lego] : [])])].filter((u) => u !== main);
+  return { looks: [...new Set(styles)], lego: lego !== main ? lego : undefined };
 }
 
 /** Cosmetics added to the game this long before the shop day count as new content. */
@@ -140,6 +151,7 @@ function brItem(e: any, day?: string): BrShopItem | null {
       kind === 'bundle'
         ? (str(e.bundle.info) ?? 'Bundle')
         : (str(cosmetic?.type?.displayValue) ?? str(e.tracks?.[0]?.type) ?? ''),
+    typeKey: kind === 'bundle' || kind === 'track' ? kind : (str(cosmetic?.type?.value) ?? 'other'),
     rarity: str(cosmetic?.rarity?.value) ?? 'common',
     image,
     price: e.finalPrice,
@@ -151,7 +163,7 @@ function brItem(e: any, day?: string): BrShopItem | null {
     extras: brExtras(e),
     offerTag: str(e.offerTag?.text)?.trim(),
     video: (e.brItems ?? []).map((c: any) => str(c?.showcaseVideo)).find(Boolean),
-    looks: brLooks(e, cosmetic, image),
+    ...brLooks(e, cosmetic, image),
     tile: {
       base: hex(e.colors?.color1),
       light: hex(e.colors?.color2) ?? hex(e.colors?.color3),
